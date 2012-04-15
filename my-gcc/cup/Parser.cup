@@ -3,6 +3,7 @@ package MyGCC;
 import java_cup.runtime.*;
 import java.io.*;
 import java.util.*;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 import MyGCC.Parameter;
 
@@ -64,7 +65,7 @@ terminal Integer NB_INT;
 non terminal program, declarations_list, declaration, prototype,
              functions_list, function, header,
              body, instruct_list,
-             arg_sequence, args_list, dec_func_list, dec_end, proto_func,
+             args_list, dec_func_list, dec_end, proto_func,
              hybrid_param, dec_or_func_end, arr, arr_proto;
 
 non terminal Parameter parameter;
@@ -74,6 +75,7 @@ non terminal ArrayList<Entry<Type,String>> param_list, param_sequence;
 non terminal OperationType bin_op;
 non terminal Expression expression;
 non terminal Instruction instruction;
+non terminal ArrayList<Expression> arg_sequence;
 
 
 precedence left OR, AND;
@@ -322,7 +324,7 @@ instruction ::=
     
     // Compare the value of a variable with that of an expression
     IDENT:i EQL expression:e
-      {: if(Parser.DEBUG) System.out.println("instruction detected: EQL");
+      {: if(Parser.DEBUG) System.out.println("Instruction detected: EQL");
          parser.cg.pushInstruction(new Instruction(new Arithmetic<String>(null, i), e, InstructionType.EQL)); :}
     
     // Compare the value of an item from an array with that of an expression
@@ -392,8 +394,8 @@ expression ::=
          RESULT = new Arithmetic<Integer>(null, n); :}
 
     // Allows the use of a function in an expression
-  | IDENT LPAREN arg_sequence RPAREN
-      //{: RESULT = new FunctionCall(); :}
+  | IDENT:i LPAREN arg_sequence:a RPAREN
+      {: RESULT = new FunctionCall(i, a); :}
   
     // Allows the use of arrays with expression calculated indexes
   | IDENT LHOOK expression RHOOK
@@ -401,15 +403,18 @@ expression ::=
   
 // Can be either empty, or a list of arguments
 arg_sequence ::= 
-    args_list
-  |
+    args_list {: RESULT = parser.cg.getArguments(); :}
+  | {: RESULT = parser.cg.getArguments(); :}
   ;
         
 // A list of expressions, each seperated by a comma
 // An args_list may not be empty
 args_list ::=
-    expression
-  | expression COMMA args_list
+    expression:e1
+      {: parser.cg.pushArgument(e1); :}
+  | expression:e2 
+      {: parser.cg.pushArgument(e2); :}
+      COMMA args_list
   ;
      
 // List of accepted binary operators

@@ -22,12 +22,25 @@ public abstract class Expression{
 			boolean br = true;
 			Arithmetic tmp = null;
 			
-			if(this.left != null)
-				bl = this.left.isFullyNumeric();
-			if(this.right != null)
-				br = this.right.isFullyNumeric();
+			if(this.left != null){
+				if(this.left instanceof Arithmetic)
+					bl = this.left.isFullyNumeric();
+				else
+					return false;
+			}
+			
+			if(this.right != null){
+				if(this.right instanceof Arithmetic)
+					br = this.right.isFullyNumeric();
+				else
+					return false;
+			}
+			
+			if(this instanceof Arithmetic)
+				tmp = (Arithmetic)this;
+			else
+				return false;
 				
-			tmp = (Arithmetic)this;
 			if(tmp.getValue() instanceof String)
 				return false;
 				
@@ -63,6 +76,8 @@ public abstract class Expression{
     
     public StringBuffer handleExpression(Context context) throws Exception{
 			StringBuffer sb = new StringBuffer();
+			String lval = new String();
+			String rval = new String();
 			
 			if(this == null){
 				//sb.append("\tleave\n\tret\n"); Already handled in epilogue()
@@ -76,42 +91,49 @@ public abstract class Expression{
 			
 			else{
 				
-				Arithmetic myLeft = (Arithmetic)this.left;
-				Arithmetic myRight = (Arithmetic)this.right;
-				String lval = String.valueOf(myLeft.getValue());
-				String rval = String.valueOf(myRight.getValue());
+				Expression lexp = this.left;
+				Expression rexp = this.right;
+				Arithmetic myLeft = null;
+				Arithmetic myRight = null;
 				Register regL = null;
 				Register regR = null;
-			
-				if(this.left.op != null)
-					sb.append(this.left.handleExpression(context));
-				if(this.right.op != null)
-					sb.append(this.right.handleExpression(context)); 
-      
+				
 
-				if(myLeft.getValue() instanceof String && myRight.getValue() instanceof String){
-					regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
-					regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
-					sb.append("\tmovl %" + myLeft.getValue() + ", %" + regL.toString() + "\n");
-					sb.append("\tmovl %" + myRight.getValue() + ", %" + regR.toString() + "\n");
-					sb.append("\t" + this.op.toString() + " %" + regL.toString() + ", %" + regR.toString() + "\n");
+				if(lexp instanceof Arithmetic){
+					myLeft = (Arithmetic)lexp;
+					lval = String.valueOf(myLeft.getValue());
 				}
-            
-				else if(myLeft.getValue() instanceof Integer && myRight.getValue() instanceof String){
-					regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
-					sb.append("\tmovl %" + context.getVariableLocation((String)myRight.getValue()) + ", %" + regR.toString() + "\n");
-					sb.append("\t" + this.op.toString() + " %" + myLeft.getValue() + ", %" + regR.toString() + "\n");
+
+				if(rexp instanceof Arithmetic){
+					myRight = (Arithmetic)rexp;
+					rval = String.valueOf(myRight.getValue());
 				}
-            
-				else if(myLeft.getValue() instanceof String && myRight.getValue() instanceof Integer){
-					regR = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
-					sb.append("\tmovl %" + context.getVariableLocation((String)myLeft.getValue()) + ", %" + regR.toString() + "\n");
-					sb.append("\t" + this.op.toString() + " %" + myRight.getValue() + ", %" + regR.toString() + "\n");
+				
+				if(this.left != null){
+					if(this.left.op != null){
+						sb.append(this.left.handleExpression(context));
+					}
+				}
+				
+				if(this.right!= null){
+					if(this.right.op != null)
+						sb.append(this.right.handleExpression(context));
+				}
+				
+					
+				if(lexp instanceof Arithmetic && rexp instanceof Arithmetic)
+					sb = StringManipulator.handleArithmetics(sb, myLeft, myRight, this.op, context);
+
+				else{
+					//TODO generate code for function calls
+					System.out.println("NON-ARITHMETIC");
+					return sb;
 				}
 			}
       
       return sb;
 		}
+		
     
     
 }

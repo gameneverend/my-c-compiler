@@ -5,8 +5,10 @@ int addition(int a){
   int d;
   int e;
   
+  //e = addition(42, 78);
+  
   d = 8 / 2 + 3 * 4;
-  //e = d - 3;
+  e = d - 3;
   //return d + 4;
   return;
 }

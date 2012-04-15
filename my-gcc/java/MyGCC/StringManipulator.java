@@ -120,6 +120,36 @@ public class StringManipulator{
 			else
 				return 1;
 		}
+		
+		
+		public static StringBuffer handleArithmetics(StringBuffer sb, Arithmetic l, Arithmetic r, OperationType op, Context context) throws Exception{
+			Register regL;
+			Register regR;
+			String lval = String.valueOf(l);
+			String rval = String.valueOf(r);
+			
+			if(l.getValue() instanceof String && r.getValue() instanceof String){
+				regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
+				regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
+				sb.append("\tmovl %" + l.getValue() + ", %" + regL.toString() + "\n");
+				sb.append("\tmovl %" + r.getValue() + ", %" + regR.toString() + "\n");
+				sb.append("\t" + op.toString() + " %" + regL.toString() + ", %" + regR.toString() + "\n");
+			}
+          
+			else if(l.getValue() instanceof Integer && r.getValue() instanceof String){   
+				regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
+				sb.append("\tmovl %" + context.getVariableLocation((String)r.getValue()) + ", %" + regR.toString() + "\n");
+				sb.append("\t" + op.toString() + " %" + l.getValue() + ", %" + regR.toString() + "\n");
+			}
+         
+			else if(l.getValue() instanceof String && r.getValue() instanceof Integer){   
+				regR = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
+				sb.append("\tmovl %" + context.getVariableLocation((String)l.getValue()) + ", %" + regR.toString() + "\n");
+				sb.append("\t" + op.toString() + " %" + r.getValue() + ", %" + regR.toString() + "\n");
+			}	
+			
+			return sb;
+		}
      
     
 }

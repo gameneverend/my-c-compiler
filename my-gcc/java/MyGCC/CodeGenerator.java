@@ -17,13 +17,26 @@ public class CodeGenerator{
   private Context actualContext;
   private Function currentFunction;
   private Block currentBlock = null;
+  private Stack<Expression> args;
 
   public CodeGenerator(){
     myStack = new LinkedList<Stack<Object>>();
+    args = new Stack();
   }
   
+  public void pushArgument(Expression e){
+		args.push(e);
+	}
+	
+	public ArrayList<Expression> getArguments(){
+		ArrayList<Expression> lst = new ArrayList<Expression>();
+		while(!args.empty())
+			lst.add(args.pop());
+		return lst;
+	}
+  
   public void pushInstruction(Instruction i){
-    System.out.println("pushing instruction to function: " + currentFunction.name);
+    System.out.println("Pushing instruction to function: " + currentFunction.name);
     if(currentFunction == null)
       System.err.println("ERROR: currentFunction is null");
       
@@ -41,7 +54,7 @@ public class CodeGenerator{
   }
 
   @SuppressWarnings("unchecked")
-public void declarePrototype(){
+	public void declarePrototype(){
     Type returnType = null;
     String name = null;
     ArrayList<Type> parameters = new ArrayList<Type>();
@@ -63,7 +76,7 @@ public void declarePrototype(){
   }
 
   @SuppressWarnings("unchecked")
-public void startFunctionDefinition(){
+	public void startFunctionDefinition(){
     System.out.println("Starting function definition");
     Type returnType = null;
     String name = null;
@@ -97,7 +110,7 @@ public void startFunctionDefinition(){
 
 
   @SuppressWarnings("unchecked")
-public void declareVariable(){
+	public void declareVariable(){
     Type type = null;
     String identifier = null; 
     int arraySize = 0;
