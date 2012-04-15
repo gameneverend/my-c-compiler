@@ -369,7 +369,11 @@ instruction ::=
 expression ::=
     expression:left bin_op:op expression:right
       {: if(Parser.DEBUG) System.out.println("expression operator: " + op);
-         RESULT = new ArithmeticResult<Expression>(op, left, right); :}
+				 if(op == OperationType.IMULL || op == OperationType.IDIVL)
+				   RESULT = new ArithmeticResult<Expression>(op, left, right, 2);
+				 else
+           RESULT = new ArithmeticResult<Expression>(op, left, right, 1); 
+      :}
 
   | MINUS expression
   
@@ -423,13 +427,13 @@ bin_op ::=
   | DIFF
     {: RESULT = OperationType.DIFF; :}
   | PLUS
-    {: RESULT = OperationType.ADD; :}
+    {: RESULT = OperationType.ADDL; :}
   | MINUS
-    {: RESULT = OperationType.SUB; :}
+    {: RESULT = OperationType.SUBL; :}
   | TIMES
-    {: RESULT = OperationType.MUL; :}
+    {: RESULT = OperationType.IMULL; :}
   | DIV
-    {: RESULT = OperationType.DIV; :}
+    {: RESULT = OperationType.IDIVL; :}
   | MOD
     {: RESULT = OperationType.MOD; :}  
   | OR

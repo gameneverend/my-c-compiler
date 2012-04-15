@@ -1,7 +1,17 @@
-int addition(int, int);
+int addition(int);
 
-int addition(int a, int b){
+int addition(int a){
   int c;
-  c = a + 3;
-  //return c;
+  int d;
+  int e;
+  
+  //d = 8 / 2 + 3 * 4;
+  //e = d - 3;
+  return 5 + 4;
 }
+
+
+
+
+
+

@@ -1,10 +1,10 @@
 package MyGCC;
 
 public enum OperationType{
-  ADD("addl"),
-  SUB("subl"),
-  MUL("imull"),
-  DIV("idivl"),
+  ADDL("addl"),
+  SUBL("subl"),
+  IMULL("imull"),
+  IDIVL("idivl"),
   LESS("jl"),
   GREATER("jg"),
   EQUALS("je"),
