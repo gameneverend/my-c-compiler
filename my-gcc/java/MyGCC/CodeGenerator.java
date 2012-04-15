@@ -64,7 +64,7 @@ public void declarePrototype(){
 
   @SuppressWarnings("unchecked")
 public void startFunctionDefinition(){
-    System.out.println("FUNCTIION");
+    System.out.println("Starting function definition");
     Type returnType = null;
     String name = null;
     ArrayList<Parameter> parameters = new ArrayList<Parameter>();
@@ -116,7 +116,6 @@ public void declareVariable(){
           break;
         default:
           System.err.println("Unexpected Type :" + r.type);
-          System.err.println("WTF DUDE ?!, I didn't know that type was even possible");
       }
     }
     if(currentFunction != null) {

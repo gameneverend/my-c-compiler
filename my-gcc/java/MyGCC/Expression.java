@@ -20,14 +20,14 @@ public abstract class Expression{
     public boolean isFullyNumeric(){
 			boolean bl = true;
 			boolean br = true;
-			ArithmeticResult tmp = null;
+			Arithmetic tmp = null;
 			
 			if(this.left != null)
 				bl = this.left.isFullyNumeric();
 			if(this.right != null)
 				br = this.right.isFullyNumeric();
 				
-			tmp = (ArithmeticResult)this;
+			tmp = (Arithmetic)this;
 			if(tmp.getValue() instanceof String)
 				return false;
 				
@@ -39,18 +39,18 @@ public abstract class Expression{
 		 **/
 		public String toNumeric(){
 			StringBuffer sb = new StringBuffer();
-			ArithmeticResult tmp = (ArithmeticResult)this;
+			Arithmetic tmp = (Arithmetic)this;
 			if(this.op != null){
-				ArithmeticResult lft = (ArithmeticResult)this.left;
+				Arithmetic lft = (Arithmetic)this.left;
 				sb.append(lft.getValue().toString());
 				
 				while(tmp.op != null){
 					if(tmp.right.left != null){
-						sb.append(" " + tmp.op.toString() + " " +((ArithmeticResult)tmp.right.left).getValue());
-						tmp = (ArithmeticResult)tmp.right;
+						sb.append(" " + tmp.op.toString() + " " +((Arithmetic)tmp.right.left).getValue());
+						tmp = (Arithmetic)tmp.right;
 					}
 					else{
-						sb.append(" " + tmp.op.toString() + " " + ((ArithmeticResult)tmp.right).getValue());
+						sb.append(" " + tmp.op.toString() + " " + ((Arithmetic)tmp.right).getValue());
 						break;
 					}
 				}
@@ -76,8 +76,8 @@ public abstract class Expression{
 			
 			else{
 				
-				ArithmeticResult myLeft = (ArithmeticResult)this.left;
-				ArithmeticResult myRight = (ArithmeticResult)this.right;
+				Arithmetic myLeft = (Arithmetic)this.left;
+				Arithmetic myRight = (Arithmetic)this.right;
 				String lval = String.valueOf(myLeft.getValue());
 				String rval = String.valueOf(myRight.getValue());
 				Register regL = null;
