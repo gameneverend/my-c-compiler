@@ -62,78 +62,87 @@ public abstract class Expression{
 						sb.append(" " + tmp.op.toString() + " " +((Arithmetic)tmp.right.left).getValue());
 						tmp = (Arithmetic)tmp.right;
 					}
-					else{
+					else
 						sb.append(" " + tmp.op.toString() + " " + ((Arithmetic)tmp.right).getValue());
 						break;
-					}
 				}
 				return sb.toString();
 			}
 			return (tmp.getValue()).toString();
 		}
-
     
     
     public StringBuffer handleExpression(Context context) throws Exception{
 			StringBuffer sb = new StringBuffer();
-			String lval = new String();
-			String rval = new String();
-			
-			if(this == null){
-				//sb.append("\tleave\n\tret\n"); Already handled in epilogue()
-				System.err.println("Expression is null\n");
-			}
 			
 			if(this.isFullyNumeric()){
+        System.out.println("Fully numeric found");
 				//TODO get the corresponding register for this evaluation (always eax?)
+        //TODO should add to register manager.
 				return sb.append("\tmovl %" + StringManipulator.calculateNum(this) + ", %TMP\n");
 			}
 			
 			else{
-				
-				Expression lexp = this.left;
-				Expression rexp = this.right;
-				Arithmetic myLeft = null;
-				Arithmetic myRight = null;
-				Register regL = null;
-				Register regR = null;
+          sb = this.handleMe(context);
+          return sb;
+      }
+		}
+
+    
+    public StringBuffer handleMe(Context context) throws Exception{
+      StringBuffer sb = new StringBuffer();
+      String lval = new String();
+			String rval = new String();
+      Expression lexp = this.left;
+      Expression rexp = this.right;
+      Arithmetic myLeft = null;
+      Arithmetic myRight = null;
+      FunctionCall f1 = null;
+      FunctionCall f2 = null;
+      Register regL = null;
+      Register regR = null;
 				
 
-				if(lexp instanceof Arithmetic){
-					myLeft = (Arithmetic)lexp;
-					lval = String.valueOf(myLeft.getValue());
-				}
+      if(lexp instanceof Arithmetic){
+        myLeft = (Arithmetic)lexp;
+        lval = String.valueOf(myLeft.getValue());
+      }
+      else
+        f1 = (FunctionCall)lexp;
+          
+      if(rexp instanceof Arithmetic){
+        myRight = (Arithmetic)rexp;
+        rval = String.valueOf(myRight.getValue());
+      }
+      else
+        f2 = (FunctionCall)rexp;
+				
+        
+      if(this.left != null)
+        sb.append(this.left.handleMe(context));
+				
+      if(this.right!= null)
+        sb.append(this.right.handleMe(context));
+				
+        
+      if(this instanceof Arithmetic){
+        System.out.println("arithmetic caught");
+        sb = StringManipulator.handleArithmetic(sb, (Arithmetic)this, context);
+      }
 
-				if(rexp instanceof Arithmetic){
-					myRight = (Arithmetic)rexp;
-					rval = String.valueOf(myRight.getValue());
-				}
-				
-				if(this.left != null){
-					if(this.left.op != null){
-						sb.append(this.left.handleExpression(context));
-					}
-				}
-				
-				if(this.right!= null){
-					if(this.right.op != null)
-						sb.append(this.right.handleExpression(context));
-				}
-				
-					
-				if(lexp instanceof Arithmetic && rexp instanceof Arithmetic)
-					sb = StringManipulator.handleArithmetics(sb, myLeft, myRight, this.op, context);
-
-				else{
-					//TODO generate code for function calls
-					System.out.println("NON-ARITHMETIC");
-					return sb;
-				}
-			}
+      if(this instanceof FunctionCall){
+        //TODO generate code for function calls
+        System.out.println("FUNCTION CALL: code generation is not implemented yet.");
+        sb = StringManipulator.handleFunctionCall(sb, f1, f2, context);
+        return sb;
+      }
+        
+      if(this.op != null){
+        System.out.println("operation handling");
+        sb = StringManipulator.handleOperation(sb, this.op, this.left, this.right, context);
+      }
       
       return sb;
-		}
-		
-    
+    }
     
 }

@@ -49,6 +49,7 @@ public class Instruction {
           break;
           
         case EQL:
+          //Enhancement: when fully numeric, directly transmit value without using temporary registry
           sb.append(instruct.rexpr.handleExpression(context));
           a = (Arithmetic)instruct.lexpr;
           sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 

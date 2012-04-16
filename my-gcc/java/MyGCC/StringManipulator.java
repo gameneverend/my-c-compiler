@@ -5,6 +5,25 @@ import java.util.Stack;
 public class StringManipulator{
     
 		
+    
+    public static boolean isInteger(String input){
+			try{
+				Integer.parseInt(input);
+				return true;
+			}
+			catch(Exception e){
+				return false;
+			}
+		}
+		
+		public static int getPrecedence(String s){
+			if(s.equals("imull") || s.equals("idivl"))
+				return 2;
+			else
+				return 1;
+		}
+    
+    
 		/**
      * Calculates the value of a numeric expression, written in prefix notation
      **/
@@ -104,52 +123,55 @@ public class StringManipulator{
 		
     
     
-		public static boolean isInteger(String input){
-			try{
-				Integer.parseInt(input);
-				return true;
-			}
-			catch(Exception e){
-				return false;
-			}
-		}
+    
+		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall l, FunctionCall r, Context context) throws Exception{
+      //TODO
+      sb.append("\tgenerate functionCall protocol\n");
+      return sb;
+    }
 		
-		public static int getPrecedence(String s){
-			if(s.equals("imull") || s.equals("idivl"))
-				return 2;
-			else
-				return 1;
-		}
-		
-		
-		public static StringBuffer handleArithmetics(StringBuffer sb, Arithmetic l, Arithmetic r, OperationType op, Context context) throws Exception{
-			Register regL;
-			Register regR;
-			String lval = String.valueOf(l);
-			String rval = String.valueOf(r);
-			
-			if(l.getValue() instanceof String && r.getValue() instanceof String){
-				regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
-				regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
-				sb.append("\tmovl %" + l.getValue() + ", %" + regL.toString() + "\n");
-				sb.append("\tmovl %" + r.getValue() + ", %" + regR.toString() + "\n");
-				sb.append("\t" + op.toString() + " %" + regL.toString() + ", %" + regR.toString() + "\n");
-			}
+    
+    public static StringBuffer handleArithmetic(StringBuffer sb, Arithmetic a, Context context) throws Exception{
+      if(a.getValue() != null){
+        String val = String.valueOf(a.getValue());
+        System.out.println("In handleArithmetic: val= " + val + "\n");
+        //FIXME val is null for numerics.
+        Register reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
+        //FIXME operations should use eax registry.
           
-			else if(l.getValue() instanceof Integer && r.getValue() instanceof String){   
-				regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
-				sb.append("\tmovl %" + context.getVariableLocation((String)r.getValue()) + ", %" + regR.toString() + "\n");
-				sb.append("\t" + op.toString() + " %" + l.getValue() + ", %" + regR.toString() + "\n");
-			}
-         
-			else if(l.getValue() instanceof String && r.getValue() instanceof Integer){   
-				regR = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
-				sb.append("\tmovl %" + context.getVariableLocation((String)l.getValue()) + ", %" + regR.toString() + "\n");
-				sb.append("\t" + op.toString() + " %" + r.getValue() + ", %" + regR.toString() + "\n");
-			}	
-			
+        if(a.getValue() instanceof Integer)
+          sb.append("\tmovl %" + a.getValue() + ", %" + reg.toString() + "\n");
+          
+        else if(a.getValue() instanceof String) 
+          sb.append("\tmovl %" + context.getVariableLocation((String)a.getValue()) + ", %" + reg.toString() + "\n");
+      }
 			return sb;
 		}
+    
+    public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
+      //TODO
+      Register regL;
+			Register regR;
+      String lval = null;
+      String rval = null;
+      Arithmetic ar1 = null;
+      Arithmetic ar2 = null;
+    
+      if(l instanceof Arithmetic){
+        ar1 = (Arithmetic)l;
+        lval = String.valueOf(ar1.getValue());
+      }
+      if(r instanceof Arithmetic){
+        ar2 = (Arithmetic)r;
+        rval = String.valueOf(ar2.getValue());
+      }
+      
+      regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
+      regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
+      
+      sb.append("\t" + op.toString() + " %" + regL.toString() + ", %" + regR.toString() + "\n");
+      return sb;
+    }
      
     
 }
