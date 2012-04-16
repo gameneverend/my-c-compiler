@@ -125,8 +125,11 @@ public class StringManipulator{
     
     
 		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception{
-      for(Expression e : f.getArgs())
+      Arithmetic tmp;
+      for(Expression e : f.getArgs()){
+        tmp = (Arithmetic)e;
         sb.append("\tpushl %TMP\n");
+      }
         
       sb.append("\tcall " + f.getTag() + "\n");
       return sb;
@@ -136,8 +139,6 @@ public class StringManipulator{
     public static StringBuffer handleArithmetic(StringBuffer sb, Arithmetic a, Context context) throws Exception{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
-        System.out.println("In handleArithmetic: val= " + val + "\n");
-        //FIXME val is null for numerics.
         Register reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
         //FIXME operations should use eax registry.
           

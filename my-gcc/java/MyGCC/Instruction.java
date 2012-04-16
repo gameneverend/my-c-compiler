@@ -25,7 +25,7 @@ public class Instruction {
   
   public static String instructionToAssembly(Instruction instruct, Context context) throws Exception{
 		StringBuffer sb = new StringBuffer();
-		Arithmetic a = null;
+		Arithmetic a = (Arithmetic)instruct.lexpr;
     if(instruct != null){
       if(instruct.rexpr == null){
         // do nothing: already handled in epilogue()
@@ -36,7 +36,7 @@ public class Instruction {
       switch(instruct.instrType){
         
         case RETURN:
-					sb.append(instruct.rexpr.handleExpression(context));
+					sb.append(instruct.rexpr.handleExpression(a, context));
 					sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %eax\n");
           break;
           
@@ -48,18 +48,14 @@ public class Instruction {
           break;
           
         case EQL:
-          a = (Arithmetic)instruct.lexpr;
           
           if(instruct.rexpr.isFullyNumeric()){
             System.out.println("Fully numeric found");
             sb.append("\tmovl %" + StringManipulator.calculateNum(instruct.rexpr) + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
-          else{
-            sb.append(instruct.rexpr.handleExpression(context));
-            sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
-            //FIXME find a more suitable way to get a hand on the last register used
-          }
+          else
+            sb.append(instruct.rexpr.handleExpression(a, context));
           
           break;
           
