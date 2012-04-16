@@ -28,7 +28,6 @@ public class Instruction {
 		Arithmetic a = null;
     if(instruct != null){
       if(instruct.rexpr == null){
-        //sb.append("\tleave\n\tret\n");
         // do nothing: already handled in epilogue()
         //TODO	/!\ .cfi_restore 5
         return sb.toString();
@@ -49,11 +48,18 @@ public class Instruction {
           break;
           
         case EQL:
-          //Enhancement: when fully numeric, directly transmit value without using temporary registry
-          sb.append(instruct.rexpr.handleExpression(context));
           a = (Arithmetic)instruct.lexpr;
-          sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
-          //FIXME find a more suitable way to get a hand on the last register used
+          
+          if(instruct.rexpr.isFullyNumeric()){
+            System.out.println("Fully numeric found");
+            sb.append("\tmovl %" + StringManipulator.calculateNum(instruct.rexpr) + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+          }
+          
+          else{
+            sb.append(instruct.rexpr.handleExpression(context));
+            sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+            //FIXME find a more suitable way to get a hand on the last register used
+          }
           
           break;
           

@@ -124,9 +124,11 @@ public class StringManipulator{
     
     
     
-		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall l, FunctionCall r, Context context) throws Exception{
-      //TODO
-      sb.append("\tgenerate functionCall protocol\n");
+		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception{
+      for(Expression e : f.getArgs())
+        sb.append("\tpushl %TMP\n");
+        
+      sb.append("\tcall " + f.getTag() + "\n");
       return sb;
     }
 		
