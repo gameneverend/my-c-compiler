@@ -10,8 +10,8 @@ int addition(int a, int b){
   //c = 77;
   //c = 1 + a;
   //d = 8 / 2 + 3 * 4;
-  //e = d - 3;
-  c = substraction(e, 1);
+  e = d - 3;
+  //c = substraction(e, 1) + 2;
   //c = 11 + b * e;
   //return d + 4;
   //return;

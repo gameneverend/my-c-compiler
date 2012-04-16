@@ -37,7 +37,7 @@ public class Instruction {
         
         case RETURN:
 					sb.append(instruct.rexpr.handleExpression(a, context));
-					sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %eax\n");
+					sb.append("\tmovl " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %eax\n");
           break;
           
         case EXIT:

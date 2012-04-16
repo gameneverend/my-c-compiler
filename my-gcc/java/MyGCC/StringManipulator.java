@@ -134,7 +134,7 @@ public class StringManipulator{
       sb.append("\tcall " + f.getTag() + "\n");
       return sb;
     }
-		
+    
     
     public static StringBuffer handleArithmetic(StringBuffer sb, Arithmetic a, Context context) throws Exception{
       if(a.getValue() != null){
@@ -145,14 +145,13 @@ public class StringManipulator{
         if(a.getValue() instanceof Integer)
           sb.append("\tmovl %" + a.getValue() + ", %" + reg.toString() + "\n");
           
-        else if(a.getValue() instanceof String) 
+        if(a.getValue() instanceof String) 
           sb.append("\tmovl %" + context.getVariableLocation((String)a.getValue()) + ", %" + reg.toString() + "\n");
       }
 			return sb;
 		}
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
-      //TODO
       Register regL;
 			Register regR;
       String lval = null;
@@ -172,9 +171,10 @@ public class StringManipulator{
       regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
       regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
       
-      sb.append("\t" + op.toString() + " %" + regL.toString() + ", %" + regR.toString() + "\n");
+      sb.append("\t" + op.toString() + " %" + regR.toString() + ", %" + regL.toString() + "\n");
       return sb;
     }
+    
      
     
 }

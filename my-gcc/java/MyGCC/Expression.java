@@ -74,6 +74,7 @@ public abstract class Expression{
 
     
     public StringBuffer handleExpression(Arithmetic a, Context context) throws Exception{
+			boolean numOperation = false;
       StringBuffer sb = new StringBuffer();
 				
       if(this.left != null)
@@ -81,16 +82,15 @@ public abstract class Expression{
 				
       if(this.right!= null)
         sb.append(this.right.handleExpression(a, context));
-				
+
         
-      if(this instanceof Arithmetic){
+      if(this instanceof Arithmetic && this.op == null){
         System.out.println("Arithmetic caught");
         sb = StringManipulator.handleArithmetic(sb, (Arithmetic)this, context);
-        sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
-        //FIXME find a more suitable way to get a hand on the last register used
       }
 
-      if(this instanceof FunctionCall){
+
+      if(this instanceof FunctionCall && this.op == null){
         System.out.println("Function-call caught");
         sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this, context);
         sb.append("\tmovl %eax, %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
@@ -99,7 +99,8 @@ public abstract class Expression{
       if(this.op != null){
         System.out.println("Operation handling");
         sb = StringManipulator.handleOperation(sb, this.op, this.left, this.right, context);
-        sb.append("\tmovl " + sb.substring(sb.lastIndexOf("%")).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+        sb.append("\tmovl " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+        //FIXME find a more suitable way to get a hand on the last register used
       }
       
       return sb;
