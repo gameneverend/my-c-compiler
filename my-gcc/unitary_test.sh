@@ -4,7 +4,7 @@ ant
 
 OUR_COMPILER="java -jar jar/Compiler.jar"
 
-TEST="tests/test3"
+TEST="tests/testIf"
 
 
 $OUR_COMPILER $TEST.c

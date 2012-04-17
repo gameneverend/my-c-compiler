@@ -56,7 +56,6 @@ public class Instruction {
           
           else
             sb.append(instruct.rexpr.handleExpression(a, context));
-          
           break;
           
         default:

@@ -66,7 +66,8 @@ non terminal program, declarations_list, declaration, prototype,
              functions_list, function, header,
              body, instruct_list,
              args_list, dec_func_list, dec_end, proto_func,
-             hybrid_param, dec_or_func_end, arr, arr_proto;
+             hybrid_param, dec_or_func_end, arr, arr_proto, if_else, if_end,
+             while_end;
 
 non terminal Parameter parameter;
 non terminal Type type;
@@ -81,7 +82,7 @@ non terminal ArrayList<Expression> arg_sequence;
 precedence left OR, AND;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIV, MOD;
-precedence nonassoc EQUALS, DIFF, GREATER, LESS, LEQL, GEQL, IF, ELSE, NOT;
+precedence nonassoc EQUALS, DIFF, GREATER, LESS, LEQL, GEQL, NOT;
 
 // A program is a list of declarations and functions
 program ::= dec_func_list;
@@ -316,7 +317,7 @@ body ::=
 // A list of instructions, each separated by semicolons
 instruct_list ::=
     instruction SEMI instruct_list
-  |
+  | 
   ;
         
 // Every instruction which can be performed
@@ -350,23 +351,37 @@ instruction ::=
   | READ_INT LPAREN IDENT RPAREN
   
     // Basic "if else" test on an expression
-  | IF LPAREN expression RPAREN instruction ELSE instruction
-
-    // Simple "if" test on an expression
-  | IF LPAREN expression RPAREN instruction
+  | IF {: if(Parser.DEBUG) System.out.println("If detected"); :}
+      LPAREN expression RPAREN if_end
+        {: if(Parser.DEBUG) System.out.println("If reduced"); :}
   
     // Basic "while" instruction
-  | WHILE LPAREN expression RPAREN instruction
-  
-    // Allow for the use of multiple instructions (for instance
-    // after an if, or a while
-  | LBRACKET instruct_list RBRACKET
+  | WHILE LPAREN expression RPAREN while_end
   
   | expression:e
       {: if(Parser.DEBUG) System.out.println("Instruction detected: exp");
          parser.cg.pushInstruction(new Instruction(e, null)); :} //OperationType instead of null?
   ;
-        
+  
+while_end ::=
+    LBRACKET instruct_list RBRACKET
+  | instruction SEMI
+  ;
+
+if_end ::=
+    LBRACKET instruct_list RBRACKET if_else
+  | instruction SEMI if_else
+  ;
+  
+if_else ::=
+    ELSE {: if(Parser.DEBUG) System.out.println("Else detected"); :}
+      LBRACKET {: if(Parser.DEBUG) System.out.println("LB"); :}
+      instruct_list {: if(Parser.DEBUG) System.out.println("instruct_list"); :}
+      RBRACKET {: if(Parser.DEBUG) System.out.println("RB"); :}
+  | ELSE {: if(Parser.DEBUG) System.out.println("Else detected"); :} instruction SEMI
+  |
+  ;
+    
 // Defines the list of possible expressions to be used
 expression ::=
     expression:left bin_op:op expression:right

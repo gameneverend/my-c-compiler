@@ -144,7 +144,8 @@ public class RegisterManager {
    **/
   public Register addVariableToRegister(String var, Register reg) {
     if(isRegisterUsed(reg)) {
-      //TODO push content !
+      freeRegister(reg);
+      return reg;
     } else {
       this.usedRegisters.put(reg, var);
       return reg;

@@ -2,8 +2,10 @@ package MyGCC;
 
 public enum InstructionType{
   RETURN("ret"),
-  EXIT("leave"), //TODO check corresponding instruction
-  EQL("movl");
+  EXIT("leave"),
+  EQL("movl"),
+  IF(""),
+  WHILE("");
   
   public String name;
 
