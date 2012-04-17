@@ -18,7 +18,7 @@ public enum Register {
   R9D ("r9d", "6th Argument", RegisterType.CALLER_SAVED),
   R10D ("r10d", "", RegisterType.CALLEE_SAVED),
   R11D ("r11d", "Used for Linking", RegisterType.SPECIAL),
-  //R12D ("Unused", RegisterType.UNUSED)  We have no need for this registry as we will only be compiling C
+  //R12D ("Unused", RegisterType.UNUSED)  // We have no need for this registry as we will only be compiling C
   R13D ("r13d", "", RegisterType.CALLEE_SAVED),
   R14D ("r14d", "", RegisterType.CALLEE_SAVED),
   R15D ("r15d", "", RegisterType.CALLEE_SAVED);

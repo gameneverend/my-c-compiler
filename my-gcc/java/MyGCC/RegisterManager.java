@@ -29,7 +29,6 @@ public class RegisterManager {
   
   /**
    * Returns a Register that has no assigned variable.
-   * 'e' for callee-saved, 'r' for caller-saved
    **/
   public Register getFreeRegister(Register.RegisterType type) {
     ArrayList<HashSet<Register>> al = new ArrayList<HashSet<Register>>();
@@ -140,6 +139,18 @@ public class RegisterManager {
     return null;
   }
   
+  /**
+   * Adds the variable to the specified Register
+   **/
+  public Register addVariableToRegister(String var, Register reg) {
+    if(isRegisterUsed(reg)) {
+      //TODO push content !
+    } else {
+      this.usedRegisters.put(reg, var);
+      return reg;
+    }
+  }
+  
   public SimpleEntry<Register, Register> addTwoVariablesToRegisters(String var1, String var2, Register.RegisterType type) {
     Register r1, r2;
     SimpleEntry<Register, Register> se;
@@ -164,6 +175,16 @@ public class RegisterManager {
       
     System.err.println("One or several of the registers were null");
     return null;
+  }
+  
+  /**
+   * Adds the variable to the nth argument register.
+   **/
+  public Register getArgReg(String var, int n) {
+    n = n % 6;
+    Register reg = Register.getArgumentRegister(n);
+    reg = addVariableToRegister(var, reg);
+    return reg;
   }
   
   public String getRegisterContent(Register reg) {
@@ -216,28 +237,11 @@ public class RegisterManager {
     System.out.println(se.toString());
     se = rm.addTwoVariablesToRegisters("a", "c", Register.RegisterType.CALLER_SAVED);
     System.out.println(se.toString());
-    /*Register r1 = rm.addVariableToRegister("a", 'e');
-    Register r2 = rm.addVariableToRegister("b", 'e');
-    Register r3 = rm.addVariableToRegister("c", 'e');
-    Register r4 = rm.addVariableToRegister("d", 'e');
-    Register r5 = rm.addVariableToRegister("b", 'e');
-    Register r6 = rm.addVariableToRegister("e", 'e');
-    Register r7 = rm.addVariableToRegister("f", 'e');
-    Register r8 = rm.addVariableToRegister("g", 'e');
-    Register r9 = rm.addVariableToRegister("h", 'e');
-    Register r10 = rm.addVariableToRegister("i", 'e');
-    System.out.println(r.toString());
-    System.out.println("se : " + se.toString());
-    System.out.println("r1 : " + r1.toString());
-    System.out.println("r2 : " + r2.toString());
-    System.out.println("r3 : " + r3.toString());
-    System.out.println("r4 : " + r4.toString());
-    System.out.println("r5 : " + r5.toString());
-    System.out.println("r6 : " + r6.toString());
-    System.out.println("r7 : " + r7.toString());
-    System.out.println("r8 : " + r8.toString());
-    System.out.println("r9 : " + r9.toString());
-    System.out.println("r10 : " + r10.toString());*/
+    Register r1 = rm.addVariableToRegister("f", Register.RegisterType.CALLEE_SAVED);
+    System.out.println(r1.toString());
+    se = rm.addTwoVariablesToRegisters("a", "c", Register.RegisterType.CALLEE_SAVED);
+    System.out.println(se.toString());
+    
   }
 
 }
