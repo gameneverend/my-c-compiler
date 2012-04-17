@@ -10,8 +10,8 @@ public enum Register {
   RBX ("rbx", "", RegisterType.CALLEE_SAVED),
   RCX ("rcx", "4th Argument", RegisterType.CALLER_SAVED),
   RDX ("rdx", "3rd Argument", RegisterType.CALLER_SAVED),
-  RSI ("rsi", "2nd Argument", RegisterType.CALLER_SAVED),
-  RDI ("rdi", "1st Argument", RegisterType.CALLER_SAVED),
+  RSI ("esi", "2nd Argument", RegisterType.CALLER_SAVED),
+  RDI ("edi", "1st Argument", RegisterType.CALLER_SAVED),
   RBP ("rbp", "", RegisterType.SPECIAL), // Technically not a special register, but will be treated as one
   RSP ("rsp", "Stack Pointer", RegisterType.SPECIAL),
   R8D ("r8d", "5th Argument", RegisterType.CALLER_SAVED),

@@ -1,6 +1,8 @@
 int addition(int, int);
 
-int addition(int a, int b){
+int false_main(void);
+
+/*int addition(int a, int b){
   int c;
   int d;
   int e;
@@ -15,9 +17,13 @@ int addition(int a, int b){
   //c = 11 + b * e;
   //return d + 4;
   //return;
+}*/
+
+int falsemain(void){
+	int c;
+	c = 3 + 2;
+	return c;
 }
-
-
 
 
 

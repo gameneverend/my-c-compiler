@@ -51,7 +51,7 @@ public class Instruction {
           
           if(instruct.rexpr.isFullyNumeric()){
             System.out.println("Fully numeric found");
-            sb.append("\tmovl %" + StringManipulator.calculateNum(instruct.rexpr) + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+            sb.append("\tmovl $" + StringManipulator.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
           else

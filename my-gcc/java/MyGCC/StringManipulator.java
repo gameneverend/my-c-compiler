@@ -143,10 +143,10 @@ public class StringManipulator{
         //FIXME operations should use eax registry.
           
         if(a.getValue() instanceof Integer)
-          sb.append("\tmovl %" + a.getValue() + ", %" + reg.toString() + "\n");
+          sb.append("\tmovl\t$" + a.getValue() + ", %" + reg.toString() + "\n");
           
         if(a.getValue() instanceof String) 
-          sb.append("\tmovl %" + context.getVariableLocation((String)a.getValue()) + ", %" + reg.toString() + "\n");
+          sb.append("\tmovl\t" + context.getVariableLocation((String)a.getValue()) + ", %" + reg.toString() + "\n");
       }
 			return sb;
 		}

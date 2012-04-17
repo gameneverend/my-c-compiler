@@ -1,1 +1,1 @@
-int false_main(void);
+extern int falsemain(void);

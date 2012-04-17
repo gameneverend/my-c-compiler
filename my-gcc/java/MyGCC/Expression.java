@@ -93,13 +93,13 @@ public abstract class Expression{
       if(this instanceof FunctionCall && this.op == null){
         System.out.println("Function-call caught");
         sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this, context);
-        sb.append("\tmovl %eax, %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+        sb.append("\tmovl %eax, " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
       }
         
       if(this.op != null){
         System.out.println("Operation handling");
         sb = StringManipulator.handleOperation(sb, this.op, this.left, this.right, context);
-        sb.append("\tmovl " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+        sb.append("\tmovl " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
         //FIXME find a more suitable way to get a hand on the last register used
       }
       
