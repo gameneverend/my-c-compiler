@@ -125,18 +125,29 @@ public class StringManipulator{
     
     
 		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception{
-      Arithmetic tmp;
+      Variable tmp;
+      String val;
+      Register reg;
+      int i = f.getArgs().size() - 1;
       for(Expression e : f.getArgs()){
-        tmp = (Arithmetic)e;
-        sb.append("\tpushl %TMP\n");
+        tmp = (Variable)e;
+        val = String.valueOf(tmp.getValue());
+        
+        if(isInteger(val))
+          sb.append("\tpushl\t $" + val + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+        else{
+          reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
+          sb.append("\tpushl\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+        }
+        i--;
       }
         
-      sb.append("\tcall " + f.getTag() + "\n");
+      sb.append("\tcall\t " + f.getTag() + "\n");
       return sb;
     }
     
     
-    public static StringBuffer handleArithmetic(StringBuffer sb, Arithmetic a, Context context) throws Exception{
+    public static StringBuffer handleVariable(StringBuffer sb, Variable a, Context context) throws Exception{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
         Register reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
@@ -156,22 +167,36 @@ public class StringManipulator{
 			Register regR;
       String lval = null;
       String rval = null;
-      Arithmetic ar1 = null;
-      Arithmetic ar2 = null;
+      Variable ar1 = null;
+      Variable ar2 = null;
     
-      if(l instanceof Arithmetic){
-        ar1 = (Arithmetic)l;
+      if(l.op == null && r.op == null){
+        ar1 = (Variable)l;
+        ar2 = (Variable)r;     
         lval = String.valueOf(ar1.getValue());
-      }
-      if(r instanceof Arithmetic){
-        ar2 = (Arithmetic)r;
         rval = String.valueOf(ar2.getValue());
+        regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
+        regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
+      
+        sb.append("\t" + op.toString() + "\t %" + regR.toString() + ", %" + regL.toString() + "\n");
       }
       
-      regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
-      regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
+      else if(l.op == null && r.op != null){
+        ar1 = (Variable)l;  
+        lval = String.valueOf(ar1.getValue());
+        regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
+        
+        sb.append("\t" + op.toString() + "\t %" + regL.toString() + ", " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + "\n");
+      }
       
-      sb.append("\t" + op.toString() + " %" + regR.toString() + ", %" + regL.toString() + "\n");
+      else if(l.op != null && r.op == null){
+        ar2 = (Variable)r;  
+        rval = String.valueOf(ar2.getValue());
+        regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
+        
+        sb.append("\t" + op.toString() + "\t %" + regR.toString() + ", " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + "\n");
+      }
+      
       return sb;
     }
     

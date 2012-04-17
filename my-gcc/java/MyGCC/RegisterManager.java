@@ -143,10 +143,11 @@ public class RegisterManager {
    * Adds the variable to the specified Register
    **/
   public Register addVariableToRegister(String var, Register reg) {
-    if(isRegisterUsed(reg)) {
+    if(isRegisterUsed(reg)){
       freeRegister(reg);
       return reg;
-    } else {
+    }
+    else{
       this.usedRegisters.put(reg, var);
       return reg;
     }

@@ -20,24 +20,24 @@ public abstract class Expression{
     public boolean isFullyNumeric(){
 			boolean bl = true;
 			boolean br = true;
-			Arithmetic tmp = null;
+			Variable tmp = null;
 			
 			if(this.left != null){
-				if(this.left instanceof Arithmetic)
+				if(this.left instanceof Variable)
 					bl = this.left.isFullyNumeric();
 				else
 					return false;
 			}
 			
 			if(this.right != null){
-				if(this.right instanceof Arithmetic)
+				if(this.right instanceof Variable)
 					br = this.right.isFullyNumeric();
 				else
 					return false;
 			}
 			
-			if(this instanceof Arithmetic)
-				tmp = (Arithmetic)this;
+			if(this instanceof Variable)
+				tmp = (Variable)this;
 			else
 				return false;
 				
@@ -52,18 +52,18 @@ public abstract class Expression{
 		 **/
 		public String toNumeric(){
 			StringBuffer sb = new StringBuffer();
-			Arithmetic tmp = (Arithmetic)this;
+			Variable tmp = (Variable)this;
 			if(this.op != null){
-				Arithmetic lft = (Arithmetic)this.left;
+				Variable lft = (Variable)this.left;
 				sb.append(lft.getValue().toString());
 				
 				while(tmp.op != null){
 					if(tmp.right.left != null){
-						sb.append(" " + tmp.op.toString() + " " +((Arithmetic)tmp.right.left).getValue());
-						tmp = (Arithmetic)tmp.right;
+						sb.append(" " + tmp.op.toString() + " " +((Variable)tmp.right.left).getValue());
+						tmp = (Variable)tmp.right;
 					}
 					else
-						sb.append(" " + tmp.op.toString() + " " + ((Arithmetic)tmp.right).getValue());
+						sb.append(" " + tmp.op.toString() + " " + ((Variable)tmp.right).getValue());
 						break;
 				}
 				return sb.toString();
@@ -73,8 +73,7 @@ public abstract class Expression{
     
 
     
-    public StringBuffer handleExpression(Arithmetic a, Context context) throws Exception{
-			boolean numOperation = false;
+    public StringBuffer handleExpression(Variable a, Context context) throws Exception{
       StringBuffer sb = new StringBuffer();
 				
       if(this.left != null)
@@ -84,11 +83,10 @@ public abstract class Expression{
         sb.append(this.right.handleExpression(a, context));
 
         
-      if(this instanceof Arithmetic && this.op == null){
-        System.out.println("Arithmetic caught");
-        sb = StringManipulator.handleArithmetic(sb, (Arithmetic)this, context);
+      if(this instanceof Variable && this.op == null){
+        System.out.println("Variable caught");
+        sb = StringManipulator.handleVariable(sb, (Variable)this, context);
       }
-
 
       if(this instanceof FunctionCall && this.op == null){
         System.out.println("Function-call caught");
@@ -99,11 +97,23 @@ public abstract class Expression{
       if(this.op != null){
         System.out.println("Operation handling");
         sb = StringManipulator.handleOperation(sb, this.op, this.left, this.right, context);
-        sb.append("\tmovl " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
-        //FIXME find a more suitable way to get a hand on the last register used
       }
       
       return sb;
+    }
+    
+    
+    public int length(){
+      int i = 0;
+      
+      if(this.left != null)
+        i += this.left.length();
+      if(this.right != null)
+        i += this.right.length();
+      
+      if(this != null && this.op == null)
+        i++;
+      return i;
     }
     
 }

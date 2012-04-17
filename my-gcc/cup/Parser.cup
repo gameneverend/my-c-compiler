@@ -326,7 +326,7 @@ instruction ::=
     // Compare the value of a variable with that of an expression
     IDENT:i EQL expression:e
       {: if(Parser.DEBUG) System.out.println("Instruction detected: EQL");
-         parser.cg.pushInstruction(new Instruction(new Arithmetic<String>(null, i), e, InstructionType.EQL)); :}
+         parser.cg.pushInstruction(new Instruction(new Variable<String>(null, i), e, InstructionType.EQL)); :}
     
     // Compare the value of an item from an array with that of an expression
     // The index may be obtained with an expression
@@ -386,10 +386,7 @@ if_else ::=
 expression ::=
     expression:left bin_op:op expression:right
       {: if(Parser.DEBUG) System.out.println("Expression operator: " + op);
-				 if(op == OperationType.IMULL || op == OperationType.IDIVL)
-				   RESULT = new Arithmetic<Expression>(op, left, right);
-				 else
-           RESULT = new Arithmetic<Expression>(op, left, right); 
+				   RESULT = new Variable<Expression>(op, left, right);
       :}
 
   | MINUS expression
@@ -402,11 +399,11 @@ expression ::=
   | IDENT:i
       {: if(Parser.DEBUG) System.out.println("Expression ident: " + i);
          //declare ident in current block
-         RESULT = new Arithmetic<String>(null, i);  :}
+         RESULT = new Variable<String>(null, i);  :}
 
   | NB_INT:n
       {: if(Parser.DEBUG) System.out.println("Expression: " + n);
-         RESULT = new Arithmetic<Integer>(null, n); :}
+         RESULT = new Variable<Integer>(null, n); :}
 
     // Allows the use of a function in an expression
   | IDENT:i LPAREN arg_sequence:a RPAREN
