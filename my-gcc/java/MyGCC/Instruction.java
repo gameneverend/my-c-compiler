@@ -37,12 +37,12 @@ public class Instruction {
         
         case RETURN:
 					sb.append(instruct.rexpr.handleExpression(a, context));
-					sb.append("\tmovl\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %eax\n");
+					sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %eax\n");
           break;
           
         case EXIT:
           //TODO
-          //movl argument to stack
+          //movq argument to stack
           //call exit
           //do not generate ret/leave.
           break;
@@ -51,12 +51,12 @@ public class Instruction {
           
           if(instruct.rexpr.isFullyNumeric()){
             System.out.println("Fully numeric found");
-            sb.append("\tmovl\t $" + StringManipulator.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+            sb.append("\tmovq\t $" + StringManipulator.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
           else
             sb.append(instruct.rexpr.handleExpression(a, context));
-            sb.append("\tmovl\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+            sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
             //FIXME find a more suitable way to get a hand on the last register used
           break;
           

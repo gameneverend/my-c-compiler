@@ -10,18 +10,18 @@ public enum Register {
   RBX ("rbx", "", RegisterType.CALLEE_SAVED),
   RCX ("rcx", "4th Argument", RegisterType.CALLER_SAVED),
   RDX ("rdx", "3rd Argument", RegisterType.CALLER_SAVED),
-  RSI ("esi", "2nd Argument", RegisterType.CALLER_SAVED),
-  RDI ("edi", "1st Argument", RegisterType.CALLER_SAVED),
+  RSI ("rsi", "2nd Argument", RegisterType.CALLER_SAVED),
+  RDI ("rdi", "1st Argument", RegisterType.CALLER_SAVED),
   RBP ("rbp", "", RegisterType.SPECIAL), // Technically not a special register, but will be treated as one
   RSP ("rsp", "Stack Pointer", RegisterType.SPECIAL),
-  R8D ("r8d", "5th Argument", RegisterType.CALLER_SAVED),
-  R9D ("r9d", "6th Argument", RegisterType.CALLER_SAVED),
-  R10D ("r10d", "", RegisterType.CALLEE_SAVED),
-  R11D ("r11d", "Used for Linking", RegisterType.SPECIAL),
+  R8D ("r8", "5th Argument", RegisterType.CALLER_SAVED),
+  R9D ("r9", "6th Argument", RegisterType.CALLER_SAVED),
+  R10D ("r10", "", RegisterType.CALLEE_SAVED),
+  R11D ("r11", "Used for Linking", RegisterType.SPECIAL),
   //R12D ("Unused", RegisterType.UNUSED)  // We have no need for this registry as we will only be compiling C
-  R13D ("r13d", "", RegisterType.CALLEE_SAVED),
-  R14D ("r14d", "", RegisterType.CALLEE_SAVED),
-  R15D ("r15d", "", RegisterType.CALLEE_SAVED);
+  R13D ("r13", "", RegisterType.CALLEE_SAVED),
+  R14D ("r14", "", RegisterType.CALLEE_SAVED),
+  R15D ("r15", "", RegisterType.CALLEE_SAVED);
   
   public enum RegisterType {
     CALLEE_SAVED,

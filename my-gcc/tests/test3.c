@@ -8,7 +8,7 @@ int falsemain(void){
   int d;
   int e;
   
-  //d = 33;
+  d = 33;
   //e = addition(d, 78);
   //c = a;
   //c = 77;

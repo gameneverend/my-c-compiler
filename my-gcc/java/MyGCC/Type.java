@@ -1,8 +1,8 @@
 package MyGCC;
 
 public enum Type {
-  INT("int", true, 4),
-  VOID("void", false, 4);
+  INT("int", true, 8),
+  VOID("void", false, 8);
   
   private boolean isVarType;
   private String strType;
