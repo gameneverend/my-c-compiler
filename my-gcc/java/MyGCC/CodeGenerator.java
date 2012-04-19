@@ -44,6 +44,9 @@ public class CodeGenerator{
   }
 
   public void pushInformation(Object o){
+    if(o == null)
+      System.err.println("Pushing NULL object");
+      
     if (myStack.size() == 0)
       openNewContext();
     myStack.getLast().push(o);
@@ -82,9 +85,9 @@ public class CodeGenerator{
     String name = null;
     ArrayList<Parameter> parameters = new ArrayList<Parameter>();
     Stack<Object> tmpStack = myStack.getLast();
-    
     while (!tmpStack.isEmpty()){
       ParsingResult r = (ParsingResult) tmpStack.pop();
+        
       switch (r.type){
         case TYPE :        returnType = ((ParsingResult<Type>)r).getValue();          break;
         case ID:           name       = ((ParsingResult<String>)r).getValue();        break;

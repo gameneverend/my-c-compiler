@@ -29,7 +29,6 @@ public class Instruction {
     if(instruct != null){
       if(instruct.rexpr == null){
         // do nothing: already handled in epilogue()
-        //TODO	/!\ .cfi_restore 5
         return sb.toString();
       }
       
@@ -37,7 +36,7 @@ public class Instruction {
         
         case RETURN:
 					sb.append(instruct.rexpr.handleExpression(a, context));
-					sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %eax\n");
+					sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %rax\n");
           break;
           
         case EXIT:
@@ -56,9 +55,11 @@ public class Instruction {
           
           else{
             sb.append(instruct.rexpr.handleExpression(a, context));
-            //FIXME Elyas: unnecessary instruction after a function-call (the result is already stored).
-            sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
-            //FIXME find a more suitable way to get a hand on the last register used
+            String lastReg = sb.substring(sb.lastIndexOf(",") + 2).replace("\n","");
+            
+            if(!lastReg.equals(context.getVariableLocation(String.valueOf(a.getValue()))))
+              //temporary fix: to avoid unnecessary instruction (after a function-call) such as: mov -x(%rbp), -x(%rbp)
+              sb.append("\tmovq\t " + lastReg + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
           

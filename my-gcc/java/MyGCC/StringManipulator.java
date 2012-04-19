@@ -132,16 +132,41 @@ public class StringManipulator{
       Register reg;
       int i = f.getArgs().size() - 1;
       for(Expression e : f.getArgs()){
-        tmp = (Variable)e;
-        val = String.valueOf(tmp.getValue());
         
-        if(isInteger(val))
-          sb.append("\tpushl\t $" + val + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
-        else{
-          //FIXME Elyas: if a parameter A wasn't previously loaded in a register, this procedure fails
-          reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-          sb.append("\tpushl\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+        if(e.op != null){
+          tmp = (Variable)e;
+          val = String.valueOf(tmp.getValue());
+          
+          if(isInteger(val))
+            sb.append("\tmovq\t $" + val + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+          
+          else{
+            if(Parser.regMan.isListedVariable(val)){
+              reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
+              sb.append("\tmovq\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+            }
+            else
+              sb.append("\tmovq\t " + context.getVariableLocation(val) + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+          }
         }
+        
+        else{
+          //handle arg as multi-operand expression
+          //TODO Elyas.
+          
+          /*else{
+            if(Parser.regMan.isListedVariable(val))
+              reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
+            else{
+              reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
+              sb.append("\tmovq\t " + context.getVariableLocation(val) + ", %" + reg.toString() + "\n");
+            }
+            
+            sb.append("\tmovq\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+          }*/
+        }
+        
+        
         i--;
       }
         
@@ -154,7 +179,7 @@ public class StringManipulator{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
         Register reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
-        //FIXME Elyas: operations should use eax registry.
+        //FIXME Elyas: operations should use eax registry (?)
           
         if(a.getValue() instanceof Integer)
           sb.append("\tmovq\t$" + a.getValue() + ", %" + reg.toString() + "\n");
@@ -166,7 +191,7 @@ public class StringManipulator{
 		}
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
-      //TODO Elyas: improve operations with int variables (without resorting to tmp register)
+      //TODO Elyas: improve operations with numeric variables (without resorting to tmp register)
       Register regL;
 			Register regR;
       String lval = null;

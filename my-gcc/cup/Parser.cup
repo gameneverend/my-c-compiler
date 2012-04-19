@@ -35,8 +35,9 @@ parser code {:
                                new PrintStream(destination_file));
     //System.out.println("modified version");
     //p.debug_parse();
-    p.ps.print("\t.file \""+ args[0]+"\"\n\t.text\n");
+    p.ps.print("\t.file \"" + args[0] + "\"\n\t.text\n");
     p.parse();
+    System.out.println("\n*************** Generating code **************");
     p.ps.print(p.cg.generateCode());
     p.ps.close();
   }
@@ -172,12 +173,7 @@ dec_or_func_end ::=
       {:
         parser.cg.startFunctionDefinition();
       :}
-      body:b RBRACKET
-        {:
-          if(Parser.DEBUG) System.out.println("Push body : " + b);
-          parser.cg.pushInformation(b);
-        :}
-        functions_list
+      body RBRACKET functions_list
   ;
 
 // Defines the constraints of a list of declarations
@@ -266,14 +262,14 @@ function ::=
     header LBRACKET {:
                       parser.cg.startFunctionDefinition();
                     :}
-                    body:b RBRACKET {:
-                                      if(Parser.DEBUG) System.out.println("Push body: " + b);
-                                      parser.cg.pushInformation(b);
-                                    :}
+                    body RBRACKET
   ;
 
 header ::=
-    type IDENT LPAREN param_sequence RPAREN
+    type:t IDENT:i {: parser.cg.pushInformation(new ParsingResult<Type>(ResultType.TYPE, t));
+                      parser.cg.pushInformation(new ParsingResult<String>(ResultType.ID, i)); 
+                  :} 
+                    LPAREN param_sequence RPAREN
   ;
 
 // Determines whether the function requires any arguments

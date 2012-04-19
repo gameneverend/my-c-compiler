@@ -44,10 +44,11 @@ public class Function{
    *  This function returns the String that ensures that the parameters are
    *  loaded before starting the code **/
   private String loadParameters(){
+    System.out.println("Loading parameters for function: " + this.name);
     myContext.prepareParametersLocation();
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < myContext.nbParameters() && i < 6; i++){
-      sb.append("\tmovl\t%");
+      sb.append("\tmovq\t%");
       sb.append(Register.getArgumentRegister(i));
       sb.append(", ");
       try{

@@ -93,7 +93,7 @@ public abstract class Expression{
       if(this instanceof FunctionCall && this.op == null){
         System.out.println("Function-call caught");
         sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this, context);
-        sb.append("\tmovl %eax, " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+        sb.append("\tmovq %rax, " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
       }
         
       if(this.op != null){
