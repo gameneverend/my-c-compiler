@@ -25,16 +25,15 @@ int falsemain(int z){
   //c = 11 + d - 7;
   //c = 3 + 2;
   
-  //d = 33;
+  d = 33;
+  //d = 8 / 2 + 3 * 4;
   
   //e = somme(4);
-  e = addition(5, 1);
-
-  //d = 8 / 2 + 3 * 4;
+  e = addition(d - 2, 1);
   //e = d - 3;
+  
   //return d + 4;
   //return;
-	//c = 3 + 2;
 	return e;
 }
 

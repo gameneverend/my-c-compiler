@@ -115,6 +115,7 @@ public class RegisterManager {
    * Adds the variable var to a free register of type "type"
    **/
   public Register addVariableToRegister(String var, Register.RegisterType type) {
+		//FIXME Ryan: Exception caught when all registers are used.
     
     if(!isListedVariable(var)) {
       Register r = this.getFreeRegister(type);

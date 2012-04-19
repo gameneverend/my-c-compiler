@@ -129,11 +129,14 @@ public class StringManipulator{
 		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception{
       Variable tmp;
       String val;
+      Integer num;
       Register reg;
       int i = f.getArgs().size() - 1;
       for(Expression e : f.getArgs()){
+				//WARNING: This method encounters an error when all registers are used. Must fix addVariableToRegister ASAP.
+				System.out.println("Handling next arg");
         
-        if(e.op != null){
+        if(e.op == null){
           tmp = (Variable)e;
           val = String.valueOf(tmp.getValue());
           
@@ -151,9 +154,20 @@ public class StringManipulator{
         }
         
         else{
-          //handle arg as multi-operand expression
-          //TODO Elyas.
-          
+						
+						if(e.isFullyNumeric()){
+							System.out.println("Fully-numeric argument detected");
+							num = calculateNum(e);
+							sb.append("\tmovq\t $" + num + ", " + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
+						}
+						
+						else{
+							System.out.println("Handling complex arg");
+							sb.append(e.handleExpression(null, context).toString());
+							sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
+						}
+							
+
           /*else{
             if(Parser.regMan.isListedVariable(val))
               reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
@@ -192,8 +206,7 @@ public class StringManipulator{
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
       //TODO Elyas: improve operations with numeric variables (without resorting to tmp register)
-      Register regL;
-			Register regR;
+      Register regL, regR;
       String lval = null;
       String rval = null;
       Variable ar1 = null;

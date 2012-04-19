@@ -57,9 +57,10 @@ public class Instruction {
             sb.append(instruct.rexpr.handleExpression(a, context));
             String lastReg = sb.substring(sb.lastIndexOf(",") + 2).replace("\n","");
             
-            if(!lastReg.equals(context.getVariableLocation(String.valueOf(a.getValue()))))
+            if(!lastReg.equals(context.getVariableLocation(String.valueOf(a.getValue())))){
               //temporary fix: to avoid unnecessary instruction (after a function-call) such as: mov -x(%rbp), -x(%rbp)
               sb.append("\tmovq\t " + lastReg + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
+						}
           }
           break;
           
