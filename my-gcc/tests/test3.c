@@ -1,7 +1,12 @@
-//int addition(int, int);
-
+int addition(int, int);
 int falsemain(void);
 
+
+int addition(int a, int b){
+  int c;
+  c = a + b;
+  return c;
+}
 
 int falsemain(void){
   int c;
@@ -9,21 +14,19 @@ int falsemain(void){
   int e;
   
   d = 33;
-  //e = addition(d, 78);
+  e = addition(d, 78);
   //c = a;
   //c = 77;
   //c = 1 + a;
   //d = 8 / 2 + 3 * 4;
   //e = d - 3;
   //c = substraction(e, 1) + 2;
-  c = 11 + d - 7;
+  //c = 11 + d - 7;
   //return d + 4;
   //return;
 	//c = 3 + 2;
-	//return e;
+	return e;
 }
-  
-//int addition(int a, int b){
 
 
 

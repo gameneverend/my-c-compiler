@@ -53,6 +53,7 @@ public abstract class Expression{
 		public String toNumeric(){
 			StringBuffer sb = new StringBuffer();
 			Variable tmp = (Variable)this;
+      
 			if(this.op != null){
 				Variable lft = (Variable)this.left;
 				sb.append(lft.getValue().toString());
@@ -62,9 +63,10 @@ public abstract class Expression{
 						sb.append(" " + tmp.op.toString() + " " +((Variable)tmp.right.left).getValue());
 						tmp = (Variable)tmp.right;
 					}
-					else
+					else{
 						sb.append(" " + tmp.op.toString() + " " + ((Variable)tmp.right).getValue());
 						break;
+          }
 				}
 				return sb.toString();
 			}

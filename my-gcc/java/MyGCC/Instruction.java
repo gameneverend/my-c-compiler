@@ -54,10 +54,12 @@ public class Instruction {
             sb.append("\tmovq\t $" + StringManipulator.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
-          else
+          else{
             sb.append(instruct.rexpr.handleExpression(a, context));
+            //FIXME Elyas: unnecessary instruction after a function-call (the result is already stored).
             sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
             //FIXME find a more suitable way to get a hand on the last register used
+          }
           break;
           
         default:

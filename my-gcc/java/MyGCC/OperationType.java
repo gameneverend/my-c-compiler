@@ -1,10 +1,10 @@
 package MyGCC;
 
 public enum OperationType{
-  ADDL("addq"),
-  SUBL("subq"),
-  IMULL("imulq"),
-  IDIVL("idivq"),
+  ADDQ("addq"),
+  SUBQ("subq"),
+  IMULQ("imulq"),
+  IDIVQ("idivq"),
   LESS("jl"),
   GREATER("jg"),
   EQUALS("je"),
@@ -12,8 +12,8 @@ public enum OperationType{
   GEQL("jge"),
   DIFF("jne"),
   MOD("mod"),
-  OR("orl"),
-  AND("andq");
+  ORL("orl"),
+  ANDQ("andq");
   
   public String name;
 

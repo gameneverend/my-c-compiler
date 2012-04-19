@@ -226,9 +226,7 @@ prototype ::=
 
 
 type ::=
-    INT:t {:
-    		RESULT = Type.INT;
-          :}
+    INT {: RESULT = Type.INT; :}
   ;
     
 // A sequence of types for the prototype of a function
@@ -265,7 +263,13 @@ functions_list ::=
         
 // Core structure of a function in C
 function ::=
-    header LBRACKET body RBRACKET
+    header LBRACKET {:
+                      parser.cg.startFunctionDefinition();
+                    :}
+                    body:b RBRACKET {:
+                                      if(Parser.DEBUG) System.out.println("Push body: " + b);
+                                      parser.cg.pushInformation(b);
+                                    :}
   ;
 
 header ::=
@@ -444,18 +448,18 @@ bin_op ::=
   | DIFF
     {: RESULT = OperationType.DIFF; :}
   | PLUS
-    {: RESULT = OperationType.ADDL; :}
+    {: RESULT = OperationType.ADDQ; :}
   | MINUS
-    {: RESULT = OperationType.SUBL; :}
+    {: RESULT = OperationType.SUBQ; :}
   | TIMES
-    {: RESULT = OperationType.IMULL; :}
+    {: RESULT = OperationType.IMULQ; :}
   | DIV
-    {: RESULT = OperationType.IDIVL; :}
+    {: RESULT = OperationType.IDIVQ; :}
   | MOD
     {: RESULT = OperationType.MOD; :}  
   | OR
-    {: RESULT = OperationType.OR; :}
+    {: RESULT = OperationType.ORL; :}
   | AND
-    {: RESULT = OperationType.AND; :}
+    {: RESULT = OperationType.ANDQ; :}
   ;
      

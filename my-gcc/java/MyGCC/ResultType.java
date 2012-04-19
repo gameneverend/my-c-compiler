@@ -9,6 +9,6 @@ public enum ResultType{
   BLOCK,
   PROTOTYPE,
   FUNCTION,
-  ARITHMETIC,
+  VARIABLE,
   UNKNOWN;
 }

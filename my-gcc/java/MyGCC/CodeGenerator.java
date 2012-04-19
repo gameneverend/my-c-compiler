@@ -124,7 +124,7 @@ public class CodeGenerator{
         case ID : 
           identifier = ((ParsingResult<String>)r).getValue();
           break;
-        case ARITHMETIC :
+        case VARIABLE :
           arraySize = ((ParsingResult<Integer>)r).getValue();
           break;
         default:
@@ -140,7 +140,7 @@ public class CodeGenerator{
   public String generateCode(){
     StringBuffer sb = new StringBuffer();
     for (Function f : globalFunctions){
-      sb.append(f.toString());
+      sb.append("\n" + f.toString() + "\n");
     }
     return sb.toString();
   }

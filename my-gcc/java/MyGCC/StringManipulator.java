@@ -17,7 +17,7 @@ public class StringManipulator{
 		}
 		
 		public static int getPrecedence(String s){
-			if(s.equals("imull") || s.equals("idivl"))
+			if(s.equals(OperationType.IMULQ.toString()) || s.equals(OperationType.IDIVQ.toString()))
 				return 2;
 			else
 				return 1;
@@ -47,19 +47,19 @@ public class StringManipulator{
 					op2 = (Integer)(stack.pop());
 					
 					switch(OperationType.valueOf(tmp.toUpperCase())){
-						case ADDL:
+						case ADDQ:
 							result = op1 + op2;
 							break;
 							
-						case SUBL:
+						case SUBQ:
 							result = op1 - op2;
 							break;
 							
-						case IMULL:
+						case IMULQ:
 							result = op1 * op2;
 							break;
 							
-						case IDIVL:
+						case IDIVQ:
 							result = op1 / op2;
 							break;
 							
@@ -85,16 +85,18 @@ public class StringManipulator{
 			
 			for(int i = sp.length-1; i >= 0; i--){
 				tmp = sp[i];
+        System.out.println(tmp);
 				
 				if(isInteger(tmp))
 					output.push(tmp);
 				
 				else if(tmp.equals("(")){
-					//TODO: push to opStack
+          System.out.println("111");
+					//TODO Elyas: push to opStack
 				}
 				
 				else if(tmp.equals(")")){
-					//TODO: until opStack.top is lparen, pop operators off the stack onto output.
+					//TODO Elyas: until opStack.top is lparen, pop operators off the stack onto output.
 					// pop lparen from stack
 					// if stack runs out without finding lparen -> mismatched parentheses
 				}
@@ -111,7 +113,7 @@ public class StringManipulator{
 			}
 			
 			while(!opStack.empty()){
-				//TODO if top is parenthesis -> mismatched parentheses
+				//TODO Elyas: if top is parenthesis -> mismatched parentheses
 				output.push(opStack.pop());
 			}
 			
@@ -136,6 +138,7 @@ public class StringManipulator{
         if(isInteger(val))
           sb.append("\tpushl\t $" + val + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
         else{
+          //FIXME Elyas: if a parameter A wasn't previously loaded in a register, this procedure fails
           reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
           sb.append("\tpushl\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
         }
@@ -151,7 +154,7 @@ public class StringManipulator{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
         Register reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
-        //FIXME operations should use eax registry.
+        //FIXME Elyas: operations should use eax registry.
           
         if(a.getValue() instanceof Integer)
           sb.append("\tmovq\t$" + a.getValue() + ", %" + reg.toString() + "\n");
@@ -163,6 +166,7 @@ public class StringManipulator{
 		}
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
+      //TODO Elyas: improve operations with int variables (without resorting to tmp register)
       Register regL;
 			Register regR;
       String lval = null;
