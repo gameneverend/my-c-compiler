@@ -355,7 +355,10 @@ instruction ::=
   
     // Basic "if else" test on an expression
   | IF {: if(Parser.DEBUG) System.out.println("If detected"); :}
-      LPAREN expression RPAREN if_end
+      LPAREN expression:e RPAREN
+        {: parser.cg.startBlockDefinition(new LogicalBlock(e, InstructionType.IF));
+        :}
+      if_end
         {: if(Parser.DEBUG) System.out.println("If reduced"); :}
   
     // Basic "while" instruction
@@ -368,20 +371,31 @@ instruction ::=
   
 while_end ::=
     LBRACKET instruct_list RBRACKET
-  | instruction SEMI
+  | instruction:i SEMI
+      {: //parser.cg.pushInstruction(i);
+         parser.cg.closeBlockDefinition();
+      :}
   ;
 
 if_end ::=
     LBRACKET instruct_list RBRACKET if_else
-  | instruction SEMI if_else
+  | instruction:i SEMI
+      {: //parser.cg.pushInstruction(i);
+         parser.cg.closeBlockDefinition();
+      :}
+    if_else
   ;
   
 if_else ::=
-    ELSE {: if(Parser.DEBUG) System.out.println("Else detected"); :}
-      LBRACKET {: if(Parser.DEBUG) System.out.println("LB"); :}
-      instruct_list {: if(Parser.DEBUG) System.out.println("instruct_list"); :}
-      RBRACKET {: if(Parser.DEBUG) System.out.println("RB"); :}
-  | ELSE {: if(Parser.DEBUG) System.out.println("Else detected"); :} instruction SEMI
+    ELSE
+      {: parser.cg.startBlockDefinition(new LogicalBlock(null, InstructionType.ELSE)); :}
+    LBRACKET instruct_list RBRACKET
+  | ELSE
+      {: parser.cg.startBlockDefinition(new LogicalBlock(null, InstructionType.ELSE)); :}
+    instruction:i SEMI
+      {: //parser.cg.pushInstruction(i);
+         parser.cg.closeBlockDefinition();
+      :}
   |
   ;
     

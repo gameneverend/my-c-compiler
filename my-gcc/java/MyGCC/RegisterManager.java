@@ -243,7 +243,7 @@ public class RegisterManager {
 	  }
   }
   
-  public static void main(String[] args) {
+ /* public static void main(String[] args) {
     RegisterManager rm = new RegisterManager();
     SimpleEntry<Register, Register> se;
     se = rm.addTwoVariablesToRegisters("a", "b", Register.RegisterType.CALLEE_SAVED);
@@ -259,6 +259,6 @@ public class RegisterManager {
     se = rm.addTwoVariablesToRegisters("a", "c", Register.RegisterType.CALLEE_SAVED);
     System.out.println(se.toString());
     
-  }
+  }*/
 
 }

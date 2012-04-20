@@ -5,6 +5,7 @@ public enum InstructionType{
   EXIT("exit"),
   EQL("movq"),
   IF(""),
+  ELSE(""),	
   WHILE("");
   
   public String name;

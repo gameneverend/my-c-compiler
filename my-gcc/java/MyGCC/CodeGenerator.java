@@ -101,6 +101,13 @@ public class CodeGenerator{
     this.currentBlock = f.body.mainBlock;
   }
   
+  public void startBlockDefinition(Block b) {
+	if(b != null) {
+	  b.parent = this.currentBlock;
+	  this.currentBlock = b;
+	}
+  }
+  
   public void startBlockDefinition() {
     Block b = new Block();
     b.parent = this.currentBlock;

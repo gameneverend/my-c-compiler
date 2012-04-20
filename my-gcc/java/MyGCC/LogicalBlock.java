@@ -12,6 +12,12 @@ public class LogicalBlock extends Block  {
     this.type = null;
   }
   
+  public LogicalBlock(Expression e, InstructionType t) {
+	super();
+	this.expr = e;
+	this.type = t;
+  }
+  
   public LogicalBlock(LinkedList<Instruction> ins, LinkedList<Block> bl, Expression e, InstructionType t) {
     super(ins, bl);
     this.expr = e;
