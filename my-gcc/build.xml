@@ -7,6 +7,7 @@
   <property name="dist"    location="jar"    />
   <property name="lib"     location="lib"     />
   <property name="bin"     location="bin"     />
+  <property name="debug"   location="debug"	/>
   <property environment="env" />
 
   <!-- We rely on CUP-11a  JFlex 1.4.1  -->
@@ -48,6 +49,7 @@
     <mkdir dir="${classes}"/>
     <mkdir dir="${java}"/>
     <mkdir dir="${dist}"/>
+  	<mkdir dir="${debug}"/>
   </target>
 
 
@@ -76,6 +78,14 @@
     </javac>
   </target>
 
+  <target name="compile.debug" depends="copy_src">
+	<javac srcdir="${java}" destdir="${debug}" debug="true">
+	  <classpath refid="libraries" />
+	</javac>
+  </target>
+
+	
+
   <target name="jar" depends="compile">
     <jar jarfile="${dist}/Compiler.jar" basedir="${classes}">
      <manifest>
@@ -96,6 +106,27 @@
       <arg value="input.test" />
     </java>
   </target>
+	
+  <!-- Allow to debug, viewing the line -->
+  <target name="debug" depends="jar.debug">
+    <java jar="${dist}/CompilerDebug.jar" fork="true">
+    	<arg path="input.test"/>
+    </java>
+  </target>
+	
+  <target name="jar.debug" depends="compile.debug">
+    <jar jarfile="${dist}/CompilerDebug.jar" basedir="${debug}">
+     <manifest>
+       <attribute name="Main-Class" value="MyGCC.Parser" />
+       <!-- CUP runtime is needed for parsing! -->
+       <attribute name="Class-Path" value="java-cup-11a-runtime.jar" />
+     </manifest>
+    </jar>
+    <!-- Thrid party libraries can only be found by java -jar if they reside in the same dir -->
+    <copy todir="${dist}">
+	<fileset dir="${lib}" includes="**/**.jar"/>
+    </copy>
+  </target>
 
   
   <target name="clean">
@@ -104,5 +135,6 @@
     <delete file="${java}/sym.java"/>
     <delete dir="${classes}" />
     <delete dir="${dist}" />
+  	<delete dir="${debug}"/>
   </target>
 </project>
