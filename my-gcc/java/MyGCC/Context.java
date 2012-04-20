@@ -20,6 +20,8 @@ public abstract class Context{
 	protected int variablesTotalSize;
 	/** useful for a lazy-mechanism **/
 	protected boolean localVariablesLocated = false;
+	
+	protected int stackPosition = 0;
 
 	public Context(){
 	}
@@ -49,12 +51,21 @@ public abstract class Context{
 			variablesLocations.put(e.getKey(), -variablesTotalSize);
 		}
 		variablesTotalSize = variablesTotalSize + (16 -variablesTotalSize % 16);
+		stackPosition = -variablesTotalSize;
 		localVariablesLocated = true;
 	}
 
 	public void addVariable(Type type, String identifier, int arraySize) {
 		localVariables.put(identifier, type);
 		localVariablesLocated = false;
+	}
+	
+	public String virtualPush(){
+		return (stackPosition -= 8) + "(%rbp)";
+	}
+	
+	public String virtualPop(Type t){
+		return (stackPosition += 8) + "(%rbp)";
 	}
 
 }

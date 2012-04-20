@@ -25,8 +25,10 @@ public class FunctionContext extends Context{
 		int k = 1;
 		if (parameters != null){// TODO usually parameters should never be null but that's an issue coming from the parser
 			for (Parameter p : parameters){
-				if (k <= 6)
+				if (k <= 6){
 					parametersLocations.put(p.name,-variablesTotalSize - 8 * k);
+					stackPosition -= 8;
+				}
 				else
 					parametersLocations.put(p.name, (k - 7) * 8);
 				k++;
