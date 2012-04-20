@@ -74,7 +74,7 @@ public abstract class Expression{
 		}
     
 
-    
+    //TODO gérer de manière plus simple les cas où left ou right est fully numerical
     public StringBuffer handleExpression(Variable a, Context context) throws Exception{
       StringBuffer sb = new StringBuffer();
 				

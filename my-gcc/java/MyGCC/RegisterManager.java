@@ -1,6 +1,7 @@
 package MyGCC;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.AbstractMap.*;
 
 public class RegisterManager {
@@ -116,30 +117,22 @@ public class RegisterManager {
    * Adds the variable var to a free register of type "type"
    **/
   public Register addVariableToRegister(String var, Register.RegisterType type) {
-    
-    if(!isListedVariable(var)) {
-      Register r = this.getFreeRegister(type);
-      this.usedRegisters.put(r, var);
-      this.usedRegistersList.addFirst(r);
-      return r;
-      
-    } else {
-      Set<Register> regSet = this.usedRegisters.keySet();
-      for(Register reg : regSet) {
-        if(reg.getType().equals(type)) {
-          if(this.usedRegisters.get(reg).equals(var))
-            return reg;
-        } else {
-          freeRegister(reg);
-          Register r = this.getFreeRegister(type);
-          this.usedRegisters.put(r, var);
-          this.usedRegistersList.addFirst(r);
-          return r;
-        }
-      }
-    }
-    System.err.println("Variable was listed, but no corresponding Register was found in usedRegisters");
-    return null;
+
+	  System.out.println("searching variable " + var);
+	  Set<Register> regSet = this.usedRegisters.keySet();
+	  for(Register reg : regSet) {
+		  if(reg.getType().equals(type)) {
+			  if(this.usedRegisters.get(reg).equals(var)){
+				  System.out.println("variable found ");
+				  return reg;
+			  }
+		  }
+	  }
+	  System.out.println("variable not found");
+	  Register r = this.getFreeRegister(type);
+	  this.usedRegisters.put(r, var);
+	  this.usedRegistersList.addFirst(r);
+	  return r;
   }
   
   /**
@@ -222,10 +215,12 @@ public class RegisterManager {
     if(this.usedRegisters.containsValue(var))
       regSet = this.usedRegisters.keySet();
       for(Register reg : regSet)
-        if(this.usedRegisters.get(reg).equals(var))
+        if(this.usedRegisters.get(reg).equals(var)){
           this.usedRegisters.remove(reg);
+          this.usedRegistersList.remove(reg);
+        }
     else
-      System.err.println("The variable was not set to any registers.");
+    	System.err.println("The variable was not set to any registers.");
   }
   
 
@@ -234,6 +229,17 @@ public class RegisterManager {
     if(this.usedRegisters.containsKey(r))
       this.usedRegisters.remove(r);
     return r;
+  }
+  
+  public void printState(){
+	  System.out.println("Entries :");
+	  for (Entry<Register,String> e: usedRegisters.entrySet()){
+		  System.out.println("\t" +e.getKey() +" -> " + e.getValue());
+	  }
+	  System.out.println("list :");
+	  for (Register r : usedRegistersList){
+		  System.out.println("\t"+ r + " ->");
+	  }
   }
   
   public static void main(String[] args) {
