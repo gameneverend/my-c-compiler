@@ -8,10 +8,11 @@ public class RegisterManager {
    * Lists all the registers that currently contain a variable
    **/
   private HashMap<Register, String> usedRegisters;
-  //private HashMap<Integer, Integer> usedStackPositions;
+  private LinkedList<Register> usedRegistersList;
   
   public RegisterManager() {
     this.usedRegisters = new HashMap<Register, String>();
+    this.usedRegistersList = new LinkedList<Register>();
     //this.usedStackPositions = new HashMap<Integer, String>();
   }
   
@@ -62,7 +63,7 @@ public class RegisterManager {
         }
       }
     }
-    return freeUselessRegister(type); // No free registers have been found, we should now attempt to free some by pushing to the stack.
+    return freeUselessRegister(); // No free registers have been found, we should now attempt to free some by pushing to the stack.
   }
   
 
@@ -106,20 +107,20 @@ public class RegisterManager {
         return (new SimpleEntry<Register, Register>(r1, r2));
     }
 
-
-    System.err.println("Assigning two registers failed");
-    return null; //TODO attempt to free two registers by pushing some to the stack
+    r1 = freeUselessRegister();
+    r2 = freeUselessRegister();
+    return new SimpleEntry<Register, Register>(r1, r2);
   }
   
   /**
    * Adds the variable var to a free register of type "type"
    **/
   public Register addVariableToRegister(String var, Register.RegisterType type) {
-		//FIXME Ryan: Exception caught when all registers are used.
     
     if(!isListedVariable(var)) {
       Register r = this.getFreeRegister(type);
       this.usedRegisters.put(r, var);
+      this.usedRegistersList.addFirst(r);
       return r;
       
     } else {
@@ -132,6 +133,7 @@ public class RegisterManager {
           freeRegister(reg);
           Register r = this.getFreeRegister(type);
           this.usedRegisters.put(r, var);
+          this.usedRegistersList.addFirst(r);
           return r;
         }
       }
@@ -146,10 +148,13 @@ public class RegisterManager {
   public Register addVariableToRegister(String var, Register reg) {
     if(isRegisterUsed(reg)){
       freeRegister(reg);
+      this.usedRegisters.put(reg, var);
+      this.usedRegistersList.addFirst(reg);
       return reg;
     }
     else{
       this.usedRegisters.put(reg, var);
+      this.usedRegistersList.addFirst(reg);
       return reg;
     }
   }
@@ -165,8 +170,10 @@ public class RegisterManager {
       se = getTwoRegisters(type);
       r1 = se.getKey();
       this.usedRegisters.put(r1, var1);
+      this.usedRegistersList.addFirst(r1);
       r2 = se.getValue();
       this.usedRegisters.put(r2, var2);
+      this.usedRegistersList.addFirst(r2);
       return se;
     }
     
@@ -200,9 +207,10 @@ public class RegisterManager {
    * Removes the specified Register from the list of usedRegisters.
    **/
   public void freeRegister(Register r) {
-    if(this.usedRegisters.containsKey(r))
+    if(this.usedRegisters.containsKey(r)) {
       this.usedRegisters.remove(r);
-    else
+      this.usedRegistersList.remove(r);
+    } else
       System.err.println("The Register did not have any variables set to it.");
   }
   
@@ -221,12 +229,11 @@ public class RegisterManager {
   }
   
 
-  public Register freeUselessRegister(Register.RegisterType type) {
-    /* 
-     * TODO find a register that can be removed from the list of used registers with the "type" category
-     * IMPORTANT to establish the constraints required on freeing registers
-     */
-    return null;
+  public Register freeUselessRegister() {
+    Register r = this.usedRegistersList.pollLast();
+    if(this.usedRegisters.containsKey(r))
+      this.usedRegisters.remove(r);
+    return r;
   }
   
   public static void main(String[] args) {
