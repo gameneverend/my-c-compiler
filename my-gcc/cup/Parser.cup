@@ -334,7 +334,10 @@ instruction ::=
   
     // Exit with status NB_INT
   | EXIT LPAREN NB_INT:n RPAREN
-      //{: parser.cg.pushInstruction(new Instruction(n, InstructionType.EXIT)); :}
+      {: ArrayList<Expression> arg = new ArrayList<Expression>();
+         arg.add(new Variable<Integer>(null, n));
+         parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.EXIT.toString(), arg), InstructionType.EXIT));
+      :}
       //TODO fix: constructor takes Expression as 1st argument, not Integer.
   
     // Return the value of an expression

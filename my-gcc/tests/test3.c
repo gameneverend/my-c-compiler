@@ -23,18 +23,21 @@ int falsemain(int z){
   //c = 1 + a;
   //c = substraction(e, 1) + 2;
   //c = 11 + d - 7;
-  //c = 3 + 2;
-  
-  d = 10;
+
+  c = 3 + 2;
+  exit(42);
+
+  //d = 33;
   //d = 8 / 2 + 3 * 4;
   
-  //e = somme(4);
-  e = addition(d + 3 + d * d, 1);
+  //e = addition(d - 2, 1);
   //e = d - 3;
+  //e = somme(4);
+  //e = addition(d + 3 + d * d, 1);
   
   //return d + 4;
   //return;
-	return e;
+	//return e;
 }
 
 

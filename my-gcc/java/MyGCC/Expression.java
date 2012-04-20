@@ -75,25 +75,26 @@ public abstract class Expression{
     
 
     //TODO gérer de manière plus simple les cas où left ou right est fully numerical
-    public StringBuffer handleExpression(Variable a, Context context) throws Exception{
+    public StringBuffer handleExpression(Expression e, Context context) throws Exception{
       StringBuffer sb = new StringBuffer();
 				
       if(this.left != null)
-        sb.append(this.left.handleExpression(a, context));
+        sb.append(this.left.handleExpression(e, context));
 				
       if(this.right!= null)
-        sb.append(this.right.handleExpression(a, context));
+        sb.append(this.right.handleExpression(e, context));
 
         
       if(this instanceof Variable && this.op == null){
-        System.out.println("Variable caught");
+        System.out.println("Variable caught: " + ((Variable)this).getValue());
         sb = StringManipulator.handleVariable(sb, (Variable)this, context);
       }
 
       if(this instanceof FunctionCall && this.op == null){
         System.out.println("Function-call caught");
         sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this, context);
-        sb.append("\tmovq %rax, " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+        if(!((FunctionCall)this).getTag().equals(InstructionType.EXIT.toString()))
+          sb.append("\tmovq %rax, " + context.getVariableLocation(String.valueOf(((Variable)e).getValue())) + "\n"); 
       }
         
       if(this.op != null){

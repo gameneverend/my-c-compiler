@@ -110,7 +110,7 @@
   <!-- Allow to debug, viewing the line -->
   <target name="debug" depends="jar.debug">
     <java jar="${dist}/CompilerDebug.jar" fork="true">
-    	<arg path="input.test"/>
+    	<arg path="tests/test3.c"/>
     </java>
   </target>
 	

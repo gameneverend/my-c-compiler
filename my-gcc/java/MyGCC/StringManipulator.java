@@ -131,10 +131,10 @@ public class StringManipulator{
       String val;
       Integer num;
       Register reg;
+      System.out.println("\tTag: " + f.getTag());
       int i = f.getArgs().size() - 1;
       for(Expression e : f.getArgs()){
-				//WARNING: This method encounters an error when all registers are used. Must fix addVariableToRegister ASAP.
-				System.out.println("Handling next arg");
+				System.out.println("\tHandling next arg");
         
         if(e.op == null){
           tmp = (Variable)e;
@@ -142,7 +142,7 @@ public class StringManipulator{
           
           if(isInteger(val))
             sb.append("\tmovq\t $" + val + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
-          
+            
           else{
             if(Parser.regMan.isListedVariable(val)){
               reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);

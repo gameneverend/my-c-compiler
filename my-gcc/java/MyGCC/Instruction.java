@@ -25,28 +25,34 @@ public class Instruction {
   
   public static String instructionToAssembly(Instruction instruct, Context context) throws Exception{
 		StringBuffer sb = new StringBuffer();
-		Variable a = (Variable)instruct.lexpr;
+		Expression l = instruct.lexpr;
+    Variable a;
+    FunctionCall f;
     if(instruct != null){
       if(instruct.rexpr == null){
+        System.out.println("rexpr is null");
         // do nothing: already handled in epilogue()
         return sb.toString();
       }
       
+      System.out.println("Instruction type: " + instruct.instrType.toString());
       switch(instruct.instrType){
         
         case RETURN:
+          a = (Variable)l;
 					sb.append(instruct.rexpr.handleExpression(a, context));
 					sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %rax\n");
           break;
           
         case EXIT:
-          //TODO
-          //movq argument to stack
-          //call exit
-          //do not generate ret/leave.
+          f = (FunctionCall)l;
+          System.out.println("Exit detected");
+          sb.append(instruct.rexpr.handleExpression(f, context));
+          //TODO: do not generate ret/leave when function contains an exit and no RETURN instructions
           break;
           
         case EQL:
+          a = (Variable)l;
           
           if(instruct.rexpr.isFullyNumeric()){
             System.out.println("Fully numeric found");

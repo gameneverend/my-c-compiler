@@ -2,8 +2,8 @@ package MyGCC;
 
 public enum InstructionType{
   RETURN("ret"),
-  EXIT("leave"),
-  EQL("movl"),
+  EXIT("exit"),
+  EQL("movq"),
   IF(""),
   WHILE("");
   

@@ -64,6 +64,7 @@ public class RegisterManager {
         }
       }
     }
+
     return freeUselessRegister(); // No free registers have been found, we should now attempt to free some by pushing to the stack.
   }
   
