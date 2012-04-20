@@ -60,12 +60,12 @@ public abstract class Context{
 		localVariablesLocated = false;
 	}
 	
-	public String virtualPush(){
-		return (stackPosition -= 8) + "(%rbp)";
+	public String virtualPush(Register r){
+		return "\tmovq\t" + r.toString() +", " + (stackPosition -= 8) + "(%rbp)\n";
 	}
 	
-	public String virtualPop(Type t){
-		return (stackPosition += 8) + "(%rbp)";
+	public String virtualPop(Register r){
+		return "\tmovq\t" + (stackPosition += 8) +", "+ "(%rbp)" + r.toString() + "\n";
 	}
 
 }
