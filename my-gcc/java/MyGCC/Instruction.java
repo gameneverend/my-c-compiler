@@ -41,7 +41,6 @@ public class Instruction {
         case RETURN:
           a = (Variable)l;
 					sb.append(instruct.rexpr.handleExpression(a, context));
-					sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %rax\n");
           break;
           
         case EXIT:
@@ -61,12 +60,7 @@ public class Instruction {
           
           else{
             sb.append(instruct.rexpr.handleExpression(a, context));
-            String lastReg = sb.substring(sb.lastIndexOf(",") + 2).replace("\n","");
-            
-            if(!lastReg.equals(context.getVariableLocation(String.valueOf(a.getValue())))){
-              //temporary fix: to avoid unnecessary instruction (after a function-call) such as: mov -x(%rbp), -x(%rbp)
-              sb.append("\tmovq\t " + lastReg + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
-						}
+            sb.append("\tmovq\t %rax, " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
           

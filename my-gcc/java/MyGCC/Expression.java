@@ -73,37 +73,63 @@ public abstract class Expression{
 			return (tmp.getValue()).toString();
 		}
     
-
-    //TODO gérer de manière plus simple les cas où left ou right est fully numerical
+    
+    
     public StringBuffer handleExpression(Expression e, Context context) throws Exception{
-      StringBuffer sb = new StringBuffer();
+			StringBuffer sb = new StringBuffer();
+			String lastReg;
+			System.out.println("Handling expression");
+			
+			if(this.right == null){
 				
-      if(this.left != null)
-        sb.append(this.left.handleExpression(e, context));
+				if(this instanceof Variable){
+					System.out.println("Variable caught: " + ((Variable)this).getValue());
+					sb = StringManipulator.handleVariable(sb, (Variable)this, "%rax", context);
+				}
+
+				else if(this instanceof FunctionCall){
+					System.out.println("Function-call caught: " + ((FunctionCall)this).getTag());
+					sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this, context);
+				}
+				return sb;
+			}
+			
+			sb.append(this.left.handleExpression(e, context));
+			if(this.right.op != null){
 				
-      if(this.right!= null)
-        sb.append(this.right.handleExpression(e, context));
-
-        
-      if(this instanceof Variable && this.op == null){
-        System.out.println("Variable caught: " + ((Variable)this).getValue());
-        sb = StringManipulator.handleVariable(sb, (Variable)this, context);
-      }
-
-      if(this instanceof FunctionCall && this.op == null){
-        System.out.println("Function-call caught");
-        sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this, context);
-        if(!((FunctionCall)this).getTag().equals(InstructionType.EXIT.toString()))
-          sb.append("\tmovq %rax, " + context.getVariableLocation(String.valueOf(((Variable)e).getValue())) + "\n"); 
-      }
-        
-      if(this.op != null){
-        System.out.println("Operation handling");
-        sb = StringManipulator.handleOperation(sb, this.op, this.left, this.right, context);
-      }
-      
-      return sb;
-    }
+				if(this.left instanceof FunctionCall)
+					lastReg = "%rax";
+				else
+					lastReg = sb.substring(sb.lastIndexOf(",") + 2).replace("\n","");
+					
+				sb.append(context.virtualPush(lastReg));
+				sb.append(this.right.handleExpression(e, context));
+				sb.append("\tmovq\t%rax, %rdx\n");
+				sb.append(context.virtualPop("%rax"));
+				sb.append("\t" + this.op.toString() + "\t %rdx, %rax\n");
+			}
+			
+			else{
+				
+				if(this.right instanceof Variable){
+					
+					if(((Variable)this.right).getValue() instanceof Integer)
+						sb.append("\t" + this.op.toString() + "\t $" + ((Variable)this.right).getValue() + ", %rax\n");
+					else{
+						sb = StringManipulator.handleVariable(sb, (Variable)this.right, "%rdx", context);
+						sb.append("\t" + this.op.toString() + "\t %rdx, %rax\n");
+					}
+				}
+					
+				else{
+					sb.append("\tmovq\t %rax, %rdx\n");
+					sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this.right, context);
+					sb.append("\t" + this.op.toString() + "\t %rdx, %rax\n");
+				}
+			}
+			
+			return sb;
+		}
     
     
     public int length(){

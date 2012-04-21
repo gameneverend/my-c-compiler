@@ -135,52 +135,31 @@ public class StringManipulator{
       int i = f.getArgs().size() - 1;
       for(Expression e : f.getArgs()){
 				System.out.println("\tHandling next arg");
+				
+				if(e.isFullyNumeric()){
+					System.out.println("Fully-numeric argument detected");
+					num = calculateNum(e);
+					sb.append("\tmovq\t $" + num + ", %" + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
+				}
         
-        if(e.op == null){
+        else if(e.op == null){
           tmp = (Variable)e;
           val = String.valueOf(tmp.getValue());
           
-          if(isInteger(val))
-            sb.append("\tmovq\t $" + val + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
-            
-          else{
-            if(Parser.regMan.isListedVariable(val)){
-              reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-              sb.append("\tmovq\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
-            }
-            else
-              sb.append("\tmovq\t " + context.getVariableLocation(val) + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+					if(Parser.regMan.isListedVariable(val)){
+						reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
+            sb.append("\tmovq\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
           }
+          else
+            sb.append("\tmovq\t" + context.getVariableLocation(val) + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
         }
         
         else{
-						
-						if(e.isFullyNumeric()){
-							System.out.println("Fully-numeric argument detected");
-							num = calculateNum(e);
-							sb.append("\tmovq\t $" + num + ", %" + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
-						}
-						
-						else{
-							System.out.println("Handling complex arg");
-							sb.append(e.handleExpression(null, context).toString());
-							sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
-						}
-							
-
-          /*else{
-            if(Parser.regMan.isListedVariable(val))
-              reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-            else{
-              reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
-              sb.append("\tmovq\t " + context.getVariableLocation(val) + ", %" + reg.toString() + "\n");
-            }
-            
-            sb.append("\tmovq\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
-          }*/
+					System.out.println("Handling complex arg");
+					sb.append(e.handleExpression(null, context).toString());
+					sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
         }
-        
-        
+          
         i--;
       }
         
@@ -189,17 +168,15 @@ public class StringManipulator{
     }
     
     
-    public static StringBuffer handleVariable(StringBuffer sb, Variable a, Context context) throws Exception{
+    public static StringBuffer handleVariable(StringBuffer sb, Variable a, String dst, Context context) throws Exception{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
-        Register reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLEE_SAVED);
-        //FIXME Elyas: operations should use eax registry (?)
           
         if(a.getValue() instanceof Integer)
-          sb.append("\tmovq\t$" + a.getValue() + ", %" + reg.toString() + "\n");
+          sb.append("\tmovq\t$" + a.getValue() + ", " + dst + "\n");
           
         if(a.getValue() instanceof String) 
-          sb.append("\tmovq\t" + context.getVariableLocation((String)a.getValue()) + ", %" + reg.toString() + "\n");
+          sb.append("\tmovq\t" + context.getVariableLocation((String)a.getValue()) + ", " + dst + "\n");
       }
 			return sb;
 		}

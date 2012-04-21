@@ -61,12 +61,12 @@ public abstract class Context{
 	}
 	
 
-	public String virtualPush(Register r){
-		return "\tmovq\t" + r.toString() +", " + (stackPosition -= 8) + "(%rbp)\n";
+	public String virtualPush(String s){
+		return "\tmovq\t" + s +", " + (stackPosition -= 8) + "(%rbp)\n";
 	}
 	
-	public String virtualPop(Register r){
-		return "\tmovq\t" + (stackPosition += 8) +", "+ "(%rbp)" + r.toString() + "\n";
+	public String virtualPop(String s){
+		return "\tmovq\t" + (stackPosition += 8) + "(%rbp), " + s + "\n";
 	}
 
 }
