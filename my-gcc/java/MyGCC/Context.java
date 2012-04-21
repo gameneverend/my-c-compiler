@@ -66,7 +66,9 @@ public abstract class Context{
 	}
 	
 	public String virtualPop(String s){
-		return "\tmovq\t" + (stackPosition += 8) + "(%rbp), " + s + "\n";
+		int tmp = stackPosition;
+		stackPosition += 8;
+		return "\tmovq\t" + tmp + "(%rbp), " + s + "\n";
 	}
 
 }
