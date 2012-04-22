@@ -14,6 +14,10 @@ public class FunctionCall extends Expression{
     this.args = arguments;
   }
   
+  public int maxParameters(){
+    return args.size();
+  }
+  
   public String getTag(){
     return tag;
   }

@@ -15,6 +15,18 @@ public abstract class Expression{
     }
     
     /**
+     * This functions return the highest number of parameters contained in a
+     * function call of the expression.
+     * The value returned is <b>-1</b> if there's no call to functions in the expression
+     */
+    public int maxParameters(){
+      int n = -1;
+      if (left != null) n = Math.max(n, left.maxParameters());
+      if (right != null) n = Math.max(n, right.maxParameters());
+      return n;
+    }
+    
+    /**
      * Checks if the expression is composed exclusively of numeric values
      **/
     public boolean isFullyNumeric(){

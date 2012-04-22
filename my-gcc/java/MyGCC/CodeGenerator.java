@@ -37,9 +37,8 @@ public class CodeGenerator{
   
   public void pushInstruction(Instruction i){
     System.out.println("Pushing instruction to function: " + currentFunction.name);
-    if(currentFunction == null)
+    if (currentFunction == null)
       System.err.println("ERROR: currentFunction is null");
-      
     this.currentBlock.pushInstruction(i);
   }
 
@@ -53,6 +52,7 @@ public class CodeGenerator{
   }
 
   public void openNewContext(){
+    System.out.println("Opening a new context, actual stack size :" + myStack.size());
     myStack.add(new Stack<Object>());
   }
 
@@ -156,7 +156,7 @@ public class CodeGenerator{
   }
   
   public void closeFunction(){
-    //TODO
+    currentFunction = null;
   }
 
 }

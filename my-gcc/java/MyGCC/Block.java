@@ -19,6 +19,22 @@ public class Block {
     this.blocks = bl;
   }
   
+  /**
+   * This functions return the highest number of parameters contained in a
+   * function call of the block.
+   * The value returned is <b>-1</b> if there's no call to functions in this block
+   */  
+  public int maxParameters(){
+    int n = -1;
+    for (Instruction i : instructions){
+      n = Math.max(i.maxParameters(), n);
+    }
+    for (Block b : blocks){
+      n = Math.max(b.maxParameters(), n);
+    }
+    return n;
+  }
+  
   public void pushInstruction(Instruction e) {
     if(this.instructions != null)
       if(e != null)

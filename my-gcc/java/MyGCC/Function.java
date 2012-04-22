@@ -70,6 +70,10 @@ public class Function{
     sb.append("\tmovq\t%rsp, %rbp\n");
     sb.append("\t.cfi_offset 6, -16\n");
     sb.append("\t.cfi_def_cfa_register 6\n");
+    // If there's function calls in this function rsp should be modified
+    if (body.maxParameters() >= 0){
+      sb.append("\tsubq\t$"+ 32 +", %rsp\n");
+    }
     return sb.toString();
   }
   

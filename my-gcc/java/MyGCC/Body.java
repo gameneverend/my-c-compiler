@@ -20,6 +20,14 @@ public class Body {
     this.myContext = c;
   }
   
+  /**
+   * This functions return the highest number of parameters contained in a
+   * function call of the body.
+   * The value returned is <b>-1</b> if there's no call to functions in this body
+   */  
+  public int maxParameters(){
+    return mainBlock.maxParameters();
+  }
   public void pushDeclaration(Declaration d) {
     if(this.declarations != null)
       if(d != null)
@@ -42,9 +50,8 @@ public class Body {
       System.err.println("this.mainBlock: is null");
   }
   
-  public void addBlock(){
-    //TODO
-  }
+  /*public void addBlock(){
+  }*/
   
   public LinkedList<Declaration> getDeclarations() {
     return this.declarations;

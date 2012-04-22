@@ -22,6 +22,17 @@ public class Instruction {
     this.assemblyStr = null;
   }
   
+  /**
+   * This functions return the highest number of parameters contained in a
+   * function call of the instruction.
+   * The value returned is <b>-1</b> if there's no call to functions in the instruction
+   */
+  public int maxParameters(){
+    int n = -1;
+    if (lexpr != null) n = Math.max(n, lexpr.maxParameters());
+    if (rexpr != null) n = Math.max(n, rexpr.maxParameters());
+    return n;
+  }
   
   public static String instructionToAssembly(Instruction instruct, Context context) throws Exception{
 		StringBuffer sb = new StringBuffer();

@@ -1,3 +1,5 @@
+//#include "testinclude.h"
+
 int addition(int, int);
 int falsemain(int);
 //int somme(int);
@@ -5,16 +7,17 @@ int falsemain(int);
 
 int addition(int a, int b){
   int c;
-  c = f(a) + b * 2;
+  //c = f(a) + b * 2;
   //exit(0);
+	c = 3 + 5;//somme(5);
   return c;
 }
 
-/*int somme(int x){
+int somme(int x){
   int c;
   c = x + somme(x-1);
   return c;
-}*/
+}
 
 int falsemain(int z){
   int c;
@@ -33,8 +36,8 @@ int falsemain(int z){
   
   //e = addition(d - 2, 1);
   //e = d - 3;
-  //e = somme(4);
-  e = addition(d + 7 + d * d, 1);
+  e = somme(4) + 2 * d;
+  //e = d * d + 3;//addition(d + 7 + d * d, 1);
   
   //return d + 4;
   //return;
