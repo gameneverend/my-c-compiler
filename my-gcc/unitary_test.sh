@@ -4,12 +4,12 @@ ant
 
 OUR_COMPILER="java -jar jar/Compiler.jar"
 
-TEST="tests/test3"
+TEST="tests/batterie_test"
 
 
 $OUR_COMPILER $TEST.c
 
-gcc -g $TEST.s tests/executor.c -o test
+gcc -g $TEST.s tests/full_test.c -o test
 
 ./test
 

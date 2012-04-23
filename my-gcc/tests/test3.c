@@ -15,7 +15,7 @@ int addition(int a, int b){
 
 int somme(int x){
   int c;
-  c = x + somme(x-1);
+  c = x + 1;
   return c;
 }
 
