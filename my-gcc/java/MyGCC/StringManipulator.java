@@ -16,7 +16,7 @@ public class StringManipulator{
 			}
 		}
 		
-		public static int getPrecedence(String s){
+		public static int getPriority(String s){
 			if(s.equals(OperationType.IMULQ.toString()) || s.equals(OperationType.IDIVQ.toString()))
 				return 2;
 			else
@@ -103,7 +103,7 @@ public class StringManipulator{
 					
 				else{ //operator
 					if(!opStack.empty()){
-						while(opStack.size() > 0 && getPrecedence(tmp) <= getPrecedence(opStack.peek())){
+						while(opStack.size() > 0 && getPriority(tmp) <= getPriority(opStack.peek())){
 							//Empty opStack into output
 							output.push(opStack.pop());
 						}
@@ -181,7 +181,7 @@ public class StringManipulator{
 			return sb;
 		}
     
-    public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
+    /*public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
       //TODO Elyas: improve operations with numeric variables (without resorting to tmp register)
       Register regL, regR;
       String lval = null;
@@ -223,7 +223,7 @@ public class StringManipulator{
       }
       
       return sb;
-    }
+    }*/
     
      
     
