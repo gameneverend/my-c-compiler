@@ -1,18 +1,18 @@
 /* Ce test est sensé renvoyé 42, test sans paramètre à la fonction */
-extern int test_simple();
+int test_simple(void);
 
 /* Cette fonction est sensée renvoyer -x */
-extern int oppose(int);
+int oppose(int);
 
 /* Cette fonction est sensée renvoyer a + b */
-extern int addition(int, int);
+int addition(int, int);
 
 /* Cette fonction est sensée renvoyée a * b + c */
-extern int polynome_simple(int, int, int);
+int polynome_simple(int, int, int);
 
 /* Cette fonction test un appel de fonction imbriqué,
 	 le résultat doit être a + 2 * b + c */
-extern int appel_imbrique(int, int, int);
+int appel_imbrique(int, int, int);
 
 /* Cette fonction teste les blocs logiques */
 // TODO
@@ -25,7 +25,7 @@ extern int appel_imbrique(int, int, int);
 
 
 /***** Implémentation *****/
-int test_simple(){
+int test_simple(void){
 	int a;
 	int b;
 	a = 7;
@@ -34,7 +34,8 @@ int test_simple(){
 }
 
 int oppose(int x){
-	return -x;
+	x = 0 - x;
+	return x;
 }
 
 int addition(int a, int b){
