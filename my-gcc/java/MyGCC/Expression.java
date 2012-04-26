@@ -7,11 +7,13 @@ public abstract class Expression{
     public Expression left;
     public Expression right;
     public OperationType op;
+    public boolean priority;
     
     public Expression(){
       this.left = null;
       this.right = null;
       this.op = null;
+      this.priority = false;
     }
     
     /**
@@ -98,6 +100,7 @@ public abstract class Expression{
 				if(this instanceof Variable){
 					System.out.println("Variable caught: " + ((Variable)this).getValue());
 					sb = StringManipulator.handleVariable(sb, (Variable)this, "%rax", context);
+					
 				}
 
 				else if(this instanceof FunctionCall){
@@ -108,11 +111,21 @@ public abstract class Expression{
 			}
 			
 			
-			
 			sb.append(this.left.handleExpression(e, context));
 			if(this.right.op != null){
 				
-				if(StringManipulator.getPriority(this.op.toString()) > StringManipulator.getPriority(this.right.op.toString())){
+				if(this.right.priority){
+					this.right.priority = false;
+					
+          sb.append(context.virtualPush("%rax"));
+          sb.append(this.right.handleExpression(e, context));
+          sb.append(context.virtualPop("%rdx"));
+          sb.append("\t" + this.op.toString() + "\t%rax, %rdx\n");
+          sb.append("\tmovq\t%rdx, %rax\n");	
+				}
+				
+				
+				else if(StringManipulator.getPriority(this.op.toString()) > StringManipulator.getPriority(this.right.op.toString())){
 					
 					if(this.right.left instanceof Variable)
 						sb = StringManipulator.handleVariable(sb, (Variable)this.right.left, "%rdx", context);
@@ -148,8 +161,10 @@ public abstract class Expression{
 				
 				if(this.right instanceof Variable){
 					
-					if(((Variable)this.right).getValue() instanceof Integer)
+					if(((Variable)this.right).getValue() instanceof Integer){
+						System.out.println("Variable2 caught: " + ((Variable)this.right).getValue());
 						sb.append("\t" + this.op.toString() + "\t$" + ((Variable)this.right).getValue() + ", %rax\n");
+					}
 					else{
 						sb = StringManipulator.handleVariable(sb, (Variable)this.right, "%rdx", context);
 						sb.append("\t" + this.op.toString() + "\t%rdx, %rax\n");

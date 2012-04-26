@@ -368,7 +368,7 @@ instruction ::=
   
   | expression:e
       {: if(Parser.DEBUG) System.out.println("Instruction detected: exp");
-         parser.cg.pushInstruction(new Instruction(e, null)); :} //OperationType instead of null?
+         parser.cg.pushInstruction(new Instruction(e, null)); :}
   ;
   
 while_end ::=
@@ -413,7 +413,9 @@ expression ::=
   | NOT expression
   
   | LPAREN expression:e RPAREN
-      {: RESULT = e; :}
+      {: e.priority = true;
+				 RESULT = e;
+			:}
 
   | IDENT:i
       {: if(Parser.DEBUG) System.out.println("Expression ident: " + i);

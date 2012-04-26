@@ -139,7 +139,7 @@ public class StringManipulator{
 				if(e.isFullyNumeric()){
 					System.out.println("Fully-numeric argument detected");
 					num = calculateNum(e);
-					sb.append("\tmovq\t $" + num + ", %" + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
+					sb.append("\tmovq\t$" + num + ", %" + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
 				}
         
         else if(e.op == null){
@@ -148,7 +148,7 @@ public class StringManipulator{
           
 					if(Parser.regMan.isListedVariable(val)){
 						reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-            sb.append("\tmovq\t %" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+            sb.append("\tmovq\t%" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
           }
           else
             sb.append("\tmovq\t" + context.getVariableLocation(val) + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
@@ -157,7 +157,7 @@ public class StringManipulator{
         else{
 					System.out.println("Handling complex arg");
 					sb.append(e.handleExpression(null, context).toString());
-					sb.append("\tmovq\t " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
+					sb.append("\tmovq\t" + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
         }
           
         i--;
@@ -176,7 +176,8 @@ public class StringManipulator{
           sb.append("\tmovq\t$" + a.getValue() + ", " + dst + "\n");
           
         if(a.getValue() instanceof String) 
-          sb.append("\tmovq\t" + context.getVariableLocation((String)a.getValue()) + ", " + dst + "\n");
+					if( !(a.getValue().equals("(")) && !(a.getValue().equals(")")))
+						sb.append("\tmovq\t" + context.getVariableLocation((String)a.getValue()) + ", " + dst + "\n");
       }
 			return sb;
 		}
