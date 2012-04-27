@@ -30,12 +30,13 @@ int falsemain(int z){
   //c = 1 + a;
   //c = substraction(e, 1) + 2;
   //c = 11 + d - 7;
-  c = 5;
+  //c = 5;
 
   d = 3;
   //d = 8 / 2 + 3 * 4;
   
-  e = 2 * (d + c * 6);
+  e = 6 / d;
+  //e = 2 * (d + c * 6);
   //e = addition(d - 2, 1);
   //e = d - 3;
   //e = somme(4) + 2 * d;

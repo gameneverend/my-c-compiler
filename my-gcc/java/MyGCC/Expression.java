@@ -120,7 +120,7 @@ public abstract class Expression{
           sb.append(context.virtualPush("%rax"));
           sb.append(this.right.handleExpression(e, context));
           sb.append(context.virtualPop("%rdx"));
-          sb.append("\t" + this.op.toString() + "\t%rax, %rdx\n");
+          sb = StringManipulator.handleOperation(sb, this.op, "%rax", "%rdx");
           sb.append("\tmovq\t%rdx, %rax\n");	
 				}
 				
@@ -133,12 +133,12 @@ public abstract class Expression{
 						sb.append("\tmovq\t%rax, %rdx\n");
 						sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this.right.left, context);
 					}
-						
-					sb.append("\t" + this.op.toString() + "\t%rdx, %rax\n");
+					
+					sb = StringManipulator.handleOperation(sb, this.op, "%rdx", "%rax");
 					sb.append(context.virtualPush("%rax"));
 					sb.append(this.right.right.handleExpression(e, context));
 					sb.append(context.virtualPop("%rdx"));
-					sb.append("\t" + this.right.op.toString() + "\t%rax, %rdx\n");
+					sb = StringManipulator.handleOperation(sb, this.right.op, "%rax", "%rdx");
 					sb.append("\tmovq\t%rdx, %rax\n");
 				}		
 				
@@ -152,7 +152,7 @@ public abstract class Expression{
 					sb.append(this.right.handleExpression(e, context));
 					sb.append("\tmovq\t%rax, %rdx\n");
 					sb.append(context.virtualPop("%rax"));
-					sb.append("\t" + this.op.toString() + "\t%rax, %rdx\n");
+					sb = StringManipulator.handleOperation(sb, this.op, "%rax", "%rdx");
 					sb.append("\tmovq\t%rdx, %rax\n");
 				}
 			}
@@ -161,25 +161,25 @@ public abstract class Expression{
 				
 				if(this.right instanceof Variable){
 					
-					if(((Variable)this.right).getValue() instanceof Integer){
-						System.out.println("Variable2 caught: " + ((Variable)this.right).getValue());
-						sb.append("\t" + this.op.toString() + "\t$" + ((Variable)this.right).getValue() + ", %rax\n");
-					}
+					if(((Variable)this.right).getValue() instanceof Integer)
+						sb = StringManipulator.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue(), "%rax");
+						
 					else{
 						sb = StringManipulator.handleVariable(sb, (Variable)this.right, "%rdx", context);
-						sb.append("\t" + this.op.toString() + "\t%rdx, %rax\n");
+						sb = StringManipulator.handleOperation(sb, this.op, "%rdx", "%rax");
 					}
 				}
 					
 				else{
 					sb.append("\tmovq\t%rax, %rdx\n");
 					sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this.right, context);
-					sb.append("\t" + this.op.toString() + "\t%rdx, %rax\n");
+					sb = StringManipulator.handleOperation(sb, this.op, "%rdx", "%rax");
 				}
 			}
 			
 			return sb;
 		}
+		
     
     
     public int length(){

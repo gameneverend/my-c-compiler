@@ -137,7 +137,6 @@ public class StringManipulator{
 				System.out.println("\tHandling next arg");
 				
 				if(e.isFullyNumeric()){
-					System.out.println("Fully-numeric argument detected");
 					num = calculateNum(e);
 					sb.append("\tmovq\t$" + num + ", %" + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
 				}
@@ -155,7 +154,6 @@ public class StringManipulator{
         }
         
         else{
-					System.out.println("Handling complex arg");
 					sb.append(e.handleExpression(null, context).toString());
 					sb.append("\tmovq\t" + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
         }
@@ -163,7 +161,7 @@ public class StringManipulator{
         i--;
       }
         
-      sb.append("\tcall\t " + f.getTag() + "\n");
+      sb.append("\tcall\t" + f.getTag() + "\n");
       return sb;
     }
     
@@ -182,49 +180,18 @@ public class StringManipulator{
 			return sb;
 		}
     
-    /*public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Expression l, Expression r, Context context) throws Exception{
-      //TODO Elyas: improve operations with numeric variables (without resorting to tmp register)
-      Register regL, regR;
-      String lval = null;
-      String rval = null;
-      Variable ar1 = null;
-      Variable ar2 = null;
-    
-      if(l.op == null && r.op == null){
-        ar1 = (Variable)l;
-        ar2 = (Variable)r;     
-        lval = String.valueOf(ar1.getValue());
-        rval = String.valueOf(ar2.getValue());
-        System.out.println("lval : " + lval);
-        System.out.println("rval : " + rval);
-        Parser.regMan.printState();
-        regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
-        regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
-        System.out.println("regL : " + regL);
-        System.out.println("regR : " + regR);
-        Parser.regMan.printState();
-      
-        sb.append("\t" + op.toString() + "\t %" + regR.toString() + ", %" + regL.toString() + "\n");
-      }
-      
-      else if(l.op == null && r.op != null){
-        ar1 = (Variable)l;  
-        lval = String.valueOf(ar1.getValue());
-        regL = Parser.regMan.addVariableToRegister(lval, Register.RegisterType.CALLEE_SAVED);
-        
-        sb.append("\t" + op.toString() + "\t %" + regL.toString() + ", " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + "\n");
-      }
-      
-      else if(l.op != null && r.op == null){
-        ar2 = (Variable)r;  
-        rval = String.valueOf(ar2.getValue());
-        regR = Parser.regMan.addVariableToRegister(rval, Register.RegisterType.CALLEE_SAVED);
-        
-        sb.append("\t" + op.toString() + "\t %" + regR.toString() + ", " + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + "\n");
-      }
-      
-      return sb;
-    }*/
+    public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src, String dst) throws Exception{
+			if(op.equals(OperationType.IDIVQ)){
+				//TODO Elyas: consider situation when src = %rax
+				sb.append("\tmovq\t" + src + ", %rbx\n");
+				sb.append("\txorl\t" + src + ", " + src + "\n");
+				sb.append("\t" + op.toString() + "\t%rbx\n");
+			}
+			
+			else
+				sb.append("\t" + op.toString() + "\t" + src + ", " + dst + "\n");
+			return sb;
+    }
     
      
     
