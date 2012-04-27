@@ -99,13 +99,13 @@ public abstract class Expression{
 				
 				if(this instanceof Variable){
 					System.out.println("Variable caught: " + ((Variable)this).getValue());
-					sb = StringManipulator.handleVariable(sb, (Variable)this, "%rax", context);
+					sb = ExpressionHelper.handleVariable(sb, (Variable)this, Register.RAX, context);
 					
 				}
 
 				else if(this instanceof FunctionCall){
 					System.out.println("Function-call caught: " + ((FunctionCall)this).getTag());
-					sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this, context);
+					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this, context);
 				}
 				return sb;
 			}
@@ -117,43 +117,44 @@ public abstract class Expression{
 				if(this.right.priority){
 					this.right.priority = false;
 					
-          sb.append(context.virtualPush("%rax"));
+          sb.append(context.virtualPush(Register.RAX.toString()));
           sb.append(this.right.handleExpression(e, context));
-          sb.append(context.virtualPop("%rdx"));
-          sb = StringManipulator.handleOperation(sb, this.op, "%rax", "%rdx");
-          sb.append("\tmovq\t%rdx, %rax\n");	
+          sb.append(context.virtualPop(Register.RDX.toString()));
+          sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
+          sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));	
 				}
 				
 				
-				else if(StringManipulator.getPriority(this.op.toString()) > StringManipulator.getPriority(this.right.op.toString())){
+				else if(ExpressionHelper.getPriority(this.op.toString()) > ExpressionHelper.getPriority(this.right.op.toString())){
 					
 					if(this.right.left instanceof Variable)
-						sb = StringManipulator.handleVariable(sb, (Variable)this.right.left, "%rdx", context);
+						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right.left, Register.RDX, context);
 					else{
-						sb.append("\tmovq\t%rax, %rdx\n");
-						sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this.right.left, context);
+						sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));	
+						sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right.left, context);
 					}
 					
-					sb = StringManipulator.handleOperation(sb, this.op, "%rdx", "%rax");
-					sb.append(context.virtualPush("%rax"));
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
+					sb.append(context.virtualPush(Register.RAX.toString()));
 					sb.append(this.right.right.handleExpression(e, context));
-					sb.append(context.virtualPop("%rdx"));
-					sb = StringManipulator.handleOperation(sb, this.right.op, "%rax", "%rdx");
-					sb.append("\tmovq\t%rdx, %rax\n");
+					sb.append(context.virtualPop(Register.RDX.toString()));
+					sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RDX);
+					sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));
 				}		
 				
 				else{
 					if(this.left instanceof FunctionCall)
-						lastReg = "%rax";
+						lastReg = Register.RAX.toString();
 					else
 						lastReg = sb.substring(sb.lastIndexOf(",") + 2).replace("\n","");
 					
 					sb.append(context.virtualPush(lastReg));
 					sb.append(this.right.handleExpression(e, context));
-					sb.append("\tmovq\t%rax, %rdx\n");
-					sb.append(context.virtualPop("%rax"));
-					sb = StringManipulator.handleOperation(sb, this.op, "%rax", "%rdx");
-					sb.append("\tmovq\t%rdx, %rax\n");
+					sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));
+					sb.append(context.virtualPop(Register.RAX.toString()));
+					
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
+					sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));
 				}
 			}
 			
@@ -162,22 +163,26 @@ public abstract class Expression{
 				if(this.right instanceof Variable){
 					
 					if(((Variable)this.right).getValue() instanceof Integer)
-						sb = StringManipulator.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue(), "%rax");
+						sb = ExpressionHelper.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue());
 						
 					else{
-						sb = StringManipulator.handleVariable(sb, (Variable)this.right, "%rdx", context);
-						sb = StringManipulator.handleOperation(sb, this.op, "%rdx", "%rax");
+						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RDX, context);
+						sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
 					}
 				}
 					
 				else{
-					sb.append("\tmovq\t%rax, %rdx\n");
-					sb = StringManipulator.handleFunctionCall(sb, (FunctionCall)this.right, context);
-					sb = StringManipulator.handleOperation(sb, this.op, "%rdx", "%rax");
+					sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));
+					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right, context);
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
 				}
 			}
 			
 			return sb;
+		}
+		
+		public String asm(Assembly instruction, Register r1, Register r2){
+			return "\t" + instruction + "\t" + r1 + ", " + r2 + "\n";
 		}
 		
     

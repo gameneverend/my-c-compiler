@@ -11,8 +11,8 @@ public class FunctionContext extends Context{
 	private boolean parametersLocated = false;
 	private ArrayList<Parameter> parameters;
 
-	public FunctionContext(Context heritedContext){
-		this.heritedContext = heritedContext;		  
+	public FunctionContext(Context inheritedContext){
+		this.inheritedContext = inheritedContext;		  
 	}
 
 	public void setParameters(ArrayList<Parameter> newParameters){
@@ -44,7 +44,7 @@ public class FunctionContext extends Context{
 	public String getVariableLocation(String name) throws Exception{
 		// searching in Parameters
 		Integer result = parametersLocations.get(name);
-		if (result != null) return result.intValue() + "(%rbp)";
+		if (result != null) return result.intValue() + "(" + Register.RBP + ")";
 		return super.getVariableLocation(name);
 	}
 	

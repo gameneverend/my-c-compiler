@@ -2,7 +2,7 @@ package MyGCC;
 
 import java.util.Stack;
 
-public class StringManipulator{
+public class ExpressionHelper{
     
 		
     
@@ -138,7 +138,7 @@ public class StringManipulator{
 				
 				if(e.isFullyNumeric()){
 					num = calculateNum(e);
-					sb.append("\tmovq\t$" + num + ", %" + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
+					sb.append("\t" + Assembly.MOV + "\t$" + num + ", " + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
 				}
         
         else if(e.op == null){
@@ -147,15 +147,15 @@ public class StringManipulator{
           
 					if(Parser.regMan.isListedVariable(val)){
 						reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-            sb.append("\tmovq\t%" + reg.toString() + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+            sb.append("\t" + Assembly.MOV + "\t" + reg.toString() + ", " + Parser.regMan.getArgReg(val, i) + "\n");
           }
           else
-            sb.append("\tmovq\t" + context.getVariableLocation(val) + ", %" + Parser.regMan.getArgReg(val, i) + "\n");
+            sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation(val) + ", " + Parser.regMan.getArgReg(val, i) + "\n");
         }
         
         else{
 					sb.append(e.handleExpression(null, context).toString());
-					sb.append("\tmovq\t" + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", %" + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
+					sb.append("\t" + Assembly.MOV + "\t" + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
         }
           
         i--;
@@ -166,32 +166,47 @@ public class StringManipulator{
     }
     
     
-    public static StringBuffer handleVariable(StringBuffer sb, Variable a, String dst, Context context) throws Exception{
+    public static StringBuffer handleVariable(StringBuffer sb, Variable a, Register dst, Context context) throws Exception{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
           
         if(a.getValue() instanceof Integer)
-          sb.append("\tmovq\t$" + a.getValue() + ", " + dst + "\n");
+          sb.append("\t" + Assembly.MOV + "\t$" + a.getValue() + ", " + dst + "\n");
           
-        if(a.getValue() instanceof String) 
-					if( !(a.getValue().equals("(")) && !(a.getValue().equals(")")))
-						sb.append("\tmovq\t" + context.getVariableLocation((String)a.getValue()) + ", " + dst + "\n");
+        else if(a.getValue() instanceof String)
+					sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation((String)a.getValue()) + ", " + dst + "\n");
       }
 			return sb;
 		}
     
-    public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src, String dst) throws Exception{
+    
+    public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Register src, Register dst) throws Exception{
 			if(op.equals(OperationType.IDIVQ)){
 				//TODO Elyas: consider situation when src = %rax
-				sb.append("\tmovq\t" + src + ", %rbx\n");
-				sb.append("\txorl\t" + src + ", " + src + "\n");
-				sb.append("\t" + op.toString() + "\t%rbx\n");
+				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
+				sb.append("\t" + Assembly.CONVERT + "\n");
+				sb.append("\t" + op + "\t" + Register.RBX + "\n");
 			}
 			
 			else
-				sb.append("\t" + op.toString() + "\t" + src + ", " + dst + "\n");
+				sb.append("\t" + op + "\t" + src + ", " + dst + "\n");
 			return sb;
     }
+    
+    public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src) throws Exception{
+			if(op.equals(OperationType.IDIVQ)){
+				//TODO Elyas: consider situation when src = %rax
+				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
+				sb.append("\t" + Assembly.CONVERT + "\n");
+				sb.append("\t" + op + "\t" + Register.RBX + "\n");
+			}
+			
+			else
+				sb.append("\t" + op + "\t" + src + ", " + Register.RAX + "\n");
+			return sb;
+    }
+    
+    
     
      
     

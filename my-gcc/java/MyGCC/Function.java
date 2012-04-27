@@ -48,7 +48,7 @@ public class Function{
     myContext.prepareParametersLocation();
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < myContext.nbParameters() && i < 6; i++){
-      sb.append("\tmovq\t%");
+      sb.append("\t" + Assembly.MOV + "\t");
       sb.append(Register.getArgumentRegister(i));
       sb.append(", ");
       try{
@@ -65,14 +65,14 @@ public class Function{
   private String prelude(){
     StringBuilder sb = new StringBuilder();
     sb.append("\t.cfi_startproc\n");
-    sb.append("\tpushq\t%rbp\n");
+    sb.append("\t" + Assembly.PUSH + "\t" + Register.RBP + "\n");
     sb.append("\t.cfi_def_cfa_offset 16\n");
-    sb.append("\tmovq\t%rsp, %rbp\n");
+    sb.append("\t" + Assembly.MOV + "\t" + Register.RSP + ", " + Register.RBP + "\n");
     sb.append("\t.cfi_offset 6, -16\n");
     sb.append("\t.cfi_def_cfa_register 6\n");
     // If there's function calls in this function rsp should be modified
     if (body.maxParameters() >= 0){
-      sb.append("\tsubq\t$"+ 32 +", %rsp\n");
+      sb.append("\t" + OperationType.SUBQ + "\t$"+ 32 +", " + Register.RSP + "\n");
     }
     return sb.toString();
   }
@@ -92,39 +92,5 @@ public class Function{
   public void addDeclaration(Type type, String identifier, int arraySize) {
 	  myContext.addVariable(type, identifier, arraySize);
   }
-  
-  /*public Type getReturn() {
-    return this.retType;
-  }
-  
-  public String getIdentifier() {
-    return this.identifier;
-  }
-  
-}
-  
-  public ArrayList<Entry<Type,String>> getArguments() {
-    return this.arguments;
-  }
-  
-  public Body getBody() {
-    return this.body;
-  }
-  
-  public void setReturn(Type t) {
-    this.retType = t;
-  }
-  
-  public void setIdentifier(String id) {
-    this.identifier = id;
-  }
-  
-  public void setArguments(ArrayList<Entry<Type,String>> args) {
-    this.arguments = args;
-  }
-
-  public void setBody(Block b) {
-    this.body = b;
-  }*/
     
 }

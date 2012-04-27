@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 public abstract class Context{
 
-	protected Context heritedContext;
+	protected Context inheritedContext;
 	private ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 
 	/** Contain all the variables local to the context with their type **/
@@ -26,15 +26,15 @@ public abstract class Context{
 	public Context(){
 	}
 
-	public Context(Context heritedContext){
-		this.heritedContext = heritedContext;
+	public Context(Context inheritedContext){
+		this.inheritedContext = inheritedContext;
 	}
 
 	public String getVariableLocation(String name) throws Exception{
 		// searching in Local Variables
 		Integer result = variablesLocations.get(name);
-		if (result != null) return result.intValue() + "(%rbp)";// TO PERFECT
-		if (heritedContext != null) return heritedContext.getVariableLocation(name);
+		if (result != null) return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
+		if (inheritedContext != null) return inheritedContext.getVariableLocation(name);
 		throw new Exception("No parameter with the specified name : <" + name + "> found");
 	}
 
@@ -62,13 +62,13 @@ public abstract class Context{
 	
 
 	public String virtualPush(String s){
-		return "\tmovq\t" + s +", " + (stackPosition -= 8) + "(%rbp)\n";
+		return "\t" + Assembly.MOV + "\t" + s +", " + (stackPosition -= 8) + "(" + Register.RBP + ")\n";
 	}
 	
 	public String virtualPop(String s){
 		int tmp = stackPosition;
 		stackPosition += 8;
-		return "\tmovq\t" + tmp + "(%rbp), " + s + "\n";
+		return "\t" + Assembly.MOV + "\t" + tmp + "(" + Register.RBP + "), " + s + "\n";
 	}
 
 }

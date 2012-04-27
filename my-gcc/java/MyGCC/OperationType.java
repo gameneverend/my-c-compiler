@@ -1,28 +1,32 @@
 package MyGCC;
 
 public enum OperationType{
-  ADDQ("addq"),
-  SUBQ("subq"),
-  IMULQ("imulq"),
-  IDIVQ("idivq"),
-  LESS("jl"),
-  GREATER("jg"),
-  EQUALS("je"),
-  LEQL("jle"),
-  GEQL("jge"),
-  DIFF("jne"),
-  MOD("mod"),
-  ORL("orl"),
-  ANDQ("andq");
+  ADDQ("addl", "addq"),
+  SUBQ("subl", "subq"),
+  IMULQ("imull", "imulq"),
+  IDIVQ("idivl", "idivq"),
+  LESS("jl", "jl"),
+  GREATER("jg", "jg"),
+  EQUALS("je", "je"),
+  LEQL("jle", "jle"),
+  GEQL("jge", "jge"),
+  DIFF("jne", "jne"),
+  MOD("mod", "mod"),
+  ORL("orl", "orq"),
+  ANDQ("andl", "andq");
   
-  public String name;
+  public String name32;
+  public String name64;
 
-  private OperationType(String s){
-    this.name = s;
+  private OperationType(String s32, String s64){
+    this.name32 = s32;
+    this.name64 = s64;
   }
   
   public String toString(){
-    return this.name;
+		if(CodeGenerator.mode64)
+			return this.name64;
+		return this.name32;	
   }
 
 }

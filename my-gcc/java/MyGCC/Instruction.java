@@ -66,12 +66,12 @@ public class Instruction {
           
           if(instruct.rexpr.isFullyNumeric()){
             System.out.println("Fully numeric found");
-            sb.append("\tmovq\t $" + StringManipulator.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+            sb.append("\t" + Assembly.MOV.toString() + "\t$" + ExpressionHelper.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
           else{
             sb.append(instruct.rexpr.handleExpression(a, context));
-            sb.append("\tmovq\t %rax, " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
+            sb.append("\t" + Assembly.MOV.toString() + "\t" + Register.RAX.toString() + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
           
