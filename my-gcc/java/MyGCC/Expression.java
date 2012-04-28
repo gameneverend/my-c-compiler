@@ -153,7 +153,7 @@ public abstract class Expression{
 			}
 			
 			else{
-				//Handle node (l op r)
+				//Handle simple node (l op r)
 				
 				if(this.right instanceof Variable){
 					
@@ -167,13 +167,11 @@ public abstract class Expression{
 				}
 					
 				else{
-					//FIXME Elyas: Push left before calling function, then pop for operation
-					sb.append(asm(Assembly.MOV, Register.RAX, Register.RCX));
+					sb.append(context.virtualPush(Register.RAX.toString()));
 					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right, context);
+					sb.append(context.virtualPop(Register.RCX.toString()));
 					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
 				}
-				
-				
 			}
 			
 			return sb;

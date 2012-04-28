@@ -27,7 +27,7 @@ int oppose(int a){
 }
 
 int appel_imbrique(int a, int b, int c){
-	return 99 + addition(b,c);
+	return addition(a,b) + addition(b,c);
 }
 
 int falsemain(int z){
@@ -39,6 +39,7 @@ int falsemain(int z){
   //c = 11 + d - 7;
   //d = 8 % (5 + 1) - 2;
   
+  //e = oppose(6);
   e = appel_imbrique(5,4,6);
   //e = 3 * d % c;
   //e = 6 / d;
