@@ -89,50 +89,51 @@ public abstract class Expression{
 			
 			
 			if(this.right == null){
+				//Handle leaf
 				
 				if(this instanceof Variable){
-					System.out.println("Variable caught: " + ((Variable)this).getValue());
-					sb = ExpressionHelper.handleVariable(sb, (Variable)this, Register.RAX, context);
-					
+					System.out.println("\tVariable caught: " + ((Variable)this).getValue());
+					sb = ExpressionHelper.handleVariable(sb, (Variable)this, Register.RAX, context);	
 				}
 
 				else if(this instanceof FunctionCall){
-					System.out.println("Function-call caught: " + ((FunctionCall)this).getTag());
+					System.out.println("\tFunction-call caught: " + ((FunctionCall)this).getTag());
 					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this, context);
 				}
 				return sb;
 			}
 			
-			
 			sb.append(this.left.handleExpression(e, context));
+			
 			if(this.right.op != null){
+				//Handle expression with three or more operands
 				
 				if(this.right.priority){
 					this.right.priority = false;
 					
           sb.append(context.virtualPush(Register.RAX.toString()));
           sb.append(this.right.handleExpression(e, context));
-          sb.append(context.virtualPop(Register.RDX.toString()));
-          sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
-          sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));	
+          sb.append(context.virtualPop(Register.RCX.toString()));
+          sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
+          sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));	
 				}
 				
 				
 				else if(ExpressionHelper.getPrecedence(this.op.toString()) > ExpressionHelper.getPrecedence(this.right.op.toString())){
 					
 					if(this.right.left instanceof Variable)
-						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right.left, Register.RDX, context);
+						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right.left, Register.RCX, context);
 					else{
-						sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));	
+						sb.append(asm(Assembly.MOV, Register.RAX, Register.RCX));	
 						sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right.left, context);
 					}
 					
-					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RCX, Register.RAX);
 					sb.append(context.virtualPush(Register.RAX.toString()));
 					sb.append(this.right.right.handleExpression(e, context));
-					sb.append(context.virtualPop(Register.RDX.toString()));
-					sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RDX);
-					sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));
+					sb.append(context.virtualPop(Register.RCX.toString()));
+					sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RCX);
+					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
 				}		
 				
 				else{
@@ -143,15 +144,16 @@ public abstract class Expression{
 					
 					sb.append(context.virtualPush(lastReg));
 					sb.append(this.right.handleExpression(e, context));
-					sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));
+					sb.append(asm(Assembly.MOV, Register.RAX, Register.RCX));
 					sb.append(context.virtualPop(Register.RAX.toString()));
 					
-					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
-					sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
+					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
 				}
 			}
 			
 			else{
+				//Handle node (l op r)
 				
 				if(this.right instanceof Variable){
 					
@@ -159,16 +161,19 @@ public abstract class Expression{
 						sb = ExpressionHelper.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue());
 						
 					else{
-						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RDX, context);
-						sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
+						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RCX, context);
+						sb = ExpressionHelper.handleOperation(sb, this.op, Register.RCX, Register.RAX);
 					}
 				}
 					
 				else{
-					sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));
+					//FIXME Elyas: Push left before calling function, then pop for operation
+					sb.append(asm(Assembly.MOV, Register.RAX, Register.RCX));
 					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right, context);
-					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
 				}
+				
+				
 			}
 			
 			return sb;

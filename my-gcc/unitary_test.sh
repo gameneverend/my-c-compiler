@@ -10,8 +10,9 @@ TEST="tests/batterie_test"
 
 $OUR_COMPILER $TEST.c
 
-gcc -g $TEST.s tests/full_test.c -o test
-#gcc -g $TEST.s tests/executor.c -o test
+gcc -g $TEST.s tests/full_test.c -o full
+#gcc -g $TEST.s tests/executor.c -o exec
 
-./test
+./full
+#./exec
 

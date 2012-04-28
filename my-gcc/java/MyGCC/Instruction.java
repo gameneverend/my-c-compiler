@@ -4,19 +4,19 @@ public class Instruction {
   
   public Expression lexpr;
   public Expression rexpr;
-  public InstructionType instrType;
+  public InstructionType type;
   public Context myContext = null;
   
   public Instruction(Expression r, InstructionType op){
     this.lexpr = null;
     this.rexpr = r;
-    this.instrType = op;
+    this.type = op;
   }
   
   public Instruction(Expression l, Expression r, InstructionType op){
     this.lexpr = l;
     this.rexpr = r;
-    this.instrType = op;
+    this.type = op;
   }
   
   /**
@@ -43,8 +43,8 @@ public class Instruction {
         return sb.toString();
       }
       
-      System.out.println("Instruction type: " + instruct.instrType.toString());
-      switch(instruct.instrType){
+      System.out.println("\tInstruction type: " + instruct.type.toString());
+      switch(instruct.type){
         
         case RETURN:
           a = (Variable)l;
@@ -68,7 +68,7 @@ public class Instruction {
           
           else{
             sb.append(instruct.rexpr.handleExpression(a, context));
-            sb.append("\t" + Assembly.MOV + "\t" + Register.RAX.toString() + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
+            sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
           

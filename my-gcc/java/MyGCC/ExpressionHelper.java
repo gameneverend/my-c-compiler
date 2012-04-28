@@ -18,8 +18,9 @@ public class ExpressionHelper{
 		
 		public static int getPrecedence(String s){
 			if(s.equals(OperationType.IMUL.toString()) ||
-				 s.equals(OperationType.IDIV.toString()) ||
-				 s.equals(OperationType.MOD.toString()))
+				 s.equals(OperationType.IDIV.toString()))
+				return 3;
+			else if(s.equals(OperationType.MOD.toString()))
 				return 2;
 			else
 				return 1;
@@ -189,27 +190,32 @@ public class ExpressionHelper{
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Register src, Register dst) throws Exception{
 			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
-				//TODO Elyas: consider situation when src = %rax
 				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
+				
+				if(src.equals(Register.RAX))
+					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");
 				sb.append("\t" + Assembly.CONVERT + "\n");
-				sb.append("\t" + op + "\t" + Register.RBX + "\n");
+				sb.append("\t" + OperationType.IDIV + "\t" + Register.RBX + "\n");
+				
 				if(op.equals(OperationType.MOD))
-					sb.append("\t" + Assembly.MOV + "\t" + Register.RDX + ", " + Register.RAX + "\n");				
+					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");				
 			}
 			
-			else
+			else{
 				sb.append("\t" + op + "\t" + src + ", " + dst + "\n");
-			return sb;
+				if(src.equals(Register.RAX))
+					sb.append("\t" + Assembly.MOV + "\t" + dst + ", " + Register.RAX + "\n");
+			}
+				return sb;
     }
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src) throws Exception{
 			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
-				//TODO Elyas: consider situation when src = %rax
 				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
 				sb.append("\t" + Assembly.CONVERT + "\n");
-				sb.append("\t" + op + "\t" + Register.RBX + "\n");
+				sb.append("\t" + OperationType.IDIV + "\t" + Register.RBX + "\n");
 				if(op.equals(OperationType.MOD))
-					sb.append("\t" + Assembly.MOV + "\t" + Register.RDX + ", " + Register.RAX + "\n");
+					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");
 			}
 			
 			else

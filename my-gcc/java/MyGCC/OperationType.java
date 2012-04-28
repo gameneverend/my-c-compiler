@@ -12,6 +12,7 @@ public enum OperationType{
   LESS("jl", "jl"),
   GREATER("jg", "jg"),
   EQUALS("je", "je"),
+  //EQUALS("cmpl", "cmpq"),
   LEQL("jle", "jle"),
   GEQL("jge", "jge"),
   DIFF("jne", "jne"),
@@ -23,12 +24,20 @@ public enum OperationType{
   public String name64;
   private static ArrayList<OperationType> ops = new ArrayList<OperationType>();
   
-  static {
+  static{
     ops.add(ADD);
     ops.add(SUB);
     ops.add(IMUL);
     ops.add(IDIV);
     ops.add(MOD);
+    
+    ops.add(LESS); 
+    ops.add(GREATER);
+    ops.add(LEQL); 
+    ops.add(GEQL);
+    
+    ops.add(OR);
+    ops.add(AND);   
   }
 
   private OperationType(String s32, String s64){

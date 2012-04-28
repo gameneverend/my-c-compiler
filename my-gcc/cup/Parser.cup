@@ -405,12 +405,18 @@ if_else ::=
 expression ::=
     expression:left bin_op:op expression:right
       {: if(Parser.DEBUG) System.out.println("Expression operator: " + op);
-				   RESULT = new Variable<Expression>(op, left, right);
+				 RESULT = new Variable<Expression>(op, left, right);
       :}
 
-  | MINUS expression
+  | MINUS expression:e
+			{: if(Parser.DEBUG) System.out.println("Negating expression");
+				 //TODO
+			:}
   
   | NOT expression
+			{: if(Parser.DEBUG) System.out.println("NOT expression");
+				 //TODO
+			:}
   
   | LPAREN expression:e RPAREN
       {: e.priority = true;

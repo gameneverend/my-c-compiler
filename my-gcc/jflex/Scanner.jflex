@@ -50,8 +50,8 @@ SPACING = [ \t\r\f] | {NEWLINE}
   "!="      {return sf.newSymbol("Different",sym.DIFF); }
   "<="      {return sf.newSymbol("Less or equal",sym.LEQL); }
   ">="      {return sf.newSymbol("Greater or equal",sym.GEQL); }
-  "||"      {return sf.newSymbol("Binary Or",sym.OR); }
-  "&&"      {return sf.newSymbol("Binary And",sym.AND); }
+  "|"      {return sf.newSymbol("Binary Or",sym.OR); }
+  "&"      {return sf.newSymbol("Binary And",sym.AND); }
 
   ","       {return sf.newSymbol("Comma",sym.COMMA); }
   ";"       {return sf.newSymbol("Semicolon",sym.SEMI); }
