@@ -63,28 +63,21 @@ public abstract class Expression{
 		
 		/**
 		 * Generates a String of the numeric expression.
-		 **/
+		 **/	
 		public String toNumeric(){
-			StringBuffer sb = new StringBuffer();
-			Variable tmp = (Variable)this;
-      
-			if(this.op != null){
-				Variable lft = (Variable)this.left;
-				sb.append(lft.getValue().toString());
+			String tmp;
+			if(this.op == null)
+				return ((Variable)this).getValue().toString();
 				
-				while(tmp.op != null){
-					if(tmp.right.left != null){
-						sb.append(" " + tmp.op.toString() + " " +((Variable)tmp.right.left).getValue());
-						tmp = (Variable)tmp.right;
-					}
-					else{
-						sb.append(" " + tmp.op.toString() + " " + ((Variable)tmp.right).getValue());
-						break;
-          }
-				}
-				return sb.toString();
-			}
-			return (tmp.getValue()).toString();
+			String l = this.left.toNumeric();
+			String r = this.right.toNumeric();
+			
+			if(this.priority)
+				tmp = "( " + l + " " + op + " " + r + " )";
+			else
+				tmp = l + " " + op + " " + r;
+				
+			return tmp;
 		}
     
     
@@ -125,7 +118,7 @@ public abstract class Expression{
 				}
 				
 				
-				else if(ExpressionHelper.getPriority(this.op.toString()) > ExpressionHelper.getPriority(this.right.op.toString())){
+				else if(ExpressionHelper.getPrecedence(this.op.toString()) > ExpressionHelper.getPrecedence(this.right.op.toString())){
 					
 					if(this.right.left instanceof Variable)
 						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right.left, Register.RDX, context);

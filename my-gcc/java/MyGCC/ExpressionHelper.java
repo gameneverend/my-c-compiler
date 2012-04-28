@@ -16,8 +16,10 @@ public class ExpressionHelper{
 			}
 		}
 		
-		public static int getPriority(String s){
-			if(s.equals(OperationType.IMULQ.toString()) || s.equals(OperationType.IDIVQ.toString()))
+		public static int getPrecedence(String s){
+			if(s.equals(OperationType.IMUL.toString()) ||
+				 s.equals(OperationType.IDIV.toString()) ||
+				 s.equals(OperationType.MOD.toString()))
 				return 2;
 			else
 				return 1;
@@ -46,24 +48,29 @@ public class ExpressionHelper{
 					op1 = (Integer)(stack.pop());
 					op2 = (Integer)(stack.pop());
 					
-					switch(OperationType.valueOf(tmp.toUpperCase())){
-						case ADDQ:
+					switch(OperationType.getOp(tmp)){	//TODO: always floor values (integer only).
+						case ADD:
 							result = op1 + op2;
 							break;
 							
-						case SUBQ:
+						case SUB:
 							result = op1 - op2;
 							break;
 							
-						case IMULQ:
+						case IMUL:
 							result = op1 * op2;
 							break;
 							
-						case IDIVQ:
+						case IDIV:
 							result = op1 / op2;
 							break;
 							
+						case MOD:
+							result = op1 % op2;
+							break;
+							
 						default:
+							System.err.println("Error: unrecognized operation.");
 							break;
 					}
 					stack.push(result);
@@ -85,41 +92,41 @@ public class ExpressionHelper{
 			
 			for(int i = sp.length-1; i >= 0; i--){
 				tmp = sp[i];
-        System.out.println(tmp);
 				
 				if(isInteger(tmp))
 					output.push(tmp);
 				
-				else if(tmp.equals("(")){
-          System.out.println("111");
-					//TODO Elyas: push to opStack
-				}
+				else if(tmp.equals(")"))
+          opStack.push(tmp);
 				
-				else if(tmp.equals(")")){
-					//TODO Elyas: until opStack.top is lparen, pop operators off the stack onto output.
-					// pop lparen from stack
-					// if stack runs out without finding lparen -> mismatched parentheses
+				else if(tmp.equals("(")){	//TODO: if stack runs out without finding rparen -> mismatched parentheses
+					while(!opStack.empty() && !opStack.peek().equals(")"))
+						output.push(opStack.pop());
+						
+					if(!opStack.empty())
+						opStack.pop();
 				}
 					
 				else{ //operator
-					if(!opStack.empty()){
-						while(opStack.size() > 0 && getPriority(tmp) <= getPriority(opStack.peek())){
-							//Empty opStack into output
+					while(!opStack.empty() && !opStack.peek().equals(")") && getPrecedence(tmp) < getPrecedence(opStack.peek()))
 							output.push(opStack.pop());
-						}
-					}
+							
 					opStack.push(tmp);
 				}
 			}
 			
 			while(!opStack.empty()){
-				//TODO Elyas: if top is parenthesis -> mismatched parentheses
+				if(opStack.peek().equals(")")){
+					opStack.pop();
+					continue;
+				}
+				//TODO: if top is parenthesis -> mismatched parentheses
 				output.push(opStack.pop());
 			}
 			
 			while(!output.empty())
 				sb.append(output.pop() + " ");
-				
+
 			return sb.toString();
 		}
 		
@@ -181,11 +188,13 @@ public class ExpressionHelper{
     
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Register src, Register dst) throws Exception{
-			if(op.equals(OperationType.IDIVQ)){
+			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
 				//TODO Elyas: consider situation when src = %rax
 				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
 				sb.append("\t" + Assembly.CONVERT + "\n");
 				sb.append("\t" + op + "\t" + Register.RBX + "\n");
+				if(op.equals(OperationType.MOD))
+					sb.append("\t" + Assembly.MOV + "\t" + Register.RDX + ", " + Register.RAX + "\n");				
 			}
 			
 			else
@@ -194,11 +203,13 @@ public class ExpressionHelper{
     }
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src) throws Exception{
-			if(op.equals(OperationType.IDIVQ)){
+			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
 				//TODO Elyas: consider situation when src = %rax
 				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
 				sb.append("\t" + Assembly.CONVERT + "\n");
 				sb.append("\t" + op + "\t" + Register.RBX + "\n");
+				if(op.equals(OperationType.MOD))
+					sb.append("\t" + Assembly.MOV + "\t" + Register.RDX + ", " + Register.RAX + "\n");
 			}
 			
 			else

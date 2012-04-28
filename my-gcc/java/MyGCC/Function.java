@@ -72,7 +72,7 @@ public class Function{
     sb.append("\t.cfi_def_cfa_register 6\n");
     // If there's function calls in this function rsp should be modified
     if (body.maxParameters() >= 0){
-      sb.append("\t" + OperationType.SUBQ + "\t$"+ 32 +", " + Register.RSP + "\n");
+      sb.append("\t" + OperationType.SUB + "\t$"+ 32 +", " + Register.RSP + "\n");
     }
     return sb.toString();
   }

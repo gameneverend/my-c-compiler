@@ -5,21 +5,18 @@ public class Instruction {
   public Expression lexpr;
   public Expression rexpr;
   public InstructionType instrType;
-  public String assemblyStr;
   public Context myContext = null;
   
   public Instruction(Expression r, InstructionType op){
     this.lexpr = null;
     this.rexpr = r;
     this.instrType = op;
-    this.assemblyStr = null;
   }
   
   public Instruction(Expression l, Expression r, InstructionType op){
     this.lexpr = l;
     this.rexpr = r;
     this.instrType = op;
-    this.assemblyStr = null;
   }
   
   /**
@@ -66,12 +63,12 @@ public class Instruction {
           
           if(instruct.rexpr.isFullyNumeric()){
             System.out.println("Fully numeric found");
-            sb.append("\t" + Assembly.MOV.toString() + "\t$" + ExpressionHelper.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+            sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
           else{
             sb.append(instruct.rexpr.handleExpression(a, context));
-            sb.append("\t" + Assembly.MOV.toString() + "\t" + Register.RAX.toString() + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
+            sb.append("\t" + Assembly.MOV + "\t" + Register.RAX.toString() + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
           
@@ -80,8 +77,8 @@ public class Instruction {
           // optimize and don't calculate
           break;
       }
-      instruct.assemblyStr = sb.toString();
-      return instruct.assemblyStr;
+      
+      return sb.toString();
     }
     
     else{

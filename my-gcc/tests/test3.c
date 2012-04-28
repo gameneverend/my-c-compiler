@@ -27,18 +27,15 @@ int falsemain(int z){
   int d;
   int e;
   
-  //c = 1 + a;
   //c = substraction(e, 1) + 2;
   //c = 11 + d - 7;
-  //c = 5;
 
-  d = 3;
-  //d = 8 / 2 + 3 * 4;
+  //d = 3;
+  d = 8 % (5 + 1) - 2;
   
-  e = 6 / d;
+  //e = 6 / d;
   //e = 2 * (d + c * 6);
   //e = addition(d - 2, 1);
-  //e = d - 3;
   //e = somme(4) + 2 * d;
   //e = somme(6) - somme(d);
   //e = addition(d + 7 + d * d, 2) - 2 * d;
@@ -47,7 +44,7 @@ int falsemain(int z){
   //exit(42);  
   //return d + 4;
   //return;
-	return e;
+	return d;
 }
 
 

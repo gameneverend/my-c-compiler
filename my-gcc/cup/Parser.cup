@@ -465,18 +465,18 @@ bin_op ::=
   | DIFF
     {: RESULT = OperationType.DIFF; :}
   | PLUS
-    {: RESULT = OperationType.ADDQ; :}
+    {: RESULT = OperationType.ADD; :}
   | MINUS
-    {: RESULT = OperationType.SUBQ; :}
+    {: RESULT = OperationType.SUB; :}
   | TIMES
-    {: RESULT = OperationType.IMULQ; :}
+    {: RESULT = OperationType.IMUL; :}
   | DIV
-    {: RESULT = OperationType.IDIVQ; :}
+    {: RESULT = OperationType.IDIV; :}
   | MOD
     {: RESULT = OperationType.MOD; :}  
   | OR
-    {: RESULT = OperationType.ORL; :}
+    {: RESULT = OperationType.OR; :}
   | AND
-    {: RESULT = OperationType.ANDQ; :}
+    {: RESULT = OperationType.AND; :}
   ;
      
