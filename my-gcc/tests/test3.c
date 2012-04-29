@@ -43,7 +43,7 @@ int falsemain(int z){
   
   //e = 5 * -(2 + 3);
   //e = -c + d;
-  e = -oppose(6);
+  e = addition(oppose(6) + 2, 1);
   //e = appel_imbrique(5,4,6);
   //e = 3 * d % c;
   //e = 6 / d;

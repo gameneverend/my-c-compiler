@@ -149,15 +149,21 @@ public class ExpressionHelper{
 				}
         
         else if(e.op == null){
-          tmp = (Variable)e;
-          val = String.valueOf(tmp.getValue());
-          
-					if(Parser.regMan.isListedVariable(val)){
-						reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-            sb.append("\t" + Assembly.MOV + "\t" + reg + ", " + Parser.regMan.getArgReg(val, i) + "\n");
-          }
-          else
-            sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation(val) + ", " + Parser.regMan.getArgReg(val, i) + "\n");
+					if(e instanceof Variable){
+						tmp = (Variable)e;
+						val = String.valueOf(tmp.getValue());
+						
+						if(Parser.regMan.isListedVariable(val)){
+							reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
+							sb.append("\t" + Assembly.MOV + "\t" + reg + ", " + Parser.regMan.getArgReg(val, i) + "\n");
+						}
+						else
+							sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation(val) + ", " + Parser.regMan.getArgReg(val, i) + "\n");
+					}
+					else{
+						sb.append(handleFunctionCall(sb, (FunctionCall)e, context));
+						sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + Parser.regMan.getArgReg(Register.RAX.toString(), i) + "\n");
+					}
         }
         
         else{
@@ -203,7 +209,7 @@ public class ExpressionHelper{
 				
 				if(src.equals(Register.RAX))
 					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");
-				sb.append("\t" + Assembly.CONVERT + "\n");
+				sb.append("\t" + Assembly.CONVERT + "\n");	//sign extend RAX to RDX:RAX
 				sb.append("\t" + OperationType.IDIV + "\t" + Register.RBX + "\n");
 				
 				if(op.equals(OperationType.MOD))
@@ -221,8 +227,9 @@ public class ExpressionHelper{
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src) throws Exception{
 			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
 				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
-				sb.append("\t" + Assembly.CONVERT + "\n");
+				sb.append("\t" + Assembly.CONVERT + "\n");	//sign extend RAX to RDX:RAX
 				sb.append("\t" + OperationType.IDIV + "\t" + Register.RBX + "\n");
+				
 				if(op.equals(OperationType.MOD))
 					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");
 			}
