@@ -178,11 +178,19 @@ public class ExpressionHelper{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
           
-        if(a.getValue() instanceof Integer)
-          sb.append("\t" + Assembly.MOV + "\t$" + a.getValue() + ", " + dst + "\n");
+        if(a.getValue() instanceof Integer){
+					if(a.flag != null && a.flag.equals(Flag.MINUS))
+						sb.append("\t" + Assembly.MOV + "\t$-" + a.getValue() + ", " + dst + "\n");
+					else
+						sb.append("\t" + Assembly.MOV + "\t$" + a.getValue() + ", " + dst + "\n");
+				}
           
-        else if(a.getValue() instanceof String)
+        else if(a.getValue() instanceof String){
 					sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation((String)a.getValue()) + ", " + dst + "\n");
+					if(a.flag != null && a.flag.equals(Flag.MINUS)){	
+						sb.append("\t" + OperationType.IMUL + "\t$-1, " + dst + "\n");
+					}
+				}
       }
 			return sb;
 		}

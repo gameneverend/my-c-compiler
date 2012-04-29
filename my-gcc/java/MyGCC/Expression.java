@@ -8,12 +8,14 @@ public abstract class Expression{
     public Expression right;
     public OperationType op;
     public boolean priority;
+    public Flag flag;
     
     public Expression(){
       this.left = null;
       this.right = null;
       this.op = null;
       this.priority = false;
+      this.flag = null;
     }
     
     /**
@@ -66,17 +68,28 @@ public abstract class Expression{
 		 **/	
 		public String toNumeric(){
 			String tmp;
-			if(this.op == null)
-				return ((Variable)this).getValue().toString();
-				
-			String l = this.left.toNumeric();
-			String r = this.right.toNumeric();
 			
-			if(this.priority)
-				tmp = "( " + l + " " + op + " " + r + " )";
-			else
-				tmp = l + " " + op + " " + r;
+			if(this.op == null){
+				tmp = ((Variable)this).getValue().toString();
 				
+				if(this.flag != null && this.flag.equals(Flag.MINUS))
+					tmp = "-" + tmp;
+			}
+			else{
+				String l = this.left.toNumeric();
+				String r = this.right.toNumeric();
+
+				
+				if(this.priority)
+					tmp = "( " + l + " " + op + " " + r + " )";
+				else
+					tmp = l + " " + op + " " + r;
+					
+				if(this.flag != null && this.flag.equals(Flag.MINUS))
+					tmp = "0 " + OperationType.SUB + " " + tmp ;
+			}
+			
+
 			return tmp;
 		}
     

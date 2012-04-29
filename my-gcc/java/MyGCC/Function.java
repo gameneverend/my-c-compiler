@@ -71,7 +71,7 @@ public class Function{
     sb.append("\t.cfi_offset 6, -16\n");
     sb.append("\t.cfi_def_cfa_register 6\n");
     // If there's function calls in this function rsp should be modified
-    //FIXME Ludo: modify RSP properly according to the function's local stack frame (instead of static 64).
+    //FIXME: modify RSP properly according to the function's local stack frame (instead of static 64).
     if (body.maxParameters() >= 0){
       sb.append("\t" + OperationType.SUB + "\t$"+ 64 +", " + Register.RSP + "\n");
     }

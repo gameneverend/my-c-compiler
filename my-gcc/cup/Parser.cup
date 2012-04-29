@@ -410,12 +410,14 @@ expression ::=
 
   | MINUS expression:e
 			{: if(Parser.DEBUG) System.out.println("Negating expression");
-				 //TODO
+				 e.flag = Flag.MINUS;
+				 RESULT = e;
 			:}
   
-  | NOT expression
+  | NOT expression:e
 			{: if(Parser.DEBUG) System.out.println("NOT expression");
-				 //TODO
+				 e.flag = Flag.NOT;
+				 RESULT = e;
 			:}
   
   | LPAREN expression:e RPAREN
