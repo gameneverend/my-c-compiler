@@ -100,7 +100,7 @@ public class ExpressionHelper{
 				else if(tmp.equals(")"))
           opStack.push(tmp);
 				
-				else if(tmp.equals("(")){	//TODO: if stack runs out without finding rparen -> mismatched parentheses
+				else if(tmp.equals("(")){
 					while(!opStack.empty() && !opStack.peek().equals(")"))
 						output.push(opStack.pop());
 						
@@ -121,7 +121,7 @@ public class ExpressionHelper{
 					opStack.pop();
 					continue;
 				}
-				//TODO: if top is parenthesis -> mismatched parentheses
+				
 				output.push(opStack.pop());
 			}
 			
@@ -142,7 +142,6 @@ public class ExpressionHelper{
       System.out.println("\tTag: " + f.getTag());
       int i = f.getArgs().size() - 1;
       for(Expression e : f.getArgs()){
-				System.out.println("\tHandling next arg");
 				
 				if(e.isFullyNumeric()){
 					num = calculateNum(e);
@@ -155,7 +154,7 @@ public class ExpressionHelper{
           
 					if(Parser.regMan.isListedVariable(val)){
 						reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-            sb.append("\t" + Assembly.MOV + "\t" + reg.toString() + ", " + Parser.regMan.getArgReg(val, i) + "\n");
+            sb.append("\t" + Assembly.MOV + "\t" + reg + ", " + Parser.regMan.getArgReg(val, i) + "\n");
           }
           else
             sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation(val) + ", " + Parser.regMan.getArgReg(val, i) + "\n");
@@ -170,6 +169,8 @@ public class ExpressionHelper{
       }
         
       sb.append("\tcall\t" + f.getTag() + "\n");
+      if(f.flag != null && f.flag.equals(Flag.MINUS))
+				sb.append("\t" + OperationType.IMUL + "\t$-1, " + Register.RAX + "\n");
       return sb;
     }
     

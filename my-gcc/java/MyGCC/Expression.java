@@ -86,7 +86,7 @@ public abstract class Expression{
 					tmp = l + " " + op + " " + r;
 					
 				if(this.flag != null && this.flag.equals(Flag.MINUS))
-					tmp = "0 " + OperationType.SUB + " " + tmp ;
+					tmp = "( 0 " + OperationType.SUB + " " + tmp + " )" ;
 			}
 			
 

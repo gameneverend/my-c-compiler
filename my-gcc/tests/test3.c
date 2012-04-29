@@ -9,17 +9,17 @@ int appel_imbrique(int, int, int);
 
 
 
-/*int addition(int a, int b){
+int addition(int a, int b){
   int c;
   c = a + b;
   return c;
 }
 
-int somme(int x){
+/*int somme(int x){
   int c;
   c = x + 1;
   return c;
-}
+}*/
 
 int oppose(int a){
 	a = 0 - a;
@@ -28,7 +28,7 @@ int oppose(int a){
 
 int appel_imbrique(int a, int b, int c){
 	return addition(a,b) + addition(b,c);
-}*/
+}
 
 int falsemain(int z){
   int c;
@@ -37,12 +37,13 @@ int falsemain(int z){
   
   //c = substraction(e, 1) + 2;
   //c = 11 + d - 7;
-  c = 5;
+  //c = 5;
   //d = 8 % (5 + 1) - 2;
-  d = -10;
+  //d = -10;
   
-  e = -c + d;
-  //e = oppose(6);
+  //e = 5 * -(2 + 3);
+  //e = -c + d;
+  e = -oppose(6);
   //e = appel_imbrique(5,4,6);
   //e = 3 * d % c;
   //e = 6 / d;
