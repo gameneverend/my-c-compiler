@@ -72,20 +72,19 @@ public abstract class Expression{
 			if(this.op == null){
 				tmp = ((Variable)this).getValue().toString();
 				
-				if(this.flag != null && this.flag.equals(Flag.MINUS))
+				if(this.flag != null && this.flag.equals(Flag.UMINUS))
 					tmp = "-" + tmp;
 			}
 			else{
 				String l = this.left.toNumeric();
 				String r = this.right.toNumeric();
 
-				
 				if(this.priority)
 					tmp = "( " + l + " " + op + " " + r + " )";
 				else
 					tmp = l + " " + op + " " + r;
 					
-				if(this.flag != null && this.flag.equals(Flag.MINUS))
+				if(this.flag != null && this.flag.equals(Flag.UMINUS))
 					tmp = "( 0 " + OperationType.SUB + " " + tmp + " )" ;
 			}
 			
@@ -99,7 +98,6 @@ public abstract class Expression{
 			StringBuffer sb = new StringBuffer();
 			String lastReg;
 			System.out.println("Handling expression");
-			
 			
 			if(this.right == null){
 				//Handle leaf
@@ -117,27 +115,31 @@ public abstract class Expression{
 			}
 			
 			sb.append(this.left.handleExpression(e, context));
+			if(this.flag != null && this.flag.equals(Flag.UMINUS))
+				sb.append(ExpressionHelper.asm(Assembly.NEG, Register.RAX));
 			
 			if(this.right.op != null){
 				//Handle expression with three or more operands
 				
 				if(this.right.priority){
+					//Handle priority expression first (parentheses).
 					this.right.priority = false;
 					
           sb.append(context.virtualPush(Register.RAX.toString()));
           sb.append(this.right.handleExpression(e, context));
           sb.append(context.virtualPop(Register.RCX.toString()));
           sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
-          sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));	
+          sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RCX, Register.RAX));	
 				}
 				
 				
 				else if(ExpressionHelper.getPrecedence(this.op.toString()) > ExpressionHelper.getPrecedence(this.right.op.toString())){
+					//Handle operators of higher precedence first.
 					
 					if(this.right.left instanceof Variable)
 						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right.left, Register.RCX, context);
 					else{
-						sb.append(asm(Assembly.MOV, Register.RAX, Register.RCX));	
+						sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RCX));	
 						sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right.left, context);
 					}
 					
@@ -146,7 +148,7 @@ public abstract class Expression{
 					sb.append(this.right.right.handleExpression(e, context));
 					sb.append(context.virtualPop(Register.RCX.toString()));
 					sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RCX);
-					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
+					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RCX, Register.RAX));
 				}		
 				
 				else{
@@ -157,11 +159,11 @@ public abstract class Expression{
 					
 					sb.append(context.virtualPush(lastReg));
 					sb.append(this.right.handleExpression(e, context));
-					sb.append(asm(Assembly.MOV, Register.RAX, Register.RCX));
+					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RCX));
 					sb.append(context.virtualPop(Register.RAX.toString()));
 					
 					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
-					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
+					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RCX, Register.RAX));
 				}
 			}
 			
@@ -170,8 +172,12 @@ public abstract class Expression{
 				
 				if(this.right instanceof Variable){
 					
-					if(((Variable)this.right).getValue() instanceof Integer)
-						sb = ExpressionHelper.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue());
+					if(((Variable)this.right).getValue() instanceof Integer){
+						if(this.right.flag != null && this.right.flag.equals(Flag.UMINUS))
+							sb = ExpressionHelper.handleOperation(sb, this.op, "$-"+((Variable)this.right).getValue());
+						else
+							sb = ExpressionHelper.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue());
+					}
 						
 					else{
 						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RCX, context);
@@ -190,11 +196,6 @@ public abstract class Expression{
 			return sb;
 		}
 		
-		public String asm(Assembly instruction, Register r1, Register r2){
-			return "\t" + instruction + "\t" + r1 + ", " + r2 + "\n";
-		}
-		
-    
     
     public int length(){
       int i = 0;

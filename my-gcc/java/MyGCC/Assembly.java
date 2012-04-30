@@ -5,7 +5,10 @@ public enum Assembly{
 	
 	MOV("movl", "movq"),
 	PUSH("pushl", "pushq"),
-	CONVERT("cdq", "cqto");
+	POP("popl", "popq"),
+	CALL("call", "call"),
+	CONVERT("cdq", "cqto"),
+	NEG("negl", "negq");
 	
 	private String name32;
   private String name64;

@@ -1,6 +1,6 @@
 package MyGCC;
 
 public enum Flag{
-  MINUS,
+  UMINUS,
   NOT;
 }

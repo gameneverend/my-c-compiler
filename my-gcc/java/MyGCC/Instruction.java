@@ -53,7 +53,6 @@ public class Instruction {
           
         case EXIT:
           f = (FunctionCall)l;
-          System.out.println("Exit detected");
           sb.append(instruct.rexpr.handleExpression(f, context));
           //TODO: do not generate ret/leave when function contains an exit and no RETURN instructions
           break;
@@ -62,7 +61,6 @@ public class Instruction {
           a = (Variable)l;
           
           if(instruct.rexpr.isFullyNumeric()){
-            System.out.println("Fully numeric found");
             sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           

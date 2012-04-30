@@ -410,7 +410,7 @@ expression ::=
 
   | MINUS expression:e
 			{: if(Parser.DEBUG) System.out.println("Negating expression");
-				 e.flag = Flag.MINUS;
+				 e.flag = Flag.UMINUS;
 				 RESULT = e;
 			:}
   

@@ -43,13 +43,14 @@ public class ExpressionHelper{
 				tmp = sp[i];
 				
 				if(isInteger(tmp))
-					stack.push(Integer.parseInt(tmp)); //push operand
+					//push operand
+					stack.push(Integer.parseInt(tmp));
 				
 				else{
 					op1 = (Integer)(stack.pop());
 					op2 = (Integer)(stack.pop());
 					
-					switch(OperationType.getOp(tmp)){	//TODO: always floor values (integer only).
+					switch(OperationType.getOp(tmp)){
 						case ADD:
 							result = op1 + op2;
 							break;
@@ -121,7 +122,6 @@ public class ExpressionHelper{
 					opStack.pop();
 					continue;
 				}
-				
 				output.push(opStack.pop());
 			}
 			
@@ -145,7 +145,7 @@ public class ExpressionHelper{
 				
 				if(e.isFullyNumeric()){
 					num = calculateNum(e);
-					sb.append("\t" + Assembly.MOV + "\t$" + num + ", " + Parser.regMan.getArgReg(String.valueOf(num), i) + "\n"); 
+					sb.append(asm(Assembly.MOV, "$" + num, Parser.regMan.getArgReg(String.valueOf(num), i))); 
 				}
         
         else if(e.op == null){
@@ -155,28 +155,28 @@ public class ExpressionHelper{
 						
 						if(Parser.regMan.isListedVariable(val)){
 							reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-							sb.append("\t" + Assembly.MOV + "\t" + reg + ", " + Parser.regMan.getArgReg(val, i) + "\n");
+							sb.append(asm(Assembly.MOV, reg, Parser.regMan.getArgReg(val, i)));
 						}
 						else
-							sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation(val) + ", " + Parser.regMan.getArgReg(val, i) + "\n");
+							sb.append(asm(Assembly.MOV, context.getVariableLocation(val), Parser.regMan.getArgReg(val, i)));
 					}
 					else{
 						sb.append(handleFunctionCall(sb, (FunctionCall)e, context));
-						sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + Parser.regMan.getArgReg(Register.RAX.toString(), i) + "\n");
+						sb.append(asm(Assembly.MOV, Register.RAX, Parser.regMan.getArgReg(Register.RAX.toString(), i)));
 					}
         }
         
         else{
 					sb.append(e.handleExpression(null, context).toString());
-					sb.append("\t" + Assembly.MOV + "\t" + sb.substring(sb.lastIndexOf(",") + 2).replace("\n","") + ", " + Parser.regMan.getArgReg(null, i) + "\n");  //getArgReg param1: ?
+					sb.append(asm(Assembly.MOV, sb.substring(sb.lastIndexOf(",") + 2).replace("\n",""), Parser.regMan.getArgReg(null, i)));  //getArgReg param1: ?
         }
           
         i--;
       }
         
-      sb.append("\tcall\t" + f.getTag() + "\n");
-      if(f.flag != null && f.flag.equals(Flag.MINUS))
-				sb.append("\t" + OperationType.IMUL + "\t$-1, " + Register.RAX + "\n");
+      sb.append(asm(Assembly.CALL, f.getTag()));
+      if(f.flag != null && f.flag.equals(Flag.UMINUS))
+				sb.append(asm(Assembly.NEG, Register.RAX));
       return sb;
     }
     
@@ -184,19 +184,18 @@ public class ExpressionHelper{
     public static StringBuffer handleVariable(StringBuffer sb, Variable a, Register dst, Context context) throws Exception{
       if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
-          
+         
         if(a.getValue() instanceof Integer){
-					if(a.flag != null && a.flag.equals(Flag.MINUS))
-						sb.append("\t" + Assembly.MOV + "\t$-" + a.getValue() + ", " + dst + "\n");
+					if(a.flag != null && a.flag.equals(Flag.UMINUS))
+						sb.append(asm(Assembly.MOV, "$-" + a.getValue(), dst));
 					else
-						sb.append("\t" + Assembly.MOV + "\t$" + a.getValue() + ", " + dst + "\n");
+						sb.append(asm(Assembly.MOV," $" + a.getValue(), dst));
 				}
           
         else if(a.getValue() instanceof String){
-					sb.append("\t" + Assembly.MOV + "\t" + context.getVariableLocation((String)a.getValue()) + ", " + dst + "\n");
-					if(a.flag != null && a.flag.equals(Flag.MINUS)){	
-						sb.append("\t" + OperationType.IMUL + "\t$-1, " + dst + "\n");
-					}
+					sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
+					if(a.flag != null && a.flag.equals(Flag.UMINUS))
+						sb.append(asm(Assembly.NEG, dst));
 				}
       }
 			return sb;
@@ -205,41 +204,49 @@ public class ExpressionHelper{
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Register src, Register dst) throws Exception{
 			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
-				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
+				sb.append(asm(Assembly.MOV, src, Register.RBX));
 				
 				if(src.equals(Register.RAX))
-					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");
-				sb.append("\t" + Assembly.CONVERT + "\n");	//sign extend RAX to RDX:RAX
-				sb.append("\t" + OperationType.IDIV + "\t" + Register.RBX + "\n");
+					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
+				sb.append(asm(Assembly.CONVERT, ""));	//sign extend RAX to RDX:RAX
+				sb.append(asm(OperationType.IDIV, Register.RBX));
 				
 				if(op.equals(OperationType.MOD))
-					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");				
+					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));				
 			}
 			
 			else{
-				sb.append("\t" + op + "\t" + src + ", " + dst + "\n");
+				sb.append(asm(op, src, dst));
 				if(src.equals(Register.RAX))
-					sb.append("\t" + Assembly.MOV + "\t" + dst + ", " + Register.RAX + "\n");
+					sb.append(asm(Assembly.MOV, dst, Register.RAX));
 			}
 				return sb;
     }
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src) throws Exception{
 			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
-				sb.append("\t" + Assembly.MOV + "\t" + src + ", " + Register.RBX + "\n");
-				sb.append("\t" + Assembly.CONVERT + "\n");	//sign extend RAX to RDX:RAX
-				sb.append("\t" + OperationType.IDIV + "\t" + Register.RBX + "\n");
+				sb.append(asm(Assembly.MOV, src, Register.RBX));
+				sb.append(asm(Assembly.CONVERT, ""));	//sign extend RAX to RDX:RAX
+				sb.append(asm(OperationType.IDIV, Register.RBX));
 				
 				if(op.equals(OperationType.MOD))
-					sb.append("\t" + Assembly.MOV + "\t" + Register.RCX + ", " + Register.RAX + "\n");
+					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
 			}
 			
 			else
-				sb.append("\t" + op + "\t" + src + ", " + Register.RAX + "\n");
+				sb.append(asm(op, src, Register.RAX));
 			return sb;
     }
     
     
+    public static String asm(Object instruction, Object src, Object dst){
+			return "\t" + instruction.toString() + "\t" + src.toString() + ", " + dst.toString() + "\n";
+		}
+		
+		
+    public static String asm(Object instruction, Object r){
+			return "\t" + instruction + "\t" + r + "\n";
+		}
     
      
     
