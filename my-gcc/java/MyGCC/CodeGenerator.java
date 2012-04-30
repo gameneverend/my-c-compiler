@@ -99,7 +99,7 @@ public class CodeGenerator{
     Function f = new Function(name, returnType, parameters);
     globalFunctions.add(f);
     this.currentFunction = f;
-    this.currentBlock = f.body.mainBlock;
+    this.currentBlock = f.body;
   }
   
   public void startBlockDefinition(Block b) {

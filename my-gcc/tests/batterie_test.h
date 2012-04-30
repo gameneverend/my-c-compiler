@@ -17,7 +17,7 @@ extern int polynome_simple(int a ,int b,int c);
 extern int appel_imbrique(int a, int b, int c);
 
 /* Cette fonction teste les blocs logiques */
-// TODO
+extern int test_while(void);
 
 /* Cette fonction teste la récursivité */
 // TODO

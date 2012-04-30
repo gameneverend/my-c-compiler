@@ -33,4 +33,8 @@ int main(int argc, char ** argv){
 	printf("Multiple functions call (add(5,4) + add(4,6) : ");
 	test_validity(appel_imbrique(5,4,6), 19);
 	printf("OK\n");
+  
+  printf("testing while loops (i = 0, loop while i < 10) : ");
+  test_validity(test_while(), 9);
+  printf("OK\n");
 }

@@ -5,6 +5,5 @@ public enum InstructionType{
   EXIT,
   EQL,
   IF,
-  ELSE,	
   WHILE;
 }

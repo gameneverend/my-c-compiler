@@ -7,16 +7,31 @@ public class Block {
   public Block parent = null;
   public LinkedList<Instruction> instructions;
   public LinkedList<Block> blocks;
+  public Context myContext;
 
   
   public Block() {
     this.instructions = new LinkedList<Instruction>();
     this.blocks = new LinkedList<Block>();
+    this.myContext = null;
   }
   
   public Block(LinkedList<Instruction> ins, LinkedList<Block> bl) {
     this.instructions = ins;
     this.blocks = bl;
+    this.myContext = null;
+  }
+  
+  public Block(Block b, Context c) {
+    this.instructions = new LinkedList<Instruction>(b.instructions);
+    this.blocks = new LinkedList<Block>();
+    this.myContext = c;
+  }
+  
+  public Block(Context c) {
+    this.instructions = new LinkedList<Instruction>();
+    this.blocks = new LinkedList<Block>();
+    this.myContext = c;
   }
   
   /**
@@ -61,5 +76,20 @@ public class Block {
   
   public LinkedList<Block> getBlocks() {
     return this.blocks;
+  }
+  
+  public String toString(){
+    StringBuffer sb = new StringBuffer();
+    Instruction i;
+    Iterator<Instruction> iter = instructions.iterator();
+    
+    while(iter.hasNext()){
+      i = iter.next();
+      try{
+      sb.append(Instruction.instructionToAssembly(i, myContext));
+      }catch(Exception e){e.printStackTrace();}
+    }
+    
+    return sb.toString();
   }
 }

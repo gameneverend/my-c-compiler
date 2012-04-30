@@ -31,5 +31,4 @@ public class LogicalBlock extends Block  {
   public InstructionType getInstructionType() {
     return this.type;
   }
-  
 }
