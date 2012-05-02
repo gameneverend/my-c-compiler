@@ -54,8 +54,8 @@ int appel_imbrique(int a, int b, int c){
 int test_logic(int i) {
   if(i == 10)
     i = i + 1;
-  else
-    i = 1 - 5;
+  /*else
+    i = 1 - 5;*/
   ;
   return i;
 }

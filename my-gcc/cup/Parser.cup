@@ -118,8 +118,8 @@ dec_end ::=
        
        
 arr ::=
-    // A declaration or a prototype may contain an Array of.
-    // Therefore it wile be of the for [NUM]
+    // A declaration or a prototype may contain an Array.
+    // Therefore it wile be of the form [NUM]
     LHOOK NB_INT RHOOK
     // It may also be empty
   |                     
@@ -356,15 +356,24 @@ instruction ::=
   | READ_INT LPAREN IDENT RPAREN
   
     // Basic "if else" test on an expression
-  | IF {: if(Parser.DEBUG) System.out.println("If detected"); :}
+  | IF {: if(Parser.DEBUG) System.out.println("If detected");
+          //System.out.println("body is : " + parser.cg.getCurrentBlock()); :}
       LPAREN expression:e RPAREN
         {:  parser.cg.startBlockDefinition();
         :}
-      if_end
-        {:  Block cb = parser.cg.getCurrentBlock();
-            parser.cg.closeBlockDefinition();
-            parser.cg.closeBlockDefinition();
-            parser.cg.pushInstruction(new LogicalIfElse(e, InstructionType.IF, cb.parent, cb));
+      if_end:ie
+        {:  if(ie != null) {
+              System.out.println("ie not null");
+              parser.cg.closeBlockDefinition();
+              parser.cg.pushInstruction(new LogicalIfElse(e, InstructionType.IF, ((Block)ie).parent, (Block)ie));
+            } else {
+              System.out.println("ie null");
+              Block cb = parser.cg.getCurrentBlock();
+              //System.out.println("if current block before closing : " + cb);
+              parser.cg.closeBlockDefinition();
+              //System.out.println("if current block after closing : " + parser.cg.getCurrentBlock());
+              parser.cg.pushInstruction(new LogicalIfElse(e, InstructionType.IF, cb, null));
+            }
             if(Parser.DEBUG) System.out.println("If reduced");
         :}
   
@@ -390,8 +399,12 @@ while_end ::=
   ;
 
 if_end ::=
-    LBRACKET instruct_list RBRACKET if_else
-  | instruction SEMI if_else
+    LBRACKET instruct_list RBRACKET if_else:ie
+      {:  RESULT = ie;
+      :}
+  | instruction SEMI if_else:ie
+      {:  RESULT = ie;
+      :}
   ;
   
 if_else ::=
@@ -399,12 +412,20 @@ if_else ::=
       {:  parser.cg.startBlockDefinition();
       :}
       LBRACKET instruct_list RBRACKET
+        {:  Block cb = parser.cg.getCurrentBlock();
+            parser.cg.closeBlockDefinition();
+            RESULT = cb;
+        :}
       
   | ELSE
       {:  parser.cg.startBlockDefinition();
       :}
       instruction:i SEMI
-  |
+        {:  Block cb = parser.cg.getCurrentBlock();
+            parser.cg.closeBlockDefinition();
+            RESULT = cb;
+        :}
+  | {:  RESULT = null; :}
   ;
     
 // Defines the list of possible expressions to be used
