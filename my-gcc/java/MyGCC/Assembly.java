@@ -8,6 +8,7 @@ public enum Assembly{
 	POP("popl", "popq"),
 	CALL("call", "call"),
 	CONVERT("cdq", "cqto"),
+  COMPARE("cmpl", "cmpq"),
 	NEG("negl", "negq"),
   JUMP("jmp", "jmp");
 	

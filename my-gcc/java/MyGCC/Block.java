@@ -53,29 +53,6 @@ public class Block {
     if(this.code != null)
       if(e != null) {
         this.code.add(e);
-        System.out.println(code.size());
-      } else
-        System.err.println("The specified instruction is null");
-    else
-      System.err.println("this.instructions: is null");
-  }
-  
-  public void pushInstruction(LogicalBlock e) {
-    if(this.code != null)
-      if(e != null) {
-        this.code.add(e);
-        System.out.println(code.size());
-      } else
-        System.err.println("The specified instruction is null");
-    else
-      System.err.println("this.instructions: is null");
-  }
-  
-  public void pushInstruction(LogicalIfElse e) {
-    if(this.code != null)
-      if(e != null) {
-        this.code.add(e);
-        System.out.println(code.size());
       } else
         System.err.println("The specified instruction is null");
     else

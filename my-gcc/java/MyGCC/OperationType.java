@@ -9,24 +9,24 @@ public enum OperationType{
   SUB("subl", "subq"),
   IMUL("imull", "imulq"),
   IDIV("idivl", "idivq"),
+  MOD("mod", "mod"),
+  OR("orl", "orq"),
+  AND("andl", "andq"),
   
   /* In order to maintain the same order of code as the input
    * we invert all the tests.
    */
   LESS("jge", "jge"),
   GREATER("jle", "jle"),
-  //EQUALS("jne", "jne"),
-  EQUALS("cmpl", "cmpq"),
+  EQUALS("jne", "jne"),
   LEQL("jg", "jg"),
   GEQL("jl", "jl"),
-  DIFF("je", "je"),
-  MOD("mod", "mod"),
-  OR("orl", "orq"),
-  AND("andl", "andq");
+  DIFF("je", "je");
   
   public String name32;
   public String name64;
   private static ArrayList<OperationType> ops = new ArrayList<OperationType>();
+  private static ArrayList<OperationType> conditional = new ArrayList<OperationType>();
   
   static{
     ops.add(ADD);
@@ -41,8 +41,17 @@ public enum OperationType{
     ops.add(GEQL);
     
     ops.add(OR);
-    ops.add(AND);   
-  }
+    ops.add(AND);
+    
+    conditional.add(LESS);
+    conditional.add(GREATER);
+    conditional.add(EQUALS);
+    conditional.add(LEQL);
+    conditional.add(GEQL);
+    conditional.add(DIFF);
+    
+     
+}
 
   private OperationType(String s32, String s64){
     this.name32 = s32;
@@ -55,6 +64,12 @@ public enum OperationType{
 				return op;
 		}
 		return null;
+	}
+  
+  public static boolean isConditional(OperationType op){
+		if(conditional.contains(op))
+      return true;
+    return false;
 	}
   
   public String toString(){

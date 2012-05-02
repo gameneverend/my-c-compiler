@@ -98,7 +98,6 @@ public abstract class Expression{
 			StringBuffer sb = new StringBuffer();
 			String lastReg;
 			System.out.println("Handling expression");
-			System.out.println("Context in handler : " + context);
 			if(this.right == null){
 				//Handle leaf
 				
@@ -129,7 +128,6 @@ public abstract class Expression{
           sb.append(this.right.handleExpression(e, context));
           sb.append(context.virtualPop(Register.RDX.toString()));
           sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
-          //sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RDX, Register.RAX));	
 				}
 				
 				
@@ -148,7 +146,6 @@ public abstract class Expression{
 					sb.append(this.right.right.handleExpression(e, context));
 					sb.append(context.virtualPop(Register.RDX.toString()));
 					sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RDX);
-					//sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RDX, Register.RAX));
 				}		
 				
 				else{
@@ -163,7 +160,6 @@ public abstract class Expression{
 					sb.append(context.virtualPop(Register.RAX.toString()));
 					
 					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
-					//sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RDX, Register.RAX));
 				}
 			}
 			

@@ -202,7 +202,10 @@ public class ExpressionHelper{
     
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Register src, Register dst) throws Exception{
-			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
+      if(OperationType.isConditional(op))
+        sb.append(asm(Assembly.COMPARE, src, dst));
+      
+			else if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
 				sb.append(asm(Assembly.MOV, src, Register.RBX));
 				
 				if(src.equals(Register.RAX))
@@ -223,7 +226,10 @@ public class ExpressionHelper{
     }
     
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src) throws Exception{
-			if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
+      if(OperationType.isConditional(op))
+        sb.append(asm(Assembly.COMPARE, src, Register.RAX));     
+      
+			else if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
 				sb.append(asm(Assembly.MOV, src, Register.RBX));
 				sb.append(asm(Assembly.CONVERT, ""));	//sign extend RAX to RDX:RAX
 				sb.append(asm(OperationType.IDIV, Register.RBX));

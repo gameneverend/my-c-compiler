@@ -17,6 +17,7 @@ public class LogicalIfElse extends LogicalBlock {
   
   public static String instructionToAssembly(LogicalIfElse instruct, Context context) throws Exception {
 		StringBuffer sb = new StringBuffer();
+    String label1 = LabelManager.getLabel();
     
     if(instruct != null){
       if(instruct.rexpr == null){
@@ -24,21 +25,19 @@ public class LogicalIfElse extends LogicalBlock {
         // do nothing: already handled in epilogue()
         return sb.toString();
       }
-      System.out.println("LogicalIfElse");
-      //System.out.println("\tInstruction type: " + instruct.type.toString());
-      String label1 = LabelManager.getLabel();
+      
       sb.append(instruct.rexpr.handleExpression(null, context));
-      sb.append(instruct.rexpr.op); sb.append(" "); sb.append(label1); sb.append('\n');
+      sb.append("\t"); sb.append(instruct.rexpr.op + " "); sb.append(label1); sb.append("\n");
       sb.append(instruct.block.toString());
        
       if(instruct.elseBlock != null) {
         String label2 = LabelManager.getLabel();
-        sb.append('\t'); sb.append(Assembly.JUMP + " "); sb.append(label2); sb.append('\n');
+        sb.append("\t"); sb.append(Assembly.JUMP + " "); sb.append(label2); sb.append("\n");
         sb.append(label1); sb.append(":\n");
         sb.append(instruct.elseBlock.toString());
         sb.append(label2); sb.append(":\n");
       }
-      System.out.println("Finished assembling LogicalIfElse");
+      
       return sb.toString();
     }
     

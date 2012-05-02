@@ -47,20 +47,6 @@ public class CodeGenerator{
     this.currentBlock.pushInstruction(i);
   }
   
-  public void pushInstruction(LogicalBlock i){
-    System.out.println("Pushing LogicalBlock to function: " + currentFunction.name);
-    if (currentFunction == null)
-      System.err.println("ERROR: currentFunction is null");
-    this.currentBlock.pushInstruction(i);
-  }
-  
-  public void pushInstruction(LogicalIfElse i){
-    System.out.println("Pushing LogicalIflse to function: " + currentFunction.name);
-    if (currentFunction == null)
-      System.err.println("ERROR: currentFunction is null");
-    this.currentBlock.pushInstruction(i);
-  }
-  
   public void pushInformation(Object o){
     if(o == null)
       System.err.println("Pushing NULL object");
