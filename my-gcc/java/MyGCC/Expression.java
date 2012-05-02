@@ -117,17 +117,21 @@ public abstract class Expression{
 			if(this.flag != null && this.flag.equals(Flag.UMINUS))
 				sb.append(ExpressionHelper.asm(Assembly.NEG, Register.RAX));
 			
-			if(this.right.op != null){
+			if(this.right.op != null && this.right.priority == false){
 				//Handle expression with three or more operands
 				
-				if(this.right.priority){
+				if(this.right.left.priority){
 					//Handle priority expression first (parentheses).
-					this.right.priority = false;
+					this.right.left.priority = false;
 					
           sb.append(context.virtualPush(Register.RAX.toString()));
-          sb.append(this.right.handleExpression(e, context));
+          sb.append(this.right.left.handleExpression(e, context));
           sb.append(context.virtualPop(Register.RDX.toString()));
           sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
+          sb.append(context.virtualPush(Register.RAX.toString()));
+          sb.append(this.right.right.handleExpression(e, context));
+          sb.append(context.virtualPop(Register.RDX.toString()));
+          sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RDX);
 				}
 				
 				
@@ -149,16 +153,10 @@ public abstract class Expression{
 				}		
 				
 				else{
-					if(this.left instanceof FunctionCall)
-						lastReg = Register.RAX.toString();
-					else
-						lastReg = sb.substring(sb.lastIndexOf(",") + 2).replace("\n","");
-					
-					sb.append(context.virtualPush(lastReg));
+					sb.append(context.virtualPush(Register.RAX.toString()));
 					sb.append(this.right.handleExpression(e, context));
 					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RDX));
 					sb.append(context.virtualPop(Register.RAX.toString()));
-					
 					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
 				}
 			}
@@ -166,7 +164,14 @@ public abstract class Expression{
 			else{
 				//Handle simple node (l op r)
 				
-				if(this.right instanceof Variable){
+				if(this.right.priority){
+					sb.append(context.virtualPush(Register.RAX.toString()));
+					sb.append(this.right.handleExpression(e, context));
+					sb.append(context.virtualPop(Register.RDX.toString()));
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
+				}
+				
+				else if(this.right instanceof Variable){
 					
 					if(((Variable)this.right).getValue() instanceof Integer){
 						if(this.right.flag != null && this.right.flag.equals(Flag.UMINUS))
@@ -181,7 +186,7 @@ public abstract class Expression{
 					}
 				}
 					
-				else{
+				else if(this.right instanceof FunctionCall){
 					sb.append(context.virtualPush(Register.RAX.toString()));
 					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right, context);
 					sb.append(context.virtualPop(Register.RDX.toString()));
@@ -206,5 +211,10 @@ public abstract class Expression{
         i++;
       return i;
     }
+    
+    public String toString(){
+			//TODO
+			return new String();
+		}
     
 }

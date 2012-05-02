@@ -189,7 +189,7 @@ public class ExpressionHelper{
 						sb.append(asm(Assembly.MOV, "$-" + a.getValue(), dst));
           }
 					else {
-						sb.append(asm(Assembly.MOV," $" + a.getValue(), dst));
+						sb.append(asm(Assembly.MOV, "$" + a.getValue(), dst));
           }
 				} else if(a.getValue() instanceof String){
 					sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
@@ -200,7 +200,10 @@ public class ExpressionHelper{
 			return sb;
 		}
     
-    
+    /**
+     * This method generates the assembly code for handling an operation.
+     * The calculated result is placed in Register.RAX
+     */
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Register src, Register dst) throws Exception{
       if(OperationType.isConditional(op))
         sb.append(asm(Assembly.COMPARE, src, dst));
