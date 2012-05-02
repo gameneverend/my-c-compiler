@@ -14,6 +14,7 @@ int test_validity(int result, int expected_result){
 
 int main(int argc, char ** argv){
 	int result;
+  
 	printf("Simple test (return 42) : ");
 	test_validity(test_simple(), 42);
 	printf("OK\n");
@@ -41,4 +42,9 @@ int main(int argc, char ** argv){
   printf("testing while (while i != 10, i++) : ");
   test_validity(test_while(0), 10);
   printf("OK\n");
+  
+  printf("testing fibo(5): result = 8");
+  test_validity(test_fibo(5), 8);
+  printf("OK\n");
+  
 }

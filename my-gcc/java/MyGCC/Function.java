@@ -10,6 +10,7 @@ public class Function{
   private Type returnType;
   public String name;
   public Body body;
+  public String endTag;
   private FunctionContext myContext;
 
   public Function(String name,
@@ -19,12 +20,16 @@ public class Function{
     this.returnType = returnType;
     this.myContext = new FunctionContext(null);
     myContext.setParameters(parameters);
-    body = new Body(myContext);
+    body = new Body(myContext, this);
+    endTag = null;
   }
   
   
 
   public String toString(){
+    if(body.nbReturns() > 1)
+      endTag = LabelManager.getLabel();
+
     int i = LabelManager.getFunctionNumber();
     StringBuffer sb = new StringBuffer();
     sb.append(".globl "); sb.append(name); sb.append('\n');
@@ -33,7 +38,7 @@ public class Function{
     sb.append(LabelManager.getBeginLabel(i)); sb.append(":\n");
     sb.append(prelude());
     sb.append(loadParameters());
-    sb.append(body.toString());
+    sb.append(body.toString());  
     sb.append(epilogue());
     sb.append(LabelManager.getEndLabel(i)); sb.append(":\n");
     sb.append("\t.size "); sb.append(name); sb.append(", .-"); sb.append(name); sb.append('\n');
@@ -81,6 +86,11 @@ public class Function{
   //TODO this code is written, but not fully understood by it's writer, more work should be done on it
   private String epilogue(){
     StringBuilder sb = new StringBuilder();
+    
+    if(endTag != null)
+      sb.append(endTag + ": \n");
+    
+    //TODO free allocated stack frame (add, pop)
     sb.append("\tleave\n");
     sb.append("\t.cfi_def_cfa 7, 8\n");
     sb.append("\tret\n");

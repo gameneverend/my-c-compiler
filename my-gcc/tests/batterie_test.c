@@ -17,12 +17,11 @@ int appel_imbrique(int, int, int);
 /* Cette fonction teste les blocs logiques */
 int test_logic(int);
 
-
-/* Cette fonction teste la récursivité */
-// TODO
-
 /* Cette fonction teste le fonctionnement des boucles */
 int test_while(int);
+
+/* Cette fonction teste la récursivité */
+int test_fibo(int);
 
 
 /***** Implémentation *****/
@@ -54,8 +53,6 @@ int appel_imbrique(int a, int b, int c){
 int test_logic(int i) {
   if(i == 10)
     i = i + 1;
-  /*else
-    i = 1 - 5;*/
   ;
   return i;
 }
@@ -65,4 +62,16 @@ int test_while(int i) {
     i = i + 1;
   ;
   return i;
+}
+
+int test_fibo(int i){
+  if(i == 0)
+    return 1;
+  ;
+  
+  if(i == 1)
+    return 1;
+  ;
+  
+  return test_fibo(i-1) + test_fibo(i-2);
 }

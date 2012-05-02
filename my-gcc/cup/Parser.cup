@@ -363,15 +363,11 @@ instruction ::=
         :}
       if_end:ie
         {:  if(ie != null) {
-              System.out.println("ie not null");
               parser.cg.closeBlockDefinition();
               parser.cg.pushInstruction(new LogicalIfElse(e, InstructionType.IF, ((Block)ie).parent, (Block)ie));
             } else {
-              System.out.println("ie null");
               Block cb = parser.cg.getCurrentBlock();
-              //System.out.println("if current block before closing : " + cb);
               parser.cg.closeBlockDefinition();
-              //System.out.println("if current block after closing : " + parser.cg.getCurrentBlock());
               parser.cg.pushInstruction(new LogicalIfElse(e, InstructionType.IF, cb, null));
             }
             if(Parser.DEBUG) System.out.println("If reduced");

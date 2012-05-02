@@ -31,11 +31,11 @@ public class Instruction {
     return n;
   }
   
-  public static String instructionToAssembly(Instruction instruct, Context context) throws Exception{
+  public static String instructionToAssembly(Instruction instruct, Context context, Function f) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		Expression l = instruct.lexpr;
     Variable a;
-    FunctionCall f;
+    FunctionCall fc;
     if(instruct != null){
       if(instruct.rexpr == null){
         System.out.println("rexpr is null");
@@ -49,11 +49,13 @@ public class Instruction {
         case RETURN:
           a = (Variable)l;
 					sb.append(instruct.rexpr.handleExpression(a, context));
+          if(f.endTag != null)
+            sb.append("\t" + Assembly.JUMP + " " + f.endTag + "\n");
           break;
           
         case EXIT:
-          f = (FunctionCall)l;
-          sb.append(instruct.rexpr.handleExpression(f, context));
+          fc = (FunctionCall)l;
+          sb.append(instruct.rexpr.handleExpression(fc, context));
           //TODO: do not generate ret/leave when function contains an exit and no RETURN instructions
           break;
           

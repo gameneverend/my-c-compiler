@@ -4,17 +4,15 @@ import java.util.*;
 
 public class Body extends Block{
   
+  public Function mFunction;
   public LinkedList<Declaration> declarations;
   
-  public Body(Context c) {
+  public Body(Context c, Function f) {
     super(c);
     this.declarations = new LinkedList<Declaration>();
+    this.mFunction = f;
   }
   
-  public Body(LinkedList<Declaration> dec, Block b, Context c) {
-    super(b, c);
-    this.declarations = dec;
-  }
   
   /**
    * This functions return the highest number of parameters contained in a
@@ -24,6 +22,24 @@ public class Body extends Block{
   /*public int maxParameters(){
     return mainBlock.maxParameters();
   }*/
+  
+  
+  public int nbReturns(){
+    int i = 0;
+    for(Object o : this.code){
+      
+      if(o instanceof LogicalBlock)
+        i += ((LogicalBlock)o).nbReturns();
+      else if(o instanceof LogicalIfElse)
+        i += ((LogicalIfElse)o).nbReturns();
+      else if(o instanceof Instruction){
+        if(((Instruction)o).type.equals(InstructionType.RETURN))
+          i++;
+      }
+    }
+    return i;
+  }
+      
   
   public void pushDeclaration(Declaration d) {
     if(this.declarations != null)

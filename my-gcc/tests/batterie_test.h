@@ -17,12 +17,12 @@ extern int polynome_simple(int a ,int b,int c);
 extern int appel_imbrique(int a, int b, int c);
 
 /* Cette fonction teste les blocs logiques */
+extern int test_logic(int);
+
+/* Cette fonction teste le fonctionnement des boucles */
 extern int test_while(int);
 
 /* Cette fonction teste la récursivité */
-// TODO
-
-/* Cette fonction teste le fonctionnement des boucles */
-// TODO
+extern int test_fibo(int);
 
 #endif

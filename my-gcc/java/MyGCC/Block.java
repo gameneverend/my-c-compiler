@@ -6,13 +6,11 @@ public class Block {
   
   public Block parent = null;
   public LinkedList<Object> code;
-  //public LinkedList<Block> blocks;
   public Context myContext;
 
   
   public Block() {
     this.code = new LinkedList<Object>();
-    //this.blocks = new LinkedList<Block>();
     this.myContext = null;
   }
   
@@ -23,13 +21,11 @@ public class Block {
   
   public Block(Block b, Context c) {
     this.code = new LinkedList<Object>(b.code);
-    //this.blocks = new LinkedList<Block>();
     this.myContext = c;
   }
   
   public Block(Context c) {
     this.code = new LinkedList<Object>();
-    //this.blocks = new LinkedList<Block>();
     this.myContext = c;
   }
   
@@ -47,6 +43,22 @@ public class Block {
         n = Math.max(((Block) i).maxParameters(), n);
     }
     return n;
+  }
+  
+  public int nbReturns(){
+    int i = 0;
+    for(Object o : this.code){
+      
+      if(o instanceof LogicalBlock)
+        i += ((LogicalBlock)o).nbReturns();
+      else if(o instanceof LogicalIfElse)
+        i += ((LogicalIfElse)o).nbReturns();
+      else if(o instanceof Instruction){
+        if(((Instruction)o).type.equals(InstructionType.RETURN))
+          i++;
+      }
+    }
+    return i;
   }
   
   public void pushInstruction(Instruction e) {
@@ -75,16 +87,18 @@ public class Block {
     
   public String toString(){
     StringBuffer sb = new StringBuffer();
-    for(Object i : code){
+    Block b = this;
+    while(b.parent != null)
+      b = b.parent;
+    
+    for(Object o : code){
       try{
-        if(i instanceof Body) {
-          sb.append(i.toString());
-        } else if(i instanceof LogicalIfElse) {
-          sb.append(LogicalIfElse.instructionToAssembly((LogicalIfElse)i, myContext));
-        } else if(i instanceof LogicalBlock) {
-          sb.append(LogicalBlock.instructionToAssembly((LogicalBlock)i, myContext));
-        } else if(i instanceof Instruction) {
-          sb.append(Instruction.instructionToAssembly((Instruction)i, myContext));
+        if(o instanceof LogicalIfElse) {
+          sb.append(LogicalIfElse.instructionToAssembly((LogicalIfElse)o, myContext));
+        } else if(o instanceof LogicalBlock) {
+          sb.append(LogicalBlock.instructionToAssembly((LogicalBlock)o, myContext));
+        } else if(o instanceof Instruction) {
+          sb.append(Instruction.instructionToAssembly((Instruction)o, myContext, ((Body)b).mFunction));
         }
       }catch(Exception e){e.printStackTrace();}
     }

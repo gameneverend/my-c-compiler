@@ -15,6 +15,13 @@ public class LogicalIfElse extends LogicalBlock {
     this.elseBlock = elseBlock;
   }
   
+  public int nbReturns(){
+    int i = 0;
+    if(elseBlock != null)
+      i += elseBlock.nbReturns();
+    return i + this.block.nbReturns();
+  }
+  
   public static String instructionToAssembly(LogicalIfElse instruct, Context context) throws Exception {
 		StringBuffer sb = new StringBuffer();
     String label1 = LabelManager.getLabel();
