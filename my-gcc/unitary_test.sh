@@ -9,11 +9,11 @@ TEST2="tests/test3"
 
 
 $OUR_COMPILER $TEST1.c
-$OUR_COMPILER $TEST2.c
+#$OUR_COMPILER $TEST2.c
 
-gcc $TEST1.s tests/full_test.c -o full
+gcc $TEST1.s tests/full_test.c -o exec
 #gcc -g $TEST2.s tests/executor.c -o exec
 
-./full
-#./exec
+#./full
+./exec
 

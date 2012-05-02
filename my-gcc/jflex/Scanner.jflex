@@ -74,6 +74,7 @@ SPACING = [ \t\r\f] | {NEWLINE}
 
   "if"      {return sf.newSymbol("If statement",sym.IF); }
   "else"    {return sf.newSymbol("Else statement",sym.ELSE); }
+  "while"   {return sf.newSymbol("While statement",sym.WHILE); }
   "int"     {return sf.newSymbol("Int type", sym.INT); }
   "void"    {return sf.newSymbol("Void type", sym.VOID); }
   "static"  {return sf.newSymbol("Static type", sym.STATIC); }

@@ -69,7 +69,7 @@ public class Instruction {
             sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
-          
+
         default:
           // case null, ie. for instructions like "1+2;"
           // optimize and don't calculate

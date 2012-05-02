@@ -5,32 +5,31 @@ import java.util.*;
 public class Block {
   
   public Block parent = null;
-  public LinkedList<Instruction> instructions;
-  public LinkedList<Block> blocks;
+  public LinkedList<Object> code;
+  //public LinkedList<Block> blocks;
   public Context myContext;
 
   
   public Block() {
-    this.instructions = new LinkedList<Instruction>();
-    this.blocks = new LinkedList<Block>();
+    this.code = new LinkedList<Object>();
+    //this.blocks = new LinkedList<Block>();
     this.myContext = null;
   }
   
-  public Block(LinkedList<Instruction> ins, LinkedList<Block> bl) {
-    this.instructions = ins;
-    this.blocks = bl;
+  public Block(LinkedList<Object> code) {
+    this.code = code;
     this.myContext = null;
   }
   
   public Block(Block b, Context c) {
-    this.instructions = new LinkedList<Instruction>(b.instructions);
-    this.blocks = new LinkedList<Block>();
+    this.code = new LinkedList<Object>(b.code);
+    //this.blocks = new LinkedList<Block>();
     this.myContext = c;
   }
   
   public Block(Context c) {
-    this.instructions = new LinkedList<Instruction>();
-    this.blocks = new LinkedList<Block>();
+    this.code = new LinkedList<Object>();
+    //this.blocks = new LinkedList<Block>();
     this.myContext = c;
   }
   
@@ -41,52 +40,75 @@ public class Block {
    */  
   public int maxParameters(){
     int n = -1;
-    for (Instruction i : instructions){
-      n = Math.max(i.maxParameters(), n);
-    }
-    for (Block b : blocks){
-      n = Math.max(b.maxParameters(), n);
+    for (Object i : code){
+      if(i instanceof Instruction)
+        n = Math.max(((Instruction) i).maxParameters(), n);
+      else
+        n = Math.max(((Block) i).maxParameters(), n);
     }
     return n;
   }
   
   public void pushInstruction(Instruction e) {
-    if(this.instructions != null)
-      if(e != null)
-        this.instructions.add(e);
-      else
+    if(this.code != null)
+      if(e != null) {
+        this.code.add(e);
+        System.out.println(code.size());
+      } else
+        System.err.println("The specified instruction is null");
+    else
+      System.err.println("this.instructions: is null");
+  }
+  
+  public void pushInstruction(LogicalBlock e) {
+    if(this.code != null)
+      if(e != null) {
+        this.code.add(e);
+        System.out.println(code.size());
+      } else
+        System.err.println("The specified instruction is null");
+    else
+      System.err.println("this.instructions: is null");
+  }
+  
+  public void pushInstruction(LogicalIfElse e) {
+    if(this.code != null)
+      if(e != null) {
+        this.code.add(e);
+        System.out.println(code.size());
+      } else
         System.err.println("The specified instruction is null");
     else
       System.err.println("this.instructions: is null");
   }
   
   public void pushBlock(Block bl) {
-    if(this.blocks != null)
+    if(this.code != null)
       if(bl != null)
-        this.blocks.add(bl);
+        this.code.add(bl);
       else
         System.err.println("The specified block is null");
     else
       System.err.println("this.blocks: is null");
   }
 
-  public LinkedList<Instruction> getInstructions() {
-    return this.instructions;
+  public LinkedList<Object> getInstructions() {
+    return this.code;
   }
-  
-  public LinkedList<Block> getBlocks() {
-    return this.blocks;
-  }
-  
+    
   public String toString(){
     StringBuffer sb = new StringBuffer();
-    Instruction i;
-    Iterator<Instruction> iter = instructions.iterator();
-    
-    while(iter.hasNext()){
-      i = iter.next();
+    for(Object i : code){
       try{
-      sb.append(Instruction.instructionToAssembly(i, myContext));
+        if(i instanceof Body) {
+          sb.append(i.toString());
+        } else if(i instanceof LogicalIfElse) {
+          sb.append(LogicalIfElse.instructionToAssembly((LogicalIfElse)i, myContext));
+        } else if(i instanceof LogicalBlock) {
+          sb.append(LogicalBlock.instructionToAssembly((LogicalBlock)i, myContext));
+        } else if(i instanceof Instruction) {
+          sb.append(Instruction.instructionToAssembly((Instruction)i, myContext));
+        }
       }catch(Exception e){e.printStackTrace();}
     }
     

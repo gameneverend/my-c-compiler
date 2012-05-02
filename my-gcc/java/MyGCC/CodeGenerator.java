@@ -36,13 +36,31 @@ public class CodeGenerator{
 		return lst;
 	}
   
+  public Block getCurrentBlock() {
+    return this.currentBlock;
+  }
+  
   public void pushInstruction(Instruction i){
     System.out.println("Pushing instruction to function: " + currentFunction.name);
     if (currentFunction == null)
       System.err.println("ERROR: currentFunction is null");
     this.currentBlock.pushInstruction(i);
   }
-
+  
+  public void pushInstruction(LogicalBlock i){
+    System.out.println("Pushing LogicalBlock to function: " + currentFunction.name);
+    if (currentFunction == null)
+      System.err.println("ERROR: currentFunction is null");
+    this.currentBlock.pushInstruction(i);
+  }
+  
+  public void pushInstruction(LogicalIfElse i){
+    System.out.println("Pushing LogicalIflse to function: " + currentFunction.name);
+    if (currentFunction == null)
+      System.err.println("ERROR: currentFunction is null");
+    this.currentBlock.pushInstruction(i);
+  }
+  
   public void pushInformation(Object o){
     if(o == null)
       System.err.println("Pushing NULL object");
@@ -103,17 +121,22 @@ public class CodeGenerator{
   }
   
   public void startBlockDefinition(Block b) {
-	if(b != null) {
-	  b.parent = this.currentBlock;
-	  this.currentBlock = b;
-	}
+    if(b != null) {
+      b.parent = this.currentBlock;
+      this.currentBlock = b;
+      if(b.parent != null) {
+        this.currentBlock.myContext = b.parent.myContext;
+      }
+    }
   }
   
   public void startBlockDefinition() {
     Block b = new Block();
     b.parent = this.currentBlock;
     this.currentBlock = b;
-  }
+    if(this.currentBlock.parent != null)
+      this.currentBlock.myContext = this.currentBlock.parent.myContext;
+    }
   
   public void closeBlockDefinition() {
     this.currentBlock = this.currentBlock.parent;

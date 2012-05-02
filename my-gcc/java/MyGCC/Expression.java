@@ -98,7 +98,7 @@ public abstract class Expression{
 			StringBuffer sb = new StringBuffer();
 			String lastReg;
 			System.out.println("Handling expression");
-			
+			System.out.println("Context in handler : " + context);
 			if(this.right == null){
 				//Handle leaf
 				

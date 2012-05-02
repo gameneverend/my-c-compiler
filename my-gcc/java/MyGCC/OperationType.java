@@ -9,13 +9,17 @@ public enum OperationType{
   SUB("subl", "subq"),
   IMUL("imull", "imulq"),
   IDIV("idivl", "idivq"),
-  LESS("jl", "jl"),
-  GREATER("jg", "jg"),
-  EQUALS("je", "je"),
+  
+  /* In order to maintain the same order of code as the input
+   * we invert all the tests.
+   */
+  LESS("jge", "jge"),
+  GREATER("jle", "jle"),
+  EQUALS("jne", "jne"),
   //EQUALS("cmpl", "cmpq"),
-  LEQL("jle", "jle"),
-  GEQL("jge", "jge"),
-  DIFF("jne", "jne"),
+  LEQL("jg", "jg"),
+  GEQL("jl", "jl"),
+  DIFF("je", "je"),
   MOD("mod", "mod"),
   OR("orl", "orq"),
   AND("andl", "andq");

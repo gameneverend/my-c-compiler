@@ -15,13 +15,14 @@ int polynome_simple(int, int, int);
 int appel_imbrique(int, int, int);
 
 /* Cette fonction teste les blocs logiques */
-int test_while(void);
+int test_logic(int);
+
 
 /* Cette fonction teste la récursivité */
 // TODO
 
 /* Cette fonction teste le fonctionnement des boucles */
-// TODO
+int test_while(int);
 
 
 /***** Implémentation *****/
@@ -50,10 +51,18 @@ int appel_imbrique(int a, int b, int c){
 	return addition(a,b) + addition(b,c);
 }
 
-void test_while(void) {
-  int i;
-  i = 0;
-  while(i < 10)
-    i++;
+int test_logic(int i) {
+  if(i == 10)
+    i = i + 1;
+  else
+    i = 1 - 5;
+  ;
+  return i;
+}
+
+int test_while(int i) {
+  while(i != 10)
+    i = i + 1;
+  ;
   return i;
 }

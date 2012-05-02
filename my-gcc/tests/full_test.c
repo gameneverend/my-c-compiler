@@ -34,7 +34,11 @@ int main(int argc, char ** argv){
 	test_validity(appel_imbrique(5,4,6), 19);
 	printf("OK\n");
   
-  printf("testing while loops (i = 0, loop while i < 10) : ");
-  test_validity(test_while(), 9);
+  printf("testing if (if i  == 10 , i++, else i = -4) : ");
+  test_validity(test_logic(1), -4);
+  printf("OK\n");
+  
+  printf("testing while (while i != 10, i++) : ");
+  test_validity(test_while(0), 10);
   printf("OK\n");
 }

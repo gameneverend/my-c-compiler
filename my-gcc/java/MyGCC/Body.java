@@ -34,39 +34,8 @@ public class Body extends Block{
     else
       System.err.println("this.declarations: is null");
   }
-  
-  public void pushInstructionToBlock(Instruction i) {
-    if(i != null){
-      this.instructions.add(i);
-        //System.out.println("instruction added to block");
-    }
-    else
-      System.err.println("The specified instruction is null");
-  }
-  
-  /*public void addBlock(){
-  }*/
-  
+
   public LinkedList<Declaration> getDeclarations() {
     return this.declarations;
   }
-
-  /*public Block getMainBlock() {
-    return this.mainBlock;
-  }*/
-
-  /*public String toString(){
-    StringBuffer sb = new StringBuffer();
-    Instruction i;
-    Iterator<Instruction> iter = mainBlock.instructions.iterator();
-    
-    while(iter.hasNext()){
-      i = iter.next();
-      try{
-      sb.append(Instruction.instructionToAssembly(i, myContext));
-      }catch(Exception e){e.printStackTrace();}
-    }
-    
-    return sb.toString();
-  }*/
 }
