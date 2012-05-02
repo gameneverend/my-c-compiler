@@ -15,8 +15,8 @@ public enum OperationType{
    */
   LESS("jge", "jge"),
   GREATER("jle", "jle"),
-  EQUALS("jne", "jne"),
-  //EQUALS("cmpl", "cmpq"),
+  //EQUALS("jne", "jne"),
+  EQUALS("cmpl", "cmpq"),
   LEQL("jg", "jg"),
   GEQL("jl", "jl"),
   DIFF("je", "je"),
@@ -55,12 +55,6 @@ public enum OperationType{
 				return op;
 		}
 		return null;
-	}
-  
-  public String getName(){
-		if(CodeGenerator.mode64)
-			return this.name64;
-		return this.name32;
 	}
   
   public String toString(){

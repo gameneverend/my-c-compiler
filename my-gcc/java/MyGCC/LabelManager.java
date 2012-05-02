@@ -12,15 +12,15 @@ public class LabelManager {
   
   public static String getLabel() {
     labelNb ++;
-    return "L" + nbFunctions + "." + labelNb;
+    return ".L" + nbFunctions + "." + labelNb;
   }
   
   public static String getBeginLabel(int i){
-    return "LFB" + i;
+    return ".LFB" + i;
   }
   
   public static String getEndLabel(int i){
-    return "LFE" + i;
+    return ".LFE" + i;
   }
 
 }

@@ -27,16 +27,16 @@ public class LogicalIfElse extends LogicalBlock {
       System.out.println("LogicalIfElse");
       //System.out.println("\tInstruction type: " + instruct.type.toString());
       String label1 = LabelManager.getLabel();
-      sb.append('\t'); sb.append(instruct.rexpr.handleExpression(null, context)); sb.append('\n');
-      sb.append('\t'); sb.append(instruct.rexpr.op.getName()); sb.append(" "); sb.append(label1); sb.append('\n');
+      sb.append(instruct.rexpr.handleExpression(null, context));
+      sb.append(instruct.rexpr.op); sb.append(" "); sb.append(label1); sb.append('\n');
       sb.append(instruct.block.toString());
        
       if(instruct.elseBlock != null) {
         String label2 = LabelManager.getLabel();
-        sb.append('\t'); sb.append("jmp "); sb.append(label2); sb.append('\n');
-        sb.append('.'); sb.append(label1); sb.append(":\n");
+        sb.append('\t'); sb.append(Assembly.JUMP + " "); sb.append(label2); sb.append('\n');
+        sb.append(label1); sb.append(":\n");
         sb.append(instruct.elseBlock.toString());
-        sb.append('.'); sb.append(label2); sb.append(":\n");
+        sb.append(label2); sb.append(":\n");
       }
       System.out.println("Finished assembling LogicalIfElse");
       return sb.toString();

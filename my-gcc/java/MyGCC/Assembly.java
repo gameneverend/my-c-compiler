@@ -8,7 +8,8 @@ public enum Assembly{
 	POP("popl", "popq"),
 	CALL("call", "call"),
 	CONVERT("cdq", "cqto"),
-	NEG("negl", "negq");
+	NEG("negl", "negq"),
+  JUMP("jmp", "jmp");
 	
 	private String name32;
   private String name64;

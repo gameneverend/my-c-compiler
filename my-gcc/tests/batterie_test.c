@@ -22,7 +22,7 @@ int test_logic(int);
 // TODO
 
 /* Cette fonction teste le fonctionnement des boucles */
-int test_while(int);
+//int test_while(int);
 
 
 /***** Implémentation *****/
@@ -60,9 +60,9 @@ int test_logic(int i) {
   return i;
 }
 
-int test_while(int i) {
+/*int test_while(int i) {
   while(i != 10)
     i = i + 1;
   ;
   return i;
-}
+}*/

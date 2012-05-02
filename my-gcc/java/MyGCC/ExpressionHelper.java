@@ -206,17 +206,17 @@ public class ExpressionHelper{
 				sb.append(asm(Assembly.MOV, src, Register.RBX));
 				
 				if(src.equals(Register.RAX))
-					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
+					sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));
 				sb.append(asm(Assembly.CONVERT, ""));	//sign extend RAX to RDX:RAX
 				sb.append(asm(OperationType.IDIV, Register.RBX));
 				
 				if(op.equals(OperationType.MOD))
-					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));				
+					sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));				
 			}
 			
 			else{
 				sb.append(asm(op, src, dst));
-				if(src.equals(Register.RAX))
+				if(!dst.equals(Register.RAX))
 					sb.append(asm(Assembly.MOV, dst, Register.RAX));
 			}
 				return sb;
@@ -229,7 +229,7 @@ public class ExpressionHelper{
 				sb.append(asm(OperationType.IDIV, Register.RBX));
 				
 				if(op.equals(OperationType.MOD))
-					sb.append(asm(Assembly.MOV, Register.RCX, Register.RAX));
+					sb.append(asm(Assembly.MOV, Register.RDX, Register.RAX));
 			}
 			
 			else

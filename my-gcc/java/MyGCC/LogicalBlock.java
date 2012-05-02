@@ -28,13 +28,13 @@ public class LogicalBlock extends Instruction  {
         return sb.toString();
       }
       System.out.println("LogicalBlock");
-      sb.append('.'); sb.append(label1); sb.append(":\n");
+      sb.append(label1); sb.append(":\n");
       System.out.println("Context: " + context);
-      sb.append('\t'); sb.append(instruct.rexpr.handleExpression(null, context)); sb.append('\n');
-      sb.append('\t'); sb.append(instruct.rexpr.op.getName()); sb.append('\t'); sb.append(label2); sb.append('\n');
+      sb.append(instruct.rexpr.handleExpression(null, context));
+      sb.append(instruct.rexpr.op); sb.append('\t'); sb.append(label2); sb.append('\n');
       sb.append(instruct.block.toString());
-      sb.append("\tjmp "); sb.append(label1); sb.append('\n');
-      sb.append('.'); sb.append(label2); sb.append(":\n");
+      sb.append("\t" + Assembly.JUMP + " "); sb.append(label1); sb.append('\n');
+      sb.append(label2); sb.append(":\n");
       System.out.println("Finished assembling LogicalBlock");
       return sb.toString();
     }

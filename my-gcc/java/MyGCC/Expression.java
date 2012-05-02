@@ -127,9 +127,9 @@ public abstract class Expression{
 					
           sb.append(context.virtualPush(Register.RAX.toString()));
           sb.append(this.right.handleExpression(e, context));
-          sb.append(context.virtualPop(Register.RCX.toString()));
-          sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
-          sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RCX, Register.RAX));	
+          sb.append(context.virtualPop(Register.RDX.toString()));
+          sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
+          //sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RDX, Register.RAX));	
 				}
 				
 				
@@ -137,18 +137,18 @@ public abstract class Expression{
 					//Handle operators of higher precedence first.
 					
 					if(this.right.left instanceof Variable)
-						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right.left, Register.RCX, context);
+						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right.left, Register.RDX, context);
 					else{
-						sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RCX));	
+						sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RDX));	
 						sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right.left, context);
 					}
 					
-					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RCX, Register.RAX);
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
 					sb.append(context.virtualPush(Register.RAX.toString()));
 					sb.append(this.right.right.handleExpression(e, context));
-					sb.append(context.virtualPop(Register.RCX.toString()));
-					sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RCX);
-					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RCX, Register.RAX));
+					sb.append(context.virtualPop(Register.RDX.toString()));
+					sb = ExpressionHelper.handleOperation(sb, this.right.op, Register.RAX, Register.RDX);
+					//sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RDX, Register.RAX));
 				}		
 				
 				else{
@@ -159,11 +159,11 @@ public abstract class Expression{
 					
 					sb.append(context.virtualPush(lastReg));
 					sb.append(this.right.handleExpression(e, context));
-					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RCX));
+					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RDX));
 					sb.append(context.virtualPop(Register.RAX.toString()));
 					
-					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
-					sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RCX, Register.RAX));
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
+					//sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RDX, Register.RAX));
 				}
 			}
 			
@@ -180,16 +180,17 @@ public abstract class Expression{
 					}
 						
 					else{
-						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RCX, context);
-						sb = ExpressionHelper.handleOperation(sb, this.op, Register.RCX, Register.RAX);
+						sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RDX, context);
+						sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
 					}
 				}
 					
 				else{
 					sb.append(context.virtualPush(Register.RAX.toString()));
 					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this.right, context);
-					sb.append(context.virtualPop(Register.RCX.toString()));
-					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RCX);
+					sb.append(context.virtualPop(Register.RDX.toString()));
+					sb = ExpressionHelper.handleOperation(sb, this.op, Register.RAX, Register.RDX);
+          sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RDX));
 				}
 			}
 			
