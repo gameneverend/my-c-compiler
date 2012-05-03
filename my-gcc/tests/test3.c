@@ -31,19 +31,27 @@ int appel_imbrique(int, int, int);
 }*/
 
 int falsemain(int z){
-  int c;
+  int c[70];
   int d;
   int e;
   
+  e = 1;
+  
+  c[e + 67] = 0;
+  //c[1] = 1;
+  //c[2] = 2;
+  //c[3] = 3;
+  //c[5] = 5;
+  //c[4] = 4;
   //c = substraction(e, 1) + 2;
   //c = 11 + d - 7;
   //c = 5;
   //d = 8 % (5 + 1) - 1;
-  d = 9;
+  //d = 9;
   
   //e = d % 2;
   //e = (3 * 10) % (d - 2);
-  e = 3 * (d + 1) % 7;
+  //e = 3 * (d + 1) % 7;
 	//e = -5 * (d + 1) % 2;
   //e = addition(-oppose(6) + 2, -1);
   //e = appel_imbrique(5,4,6);
@@ -59,7 +67,7 @@ int falsemain(int z){
   //exit(42);  
   //return d + 4;
   //return;
-	return e;
+	return c[68];
 }
 
 

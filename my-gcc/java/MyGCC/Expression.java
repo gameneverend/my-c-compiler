@@ -108,7 +108,7 @@ public class Expression{
     public StringBuffer handleExpression(Expression e, Context context) throws Exception{
 			StringBuffer sb = new StringBuffer();
 			String lastReg;
-			System.out.println("\nHandling expression: " + this.toString());
+			System.out.println("\nHandling expression: \"" + this.toString() + "\"");
 			if(this.right == null){
 				//Handle leaf
 				

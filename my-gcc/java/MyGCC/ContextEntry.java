@@ -5,7 +5,7 @@ public class ContextEntry {
   public int arraySize;
   
   public ContextEntry(Type t, int as) {
-    this. type = t;
+    this.type = t;
     this.arraySize  = as;
   }
 }

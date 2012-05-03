@@ -182,16 +182,22 @@ public class ExpressionHelper{
     
     
     public static StringBuffer handleVariable(StringBuffer sb, Variable a, Register dst, Context context) throws Exception{
-      if(a.getValue() != null){
+			if(a.index != null){
+					sb.append(a.index.handleExpression(null, context).toString());
+					sb.append(asm(Assembly.MOV, "<get stack address2>", dst));
+			}
+			
+      else if(a.getValue() != null){
         String val = String.valueOf(a.getValue());
+        
         if(a.getValue() instanceof Integer){
-					if(a.flag != null && a.flag.equals(Flag.UMINUS)) {
+					if(a.flag != null && a.flag.equals(Flag.UMINUS))
 						sb.append(asm(Assembly.MOV, "$-" + a.getValue(), dst));
-          }
-					else {
-						sb.append(asm(Assembly.MOV, "$" + a.getValue(), dst));
-          }
-				} else if(a.getValue() instanceof String){
+					else
+						sb.append(asm(Assembly.MOV, "$" + a.getValue(), dst));	
+				}
+				
+				else if(a.getValue() instanceof String){
 					sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
 					if(a.flag != null && a.flag.equals(Flag.UMINUS))
 						sb.append(asm(Assembly.NEG, dst));

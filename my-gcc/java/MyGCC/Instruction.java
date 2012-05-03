@@ -34,10 +34,11 @@ public class Instruction {
   public static String instructionToAssembly(Instruction instruct, Context context, Function f) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		Expression l = instruct.lexpr;
+		Expression r = instruct.rexpr;
     Variable a;
     FunctionCall fc;
     if(instruct != null){
-      if(instruct.rexpr == null){
+      if(r == null){
         System.out.println("rexpr is null");
         // do nothing: already handled in epilogue()
         return sb.toString();
@@ -48,27 +49,33 @@ public class Instruction {
         
         case RETURN:
           a = (Variable)l;
-					sb.append(instruct.rexpr.handleExpression(a, context));
+					sb.append(r.handleExpression(a, context));
           if(f.endTag != null)
             sb.append("\t" + Assembly.JUMP + " " + f.endTag + "\n");
           break;
           
         case EXIT:
           fc = (FunctionCall)l;
-          sb.append(instruct.rexpr.handleExpression(fc, context));
+          sb.append(r.handleExpression(fc, context));
           //TODO: do not generate ret/leave when function contains an exit and no RETURN instructions
           break;
           
         case EQL:
           a = (Variable)l;
           
-          if(instruct.rexpr.isFullyNumeric()){
-            sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(instruct.rexpr) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+          if(r.isFullyNumeric()){
+						if(a.index != null)
+							sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + "<getStackAddress: -x(RBP, RAX, 8)>\n"); 
+						else
+							sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
           else{
-            sb.append(instruct.rexpr.handleExpression(a, context));
-            sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
+							sb.append(r.handleExpression(a, context));
+							if(a.index != null)
+								sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + "<getStackAddress: -x(RBP, RAX, 8)>\n");
+							else
+								sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
 
