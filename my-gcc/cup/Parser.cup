@@ -120,7 +120,10 @@ dec_end ::=
 arr ::=
     // A declaration or a prototype may contain an Array.
     // Therefore it wile be of the form [NUM]
-    LHOOK NB_INT RHOOK
+    LHOOK NB_INT:n RHOOK
+      {:  if(Parser.DEBUG) System.out.println("Array size : " + n);
+          parser.cg.pushInformation(new ParsingResult<Integer>(ResultType.VARIABLE, n));
+      :}
     // It may also be empty
   |                     
   ;
@@ -194,11 +197,12 @@ declaration ::=
     // and either an array, or the rest of a function's prototype
 
     type:t IDENT:id
-         {: if(Parser.DEBUG) System.out.println("Push type : " + t);
-            parser.cg.pushInformation(new ParsingResult<Type>(ResultType.TYPE, t));
-            if(Parser.DEBUG) System.out.println("Push Identifier : " + id);
-            parser.cg.pushInformation(new ParsingResult<String>(ResultType.ID, id)); :}
-           arr_proto
+        {: if(Parser.DEBUG) System.out.println("Push type : " + t);
+           parser.cg.pushInformation(new ParsingResult<Type>(ResultType.TYPE, t));
+           if(Parser.DEBUG) System.out.println("Push Identifier : " + id);
+           parser.cg.pushInformation(new ParsingResult<String>(ResultType.ID, id));
+        :}
+        arr_proto
     
     // A variable may be declared as static
   | STATIC type IDENT arr
@@ -308,7 +312,9 @@ parameter ::=
       :}
     
     // The variable can be an array
-  | type IDENT LHOOK NB_INT RHOOK
+  | type:t IDENT:id LHOOK NB_INT:n RHOOK
+      {:  RESULT = new Parameter(t, new String(id + '[' + n + ']')); // TODO if we change the way the Context manages things, this will need changing
+      :}
   ;
      
 // The body of a function is composed of declarations and instructions
@@ -332,7 +338,9 @@ instruction ::=
     
     // Compare the value of an item from an array with that of an expression
     // The index may be obtained with an expression
-  | IDENT LHOOK expression RHOOK EQL expression
+  | IDENT:id LHOOK expression:e1 RHOOK EQL expression:e2
+      {:  if(Parser.DEBUG) System.out.println("Detected affectation to Array");
+          //parser.cg.pushInstruction(new Instruction(new Variable<String>(null, new String(id + :} // TODO expression e1 needs handling. Need a new way of managing arrays
   
     // Exit with status NB_INT
   | EXIT LPAREN NB_INT:n RPAREN

@@ -11,13 +11,16 @@ public abstract class Context{
 
 	/** Contain all the variables local to the context with their type **/
 	protected HashMap<String,Type> localVariables = new HashMap<String,Type>();
+  
 	/** Contain the "virtual" location of the variables,
 	 *  for example: if <i>a</i> is in <i>-4(%rbp)</i>, the tuple will be <i>(a,-4)</i> **/
 	protected HashMap<String,Integer> variablesLocations = new HashMap<String, Integer>();
+  
 	/** This is the place taken by all the local variables in bytes,
 	 *  Like with gcc, it is always a multiple of 16.
 	 **/
 	protected int variablesTotalSize;
+  
 	/** useful for a lazy-mechanism **/
 	protected boolean localVariablesLocated = false;
 	
@@ -56,7 +59,11 @@ public abstract class Context{
 	}
 
 	public void addVariable(Type type, String identifier, int arraySize) {
-		localVariables.put(identifier, type);
+    if(arraySize == 0)
+      localVariables.put(identifier, type);
+    else
+      for(int i = 0; i < arraySize; i++) // This should work, but I am in no way happy with it.
+        localVariables.put(new String(identifier + '[' + i + ']'), type);
 		localVariablesLocated = false;
 	}
 	
