@@ -78,9 +78,11 @@ public class Function{
     sb.append("\t" + Assembly.MOV + "\t" + Register.RSP + ", " + Register.RBP + "\n");
     sb.append("\t.cfi_offset 6, -16\n");
     sb.append("\t.cfi_def_cfa_register 6\n");
-    // If there's function calls in this function rsp should be modified
+    
     //FIXME: modify RSP properly according to the function's local stack frame (instead of static 64).
+    //Value should be calculated according to #localVariables, #localArrays, passing args > 6 (use of stack).
     if (body.maxParameters() >= 0){
+      sb.append("\t" + Assembly.PUSH + "\t" + Register.RBX + "\n");
       sb.append("\t" + OperationType.SUB + "\t$"+ 64 +", " + Register.RSP + "\n");
     }
     return sb.toString();
@@ -93,7 +95,11 @@ public class Function{
     if(endTag != null)
       sb.append(endTag + ": \n");
     
-    //TODO free allocated stack frame (add, pop)
+    //deallocate stack frame
+    if (body.maxParameters() >= 0){
+      sb.append("\t" + OperationType.ADD + "\t$"+ 64 +", " + Register.RSP + "\n");
+      sb.append("\t" + Assembly.POP + "\t" + Register.RBX + "\n");
+    }
     sb.append("\tleave\n");
     sb.append("\t.cfi_def_cfa 7, 8\n");
     sb.append("\tret\n");

@@ -1,6 +1,7 @@
 package MyGCC;
 
 import java.util.Stack;
+import java.util.ArrayList;
 
 public class Expression{
   
@@ -95,17 +96,19 @@ public class Expression{
 				if(this.flag != null && this.flag.equals(Flag.UMINUS))
 					tmp = "( 0 " + OperationType.SUB + " " + tmp + " )" ;
 			}
-			
-
+      
 			return tmp;
 		}
     
     
-    
+    /**
+     * This method runs through the expression in order to generate the corresponding
+     * assembly code. At the end of the run, the result is always stored in Register.RAX
+     */
     public StringBuffer handleExpression(Expression e, Context context) throws Exception{
 			StringBuffer sb = new StringBuffer();
 			String lastReg;
-			System.out.println("Handling expression");
+			System.out.println("\nHandling expression: " + this.toString());
 			if(this.right == null){
 				//Handle leaf
 				
@@ -220,9 +223,41 @@ public class Expression{
       return i;
     }
     
+    
+    
     public String toString(){
-			//TODO
-			return new String();
+			String tmp = new String();
+      ArrayList<Expression> args;
+      
+      if(this.op == null){
+        if(this instanceof Variable){
+          tmp = ((Variable)this).getValue().toString(); 
+          if(this.flag != null && this.flag.equals(Flag.UMINUS))
+            tmp = "-" + tmp;
+        }
+        else if(this instanceof FunctionCall){
+          tmp = ((FunctionCall)this).getTag() + "(";
+          args = ((FunctionCall)this).getArgs();
+          
+          for(int i = args.size()-1; i >= 0; i--)
+            tmp = tmp + args.get(i).toString() + ",";
+          tmp = tmp.substring(0, tmp.length()-1) + ")";
+        }
+      }
+      
+      else{
+        String l = this.left.toString();
+        String r = this.right.toString();
+        
+        if(this.priority)
+					tmp = "( " + l + " " + op.getString() + " " + r + " )";
+				else
+					tmp = l + " " + op.getString() + " " + r; 
+      
+        if(this.flag != null && this.flag.equals(Flag.UMINUS))
+					tmp = "-( " + tmp + " )" ;
+      }
+			return tmp;
 		}
     
 }

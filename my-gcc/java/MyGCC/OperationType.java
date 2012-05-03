@@ -5,26 +5,27 @@ import java.util.HashSet;
 import java.lang.String;
 
 public enum OperationType{
-  ADD("addl", "addq"),
-  SUB("subl", "subq"),
-  IMUL("imull", "imulq"),
-  IDIV("idivl", "idivq"),
-  MOD("mod", "mod"),
-  OR("orl", "orq"),
-  AND("andl", "andq"),
+  ADD("addl", "addq", "+"),
+  SUB("subl", "subq", "-"),
+  IMUL("imull", "imulq", "*"),
+  IDIV("idivl", "idivq", "/"),
+  MOD("mod", "mod", "%"),
+  OR("orl", "orq", "|"),
+  AND("andl", "andq", "&"),
   
   /* In order to maintain the same order of code as the input
    * we invert all the tests.
    */
-  LESS("jge", "jge"),
-  GREATER("jle", "jle"),
-  EQUALS("jne", "jne"),
-  LEQL("jg", "jg"),
-  GEQL("jl", "jl"),
-  DIFF("je", "je");
+  LESS("jge", "jge", "<"),
+  GREATER("jle", "jle", ">"),
+  EQUALS("jne", "jne", "=="),
+  LEQL("jg", "jg", "<="),
+  GEQL("jl", "jl", ">="),
+  DIFF("je", "je", "!=");
   
   public String name32;
   public String name64;
+  public String str;
   private static ArrayList<OperationType> ops = new ArrayList<OperationType>();
   private static ArrayList<OperationType> conditional = new ArrayList<OperationType>();
   
@@ -53,9 +54,10 @@ public enum OperationType{
      
 }
 
-  private OperationType(String s32, String s64){
+  private OperationType(String s32, String s64, String s){
     this.name32 = s32;
     this.name64 = s64;
+    this.str = s;
   }
   
   public static OperationType getOp(String s){
@@ -71,6 +73,10 @@ public enum OperationType{
       return true;
     return false;
 	}
+  
+  public String getString(){
+    return this.str;
+  }
   
   public String toString(){
 		if(CodeGenerator.mode64)
