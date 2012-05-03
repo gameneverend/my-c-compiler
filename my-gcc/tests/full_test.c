@@ -36,7 +36,7 @@ int main(int argc, char ** argv){
 	printf("OK\n");
   
   printf("testing if (if i  == 10 , i++, else i = -4) : ");
-  test_validity(test_logic(10), 11);
+  test_validity(test_logic(0), 0);
   printf("OK\n");
   
   printf("testing while (while i != 10, i++) : ");

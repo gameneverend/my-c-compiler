@@ -2,7 +2,7 @@ package MyGCC;
 
 import java.util.Stack;
 
-public abstract class Expression{
+public class Expression{
   
     public Expression left;
     public Expression right;
@@ -14,6 +14,14 @@ public abstract class Expression{
       this.left = null;
       this.right = null;
       this.op = null;
+      this.priority = false;
+      this.flag = null;
+    }
+    
+    public Expression(OperationType op, Expression l, Expression r){
+      this.left = l;
+      this.right = r;
+      this.op = op;
       this.priority = false;
       this.flag = null;
     }

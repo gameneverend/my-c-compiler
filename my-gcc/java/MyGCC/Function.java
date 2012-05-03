@@ -52,15 +52,18 @@ public class Function{
     System.out.println("Loading parameters for function: " + this.name);
     myContext.prepareParametersLocation();
     StringBuilder sb = new StringBuilder();
+    
     for (int i = 0; i < myContext.nbParameters() && i < 6; i++){
       sb.append("\t" + Assembly.MOV + "\t");
       sb.append(Register.getArgumentRegister(i));
       sb.append(", ");
+      
       try{
-      sb.append(myContext.getVariableLocation(myContext.getParameter(i).name));
-      System.out.println("\tParameter : " + myContext.getParameter(i).name);
-      System.out.println("\tLocation : " + myContext.getVariableLocation(myContext.getParameter(i).name));
+        sb.append(myContext.getVariableLocation(myContext.getParameter(i).name));
+        System.out.println("\tParameter : " + myContext.getParameter(i).name);
+        System.out.println("\tLocation : " + myContext.getVariableLocation(myContext.getParameter(i).name));
       }catch(Exception e){e.printStackTrace();}
+      
       sb.append("\n");
     }
     return sb.toString();

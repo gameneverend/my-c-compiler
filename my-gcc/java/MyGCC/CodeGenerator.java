@@ -18,7 +18,7 @@ public class CodeGenerator{
   private Function currentFunction;
   private Block currentBlock = null;
   private Stack<Expression> args;
-  public static boolean mode64 = false;
+  public static boolean mode64 = true;
 
   public CodeGenerator(){
     myStack = new LinkedList<Stack<Object>>();
@@ -152,8 +152,7 @@ public class CodeGenerator{
       }
     }
     if(currentFunction != null) {
-    	currentFunction.addDeclaration(type,identifier, arraySize);
-      //this.currentFunction.body.declarations.add(new Declaration(type, identifier, arraySize));
+    	currentFunction.addDeclaration(type, identifier, arraySize);
     }
   }
 

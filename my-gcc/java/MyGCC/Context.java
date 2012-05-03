@@ -10,7 +10,7 @@ public abstract class Context{
 	private ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 
 	/** Contain all the variables local to the context with their type **/
-	protected HashMap<String,Type> localVariables = new HashMap<String,Type>();
+	protected HashMap<String,ContextEntry> localVariables = new HashMap<String,ContextEntry>();
   
 	/** Contain the "virtual" location of the variables,
 	 *  for example: if <i>a</i> is in <i>-4(%rbp)</i>, the tuple will be <i>(a,-4)</i> **/
@@ -49,9 +49,13 @@ public abstract class Context{
 	public void prepareLocalVariablesLocation(){
 		if (localVariablesLocated) return;	
 		variablesTotalSize = 0;
-		for (Entry<String, Type> e : localVariables.entrySet()){
-			variablesTotalSize += e.getValue().size;
-			variablesLocations.put(e.getKey(), -variablesTotalSize);
+		for (Entry<String, ContextEntry> e : localVariables.entrySet()){
+      ContextEntry ce = e.getValue();
+      int i = ce.arraySize;
+      if(i == 0)
+        i++;
+      variablesTotalSize += i * ce.type.size;
+      variablesLocations.put(e.getKey(), -variablesTotalSize);
 		}
 		variablesTotalSize = variablesTotalSize + (16 -variablesTotalSize % 16);
 		stackPosition = -variablesTotalSize;
@@ -60,10 +64,7 @@ public abstract class Context{
 
 	public void addVariable(Type type, String identifier, int arraySize) {
     if(arraySize == 0)
-      localVariables.put(identifier, type);
-    else
-      for(int i = 0; i < arraySize; i++) // This should work, but I am in no way happy with it.
-        localVariables.put(new String(identifier + '[' + i + ']'), type);
+      localVariables.put(identifier, new ContextEntry(type, arraySize));
 		localVariablesLocated = false;
 	}
 	

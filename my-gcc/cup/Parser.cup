@@ -308,12 +308,12 @@ parameter ::=
 
     type:t IDENT:id
       {:
-  		RESULT = new Parameter(t,id);
+  		RESULT = new Parameter(t, id, 0);
       :}
     
     // The variable can be an array
   | type:t IDENT:id LHOOK NB_INT:n RHOOK
-      {:  RESULT = new Parameter(t, new String(id + '[' + n + ']')); // TODO if we change the way the Context manages things, this will need changing
+      {:  RESULT = new Parameter(t, id, n);
       :}
   ;
      
@@ -340,7 +340,8 @@ instruction ::=
     // The index may be obtained with an expression
   | IDENT:id LHOOK expression:e1 RHOOK EQL expression:e2
       {:  if(Parser.DEBUG) System.out.println("Detected affectation to Array");
-          //parser.cg.pushInstruction(new Instruction(new Variable<String>(null, new String(id + :} // TODO expression e1 needs handling. Need a new way of managing arrays
+          parser.cg.pushInstruction(new Instruction(new Variable<String>(null, id, e1), e2, InstructionType.EQL));
+      :}
   
     // Exit with status NB_INT
   | EXIT LPAREN NB_INT:n RPAREN
@@ -436,7 +437,7 @@ if_else ::=
 expression ::=
     expression:left bin_op:op expression:right
       {: if(Parser.DEBUG) System.out.println("Expression operator: " + op);
-				 RESULT = new Variable<Expression>(op, left, right);
+				 RESULT = new Expression(op, left, right);
       :}
 
   | MINUS expression:e
@@ -470,7 +471,9 @@ expression ::=
       {: RESULT = new FunctionCall(i, a); :}
   
     // Allows the use of arrays with expression calculated indexes
-  | IDENT LHOOK expression RHOOK
+  | IDENT:i LHOOK expression:e RHOOK
+      {:  RESULT = new Variable<String>(null, i, e);
+      :}
   ;
   
 // Can be either empty, or a list of arguments
