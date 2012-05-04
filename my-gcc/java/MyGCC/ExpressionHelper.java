@@ -184,7 +184,7 @@ public class ExpressionHelper{
     public static StringBuffer handleVariable(StringBuffer sb, Variable a, Register dst, Context context) throws Exception{
 			if(a.index != null){
 					sb.append(a.index.handleExpression(null, context).toString());
-					sb.append(asm(Assembly.MOV, "<get stack address2>", dst));
+					sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
 			}
 			
       else if(a.getValue() != null){
