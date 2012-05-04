@@ -1,27 +1,30 @@
-/* Ce test est sensé renvoyé 42, test sans paramètre à la fonction */
+/* This test returns 42, test of function with no parameters */
 int test_simple(void);
 
-/* Cette fonction est sensée renvoyer -x */
+/* This function returns -x */
 int oppose(int);
 
-/* Cette fonction est sensée renvoyer a + b */
+/* This function returns a + b */
 int addition(int, int);
 
-/* Cette fonction est sensée renvoyée a * b + c */
+/* This function returns a * b + c */
 int polynome_simple(int, int, int);
 
-/* Cette fonction test un appel de fonction imbriqué,
-	 le résultat doit être a + 2 * b + c */
+/* This function tests nested function calls,
+	 it returns (a + 2) + (b + c) */
 int appel_imbrique(int, int, int);
 
-/* Cette fonction teste les blocs logiques */
+/* This function tests logic blocks */
 int test_logic(int);
 
-/* Cette fonction teste le fonctionnement des boucles */
+/* This function tests loops */
 int test_while(int);
 
-/* Cette fonction teste la récursivité */
+/* This function tests recursion */
 int test_fibo(int);
+
+/* This function tests array access */
+int test_array(int);
 
 
 /***** Implémentation *****/
@@ -34,8 +37,7 @@ int test_simple(void){
 }
 
 int oppose(int x){
-	x = 0 - x;
-	return x;
+	return -x;
 }
 
 int addition(int a, int b){
@@ -74,4 +76,19 @@ int test_fibo(int i){
   ;
   
   return test_fibo(i-1) + test_fibo(i-2);
+}
+
+int test_array(int i){
+  int c[3];
+  c[0] = 0;
+  c[1] = 1;
+  c[2] = 2;
+  
+  return c[i%3];
+}
+
+int test_scan(int i){
+  int a;
+  read_int(a);
+  return a + 42;
 }

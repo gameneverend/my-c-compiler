@@ -36,16 +36,24 @@ int main(int argc, char ** argv){
 	test_validity(appel_imbrique(5,4,6), 19);
 	printf("OK\n");
   
-  printf("testing if (if i  == 10 , i++, else i = -4) : ");
+  printf("IF test (if i  == 10 , i++, else i = -4) : ");
   test_validity(test_logic(0), 0);
   printf("OK\n");
   
-  printf("testing while (while i != 10, i++) : ");
+  printf("WHILE test (while i != 10, i++) : ");
   test_validity(test_while(0), 10);
   printf("OK\n");
   
-  printf("testing fibo(5): result = 8 : ");
+  printf("Testing fibo(5): result = 8 : ");
   test_validity(test_fibo(5), 8);
+  printf("OK\n");
+  
+  printf("Testing arrays: return c[i%3] : ");
+  test_validity(test_array(5), 2);
+  printf("OK\n");
+  
+  printf("Testing READ_INT: return read_int(a)+42 : ");
+  test_validity(test_scan(1), 43);
   printf("OK\n");
   
   printf("\n");

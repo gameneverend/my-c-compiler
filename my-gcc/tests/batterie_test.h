@@ -1,28 +1,31 @@
 #ifndef BATTERIE_TEST
 #define BATTERIE_TEST
-/* Ce test est sensé renvoyé 42, test sans paramètre à la fonction */
+/* This test returns 42, test of function with no parameters */
 extern int test_simple();
 
-/* Cette fonction est sensée renvoyer -x */
+/* This function returns -x */
 extern int oppose(int x);
 
-/* Cette fonction est sensée renvoyer a + b */
+/* This function returns a + b */
 extern int addition(int a,int b);
 
-/* Cette fonction est sensée renvoyée a * b + c */
+/* This function returns a * b + c */
 extern int polynome_simple(int a ,int b,int c);
 
-/* Cette fonction test un appel de fonction imbriqué,
-	 le résultat doit être a + 2 * b + c */
+/* This function tests nested function calls,
+	 it returns (a + 2) + (b + c) */
 extern int appel_imbrique(int a, int b, int c);
 
-/* Cette fonction teste les blocs logiques */
+/* This function tests logic blocks */
 extern int test_logic(int);
 
-/* Cette fonction teste le fonctionnement des boucles */
+/* This function tests loops */
 extern int test_while(int);
 
-/* Cette fonction teste la récursivité */
+/* This function tests recursion */
 extern int test_fibo(int);
+
+/* This function tests array access */
+extern int test_array(int);
 
 #endif
