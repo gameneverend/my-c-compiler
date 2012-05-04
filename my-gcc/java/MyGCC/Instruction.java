@@ -64,17 +64,17 @@ public class Instruction {
           a = (Variable)l;
           
           if(r.isFullyNumeric()){
-						if(a.index != null)
+						/*if(a.index != null)
 							sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + "<getStackAddress: -x(RBP, RAX, 8)>\n"); 
-						else
+						else*/
 							sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
           }
           
           else{
 							sb.append(r.handleExpression(a, context));
-							if(a.index != null)
+							/*if(a.index != null)
 								sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + "<getStackAddress: -x(RBP, RAX, 8)>\n");
-							else
+							else*/
 								sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;

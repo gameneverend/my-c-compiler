@@ -362,7 +362,7 @@ instruction ::=
          parser.cg.pushInstruction(new Instruction(null, InstructionType.RETURN)); :}
   
     // Scanf(int)
-  | READ_INT LPAREN IDENT RPAREN
+  | READ_INT LPAREN IDENT RPAREN // should be expression ? for uses such as int a = read_int();
   
     // Basic "if else" test on an expression
   | IF {: if(Parser.DEBUG) System.out.println("If detected");

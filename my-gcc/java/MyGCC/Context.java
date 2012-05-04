@@ -35,8 +35,12 @@ public abstract class Context{
 
 	public String getVariableLocation(String name) throws Exception{
 		// searching in Local Variables
+    ContextEntry ce = localVariables.get(name);
 		Integer result = variablesLocations.get(name);
-		if (result != null) return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
+		if (result != null) {
+      if(ce.arraySize == 0) return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
+      return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";
+    }
 		if (inheritedContext != null) return inheritedContext.getVariableLocation(name);
 		throw new Exception("No parameter with the specified name : <" + name + "> found");
 	}
@@ -63,8 +67,7 @@ public abstract class Context{
 	}
 
 	public void addVariable(Type type, String identifier, int arraySize) {
-    if(arraySize == 0)
-      localVariables.put(identifier, new ContextEntry(type, arraySize));
+    localVariables.put(identifier, new ContextEntry(type, arraySize));
 		localVariablesLocated = false;
 	}
 	
