@@ -35,7 +35,7 @@ parser code {:
                                new PrintStream(destination_file));
     //System.out.println("modified version");
     //p.debug_parse();
-    p.ps.print("\t.file \"" + args[0] + "\"\n\t.text\n");
+    p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n.LC0:\n\t.string \"%ld\"\n\t.text\n");
     p.parse();
     System.out.println("\n*************** Generating code **************");
     p.ps.print(p.cg.generateCode());
@@ -362,7 +362,11 @@ instruction ::=
          parser.cg.pushInstruction(new Instruction(null, InstructionType.RETURN)); :}
   
     // Scanf(int)
-  | READ_INT LPAREN IDENT RPAREN // should be expression ? for uses such as int a = read_int();
+  | READ_INT LPAREN IDENT:i RPAREN
+      {:  ArrayList<Expression> ident = new ArrayList<Expression>();
+          ident.add(new Variable<String>(null, i));
+          parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.READ_INT.toString(), ident), InstructionType.READ_INT));
+      :}
   
     // Basic "if else" test on an expression
   | IF {: if(Parser.DEBUG) System.out.println("If detected");

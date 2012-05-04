@@ -134,7 +134,8 @@ public class ExpressionHelper{
     
     
     
-		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception{
+		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception {
+      
       Variable tmp;
       String val;
       Integer num;
@@ -177,6 +178,24 @@ public class ExpressionHelper{
       sb.append(asm(Assembly.CALL, f.getTag()));
       if(f.flag != null && f.flag.equals(Flag.UMINUS))
 				sb.append(asm(Assembly.NEG, Register.RAX));
+      return sb;
+    }
+    
+    
+    public static StringBuffer handleReadInt(StringBuffer sb, FunctionCall f, Context c) throws Exception {
+      for(Expression e : f.getArgs()){
+        sb.append(asm(Assembly.MOV, "$" + LabelManager.getStringLabel(), Register.RAX.toString()));
+        
+        String ident = String.valueOf(((Variable)e).getValue());
+        //if(Parser.regMan.isListedVariable(ident)) {
+          sb.append(asm(Assembly.LEA, c.getVariableLocation(ident), Register.RDX));
+          sb.append(asm(Assembly.MOV, Register.RDX, Register.RSI));
+          sb.append(asm(Assembly.MOV, Register.RAX, Register.RDI));
+          sb.append(asm(Assembly.MOV, "$0", Register.RAX));
+          sb.append(asm(Assembly.CALL, "__isoc99_scanf"));
+        //}
+      }
+      
       return sb;
     }
     

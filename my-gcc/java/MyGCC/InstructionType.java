@@ -5,5 +5,6 @@ public enum InstructionType{
   EXIT,
   EQL,
   IF,
-  WHILE;
+  WHILE,
+  READ_INT;
 }

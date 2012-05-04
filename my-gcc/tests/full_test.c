@@ -1,6 +1,7 @@
 #include "batterie_test.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 int test_validity(int result, int expected_result){
 	if (result != expected_result){

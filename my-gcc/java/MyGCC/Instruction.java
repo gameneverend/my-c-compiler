@@ -76,6 +76,11 @@ public class Instruction {
               sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
           }
           break;
+          
+        case READ_INT:
+          fc = (FunctionCall)r;
+          sb = ExpressionHelper.handleReadInt(sb, fc, context);
+          break;
 
         default:
           // case null, ie. for instructions like "1+2;"

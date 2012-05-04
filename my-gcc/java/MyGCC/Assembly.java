@@ -10,7 +10,8 @@ public enum Assembly{
 	CONVERT("cdq", "cqto"),
   COMPARE("cmpl", "cmpq"),
 	NEG("negl", "negq"),
-  JUMP("jmp", "jmp");
+  JUMP("jmp", "jmp"),
+  LEA("leal", "leaq");
 	
 	private String name32;
   private String name64;

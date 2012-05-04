@@ -10,8 +10,8 @@ public enum OperationType{
   IMUL("imull", "imulq", "*"),
   IDIV("idivl", "idivq", "/"),
   MOD("mod", "mod", "%"),
-  OR("orl", "orq", "|"),
-  AND("andl", "andq", "&"),
+  OR("orl", "orq", "||"),
+  AND("andl", "andq", "&&"),
   
   /* In order to maintain the same order of code as the input
    * we invert all the tests.
