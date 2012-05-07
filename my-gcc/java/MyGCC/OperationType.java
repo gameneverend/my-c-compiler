@@ -10,8 +10,8 @@ public enum OperationType{
   IMUL("imull", "imulq", "*"),
   IDIV("idivl", "idivq", "/"),
   MOD("mod", "mod", "%"),
-  OR("orl", "orq", "||"),
-  AND("andl", "andq", "&&"),
+  OR("orl", "orq", "|"),
+  AND("andl", "andq", "&"),
   
   /* In order to maintain the same order of code as the input
    * we invert all the tests.
@@ -27,6 +27,7 @@ public enum OperationType{
   public String name64;
   public String str;
   private static ArrayList<OperationType> ops = new ArrayList<OperationType>();
+  private static ArrayList<OperationType> logical = new ArrayList<OperationType>();
   private static ArrayList<OperationType> conditional = new ArrayList<OperationType>();
   
   static{
@@ -36,13 +37,8 @@ public enum OperationType{
     ops.add(IDIV);
     ops.add(MOD);
     
-    ops.add(LESS); 
-    ops.add(GREATER);
-    ops.add(LEQL); 
-    ops.add(GEQL);
-    
-    ops.add(OR);
-    ops.add(AND);
+    logical.add(OR);
+    logical.add(AND);
     
     conditional.add(LESS);
     conditional.add(GREATER);
@@ -72,6 +68,10 @@ public enum OperationType{
 		if(conditional.contains(op))
       return true;
     return false;
+	}
+	
+	public static boolean isLogical(OperationType op){
+		return logical.contains(op); 
 	}
   
   public String getString(){

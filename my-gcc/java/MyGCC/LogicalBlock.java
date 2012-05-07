@@ -34,7 +34,14 @@ public class LogicalBlock extends Instruction  {
       
       sb.append(label1); sb.append(":\n");
       sb.append(instruct.rexpr.handleExpression(null, context));
-      sb.append("\t"); sb.append(instruct.rexpr.op); sb.append("\t"); sb.append(label2); sb.append('\n');
+      sb.append("\t");
+      
+      if(instruct.rexpr.flag != null && instruct.rexpr.flag.equals(Flag.NOT))
+				sb.append(OperationType.EQUALS + " ");
+			else
+				sb.append(instruct.rexpr.op + " ");
+			
+      sb.append("\t"); sb.append(label2); sb.append('\n');
       sb.append(instruct.block.toString());
       sb.append("\t"); sb.append(Assembly.JUMP + " "); sb.append(label1); sb.append('\n');
       sb.append(label2); sb.append(":\n");

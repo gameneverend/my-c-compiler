@@ -183,18 +183,15 @@ public class ExpressionHelper{
     
     
     public static StringBuffer handleReadInt(StringBuffer sb, FunctionCall f, Context c) throws Exception {
-      for(Expression e : f.getArgs()){
-        sb.append(asm(Assembly.MOV, "$" + LabelManager.getStringLabel(), Register.RAX.toString()));
-        
-        String ident = String.valueOf(((Variable)e).getValue());
-        //if(Parser.regMan.isListedVariable(ident)) {
-          sb.append(asm(Assembly.LEA, c.getVariableLocation(ident), Register.RDX));
-          sb.append(asm(Assembly.MOV, Register.RDX, Register.RSI));
-          sb.append(asm(Assembly.MOV, Register.RAX, Register.RDI));
-          sb.append(asm(Assembly.MOV, "$0", Register.RAX));
-          sb.append(asm(Assembly.CALL, "__isoc99_scanf"));
-        //}
-      }
+			Expression e = f.getArgs().get(0);
+			sb.append(asm(Assembly.MOV, "$" + LabelManager.getStringLabel(), Register.RAX.toString()));
+			
+      String ident = String.valueOf(((Variable)e).getValue());
+      sb.append(asm(Assembly.LEA, c.getVariableLocation(ident), Register.RDX));
+      sb.append(asm(Assembly.MOV, Register.RDX, Register.RSI));
+      sb.append(asm(Assembly.MOV, Register.RAX, Register.RDI));
+      sb.append(asm(Assembly.MOV, "$0", Register.RAX));
+      sb.append(asm(Assembly.CALL, "__isoc99_scanf"));
       
       return sb;
     }
@@ -218,8 +215,12 @@ public class ExpressionHelper{
 				
 				else if(a.getValue() instanceof String){
 					sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
-					if(a.flag != null && a.flag.equals(Flag.UMINUS))
-						sb.append(asm(Assembly.NEG, dst));
+					if(a.flag != null){ 
+						if(a.flag.equals(Flag.UMINUS))
+							sb.append(asm(Assembly.NEG, dst));
+						else if(a.flag.equals(Flag.NOT))
+							sb.append(asm(Assembly.COMPARE, "$0", Register.RAX));
+					}
 				}
       }
 			return sb;
@@ -232,6 +233,11 @@ public class ExpressionHelper{
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, Register src, Register dst) throws Exception{
       if(OperationType.isConditional(op))
         sb.append(asm(Assembly.COMPARE, src, dst));
+      
+      else if(OperationType.isLogical(op)){
+				sb.append(asm(op, Register.RDX, Register.RAX));
+				sb.append(asm(Assembly.TEST, Register.RAX, Register.RAX));
+			}
       
 			else if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
 				sb.append(asm(Assembly.MOV, src, Register.RBX));
@@ -253,10 +259,16 @@ public class ExpressionHelper{
 				return sb;
     }
     
+		//@Override
     public static StringBuffer handleOperation(StringBuffer sb, OperationType op, String src) throws Exception{
       if(OperationType.isConditional(op))
-        sb.append(asm(Assembly.COMPARE, src, Register.RAX));     
-      
+        sb.append(asm(Assembly.COMPARE, src, Register.RAX));  
+           
+      else if(OperationType.isLogical(op)){
+				sb.append(asm(op, Register.RDX, Register.RAX));
+				sb.append(asm(Assembly.TEST, Register.RAX, Register.RAX));
+			}
+			
 			else if(op.equals(OperationType.IDIV) || op.equals(OperationType.MOD)){
 				sb.append(asm(Assembly.MOV, src, Register.RBX));
 				sb.append(asm(Assembly.CONVERT, ""));	//sign extend RAX to RDX:RAX

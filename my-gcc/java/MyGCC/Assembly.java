@@ -11,7 +11,8 @@ public enum Assembly{
   COMPARE("cmpl", "cmpq"),
 	NEG("negl", "negq"),
   JUMP("jmp", "jmp"),
-  LEA("leal", "leaq");
+  LEA("leal", "leaq"),
+  TEST("testl", "testq");
 	
 	private String name32;
   private String name64;

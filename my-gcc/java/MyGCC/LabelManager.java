@@ -16,7 +16,7 @@ public class LabelManager {
   
   public static String getLabel() {
     labelNb ++;
-    return ".L" + (nbFunctions - 1) + "." + labelNb;
+    return ".L" + nbFunctions + "." + labelNb;
   }
   
   public static String getBeginLabel(int i){
