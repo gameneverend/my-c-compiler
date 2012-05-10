@@ -40,6 +40,10 @@ int main(int argc, char ** argv){
   printf("IF test (if i  == 10 , i++, else i = -4) : ");
   test_validity(test_logic(0), 0);
   printf("OK\n");
+
+  printf("Testing multi-if : ");
+  test_validity(test_multi_if(2, 13), 2);
+  printf("OK\n");
   
   printf("WHILE test (while i != 10, i++) : ");
   test_validity(test_while(0), 10);
@@ -62,7 +66,7 @@ int main(int argc, char ** argv){
   printf("OK\n");
 
   printf("Testing unreachable code: ");
-  test_validity(test_unreachable(5), 0);
+  test_validity(test_unreachable(5), 2);
   printf("OK\n");
   
   printf("\n");

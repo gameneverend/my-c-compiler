@@ -55,19 +55,6 @@ public class Body extends Block{
     }
     return i > 0;
   }
-  
-  
-  public boolean uniqueRet(){
-    int i = 0;
-    for(Object o : this.code){
-      
-      if(o instanceof Instruction){
-        if(((Instruction)o).type.equals(InstructionType.RETURN))
-          i++;
-      }
-    }
-    return i == 1;
-  }
       
   
   public void pushDeclaration(Declaration d) {

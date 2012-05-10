@@ -61,18 +61,6 @@ public class Block {
     return i;
   }
   
-  public boolean uniqueRet(){
-    int i = 0;
-    for(Object o : this.code){
-      
-      if(o instanceof Instruction){
-        if(((Instruction)o).type.equals(InstructionType.RETURN))
-          i++;
-      }
-    }
-    return i == 1;
-  }
-  
   public void pushInstruction(Instruction e) {
     if(this.code != null)
       if(e != null) {
@@ -106,17 +94,17 @@ public class Block {
     
     for(Object o : code){
       try{
-        //if(!unreachable){
+        if(!unreachable){
           if(o instanceof LogicalIfElse) {
             sb.append(LogicalIfElse.instructionToAssembly((LogicalIfElse)o, myContext));
           } else if(o instanceof LogicalBlock) {
             sb.append(LogicalBlock.instructionToAssembly((LogicalBlock)o, myContext));
           } else if(o instanceof Instruction) {
-            //if(((Instruction)o).type.equals(InstructionType.RETURN))
-              //unreachable = true;
+            if(((Instruction)o).type.equals(InstructionType.RETURN))
+              unreachable = true;
             sb.append(Instruction.instructionToAssembly((Instruction)o, myContext, ((Body)b).mFunction));
           }
-        //}
+        }
       }catch(Exception e){e.printStackTrace();}
     }
     

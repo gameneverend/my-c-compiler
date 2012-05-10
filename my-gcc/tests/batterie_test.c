@@ -17,6 +17,9 @@ int appel_imbrique(int, int, int);
 /* This function tests logic blocks */
 int test_logic(int);
 
+/* This function tests nested IF conditions */
+int test_multi_if(int, int);
+
 /* This function tests loops */
 int test_while(int);
 
@@ -62,6 +65,21 @@ int test_logic(int i) {
   return i;
 }
 
+int test_multi_if(int a, int b){
+  int x;
+  x = 1;
+  if(a < 10){
+    if(b < 10){
+      return 42;
+    };
+    return 2;
+  }
+  else
+    return 0;
+  ;
+  x = 3;
+}
+
 int test_while(int i) {
   while(i != 10)
     i = i + 1;
@@ -98,12 +116,15 @@ int test_scan(int i){
 }
 
 int test_unreachable(int i){
-  while(i >= 0){
+  int a;
+  while(i >= 1){
     
     if(i == 0)
       return 0;
     ;
     i = i - 1;
-  }
-  ;
+  };
+  return 2;
+  a = 10;
 }
+

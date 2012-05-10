@@ -27,7 +27,7 @@ public class Function{
   
 
   public String toString(){
-    if(body.nbReturns() > 1 || body.hasLogicalBlock())  //&& body.uniqueRet()
+    if(body.nbReturns() > 1 || body.hasLogicalBlock())
       endTag = LabelManager.getLabel();
 
     int i = LabelManager.getFunctionNumber();

@@ -136,10 +136,7 @@ public class ExpressionHelper{
     
 		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception {
       
-      Variable tmp;
-      String val;
       Integer num;
-      Register reg;
       System.out.println("\tTag: " + f.getTag());
       int i = f.getArgs().size() - 1;
       for(Expression e : f.getArgs()){
@@ -149,27 +146,9 @@ public class ExpressionHelper{
 					sb.append(asm(Assembly.MOV, "$" + num, Parser.regMan.getArgReg(String.valueOf(num), i))); 
 				}
         
-        else if(e.op == null){
-					if(e instanceof Variable){
-						tmp = (Variable)e;
-						val = String.valueOf(tmp.getValue());
-						
-						if(Parser.regMan.isListedVariable(val)){
-							reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-							sb.append(asm(Assembly.MOV, reg, Parser.regMan.getArgReg(val, i)));
-						}
-						else
-							sb.append(asm(Assembly.MOV, context.getVariableLocation(val), Parser.regMan.getArgReg(val, i)));
-					}
-					else{
-						sb.append(handleFunctionCall(sb, (FunctionCall)e, context));
-						sb.append(asm(Assembly.MOV, Register.RAX, Parser.regMan.getArgReg(Register.RAX.toString(), i)));
-					}
-        }
-        
         else{
 					sb.append(e.handleExpression(null, context).toString());
-					sb.append(asm(Assembly.MOV, sb.substring(sb.lastIndexOf(",") + 2).replace("\n",""), Parser.regMan.getArgReg(null, i)));  //getArgReg param1: ?
+					sb.append(asm(Assembly.MOV, Register.RAX, Parser.regMan.getArgReg(null, i)));  //getArgReg param1: ?
         }
           
         i--;

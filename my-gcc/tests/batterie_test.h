@@ -19,6 +19,9 @@ extern int appel_imbrique(int a, int b, int c);
 /* This function tests logic blocks */
 extern int test_logic(int);
 
+/* This function tests nested IF conditions */
+extern int test_multi_if(int, int);
+
 /* This function tests loops */
 extern int test_while(int);
 
