@@ -35,7 +35,7 @@ parser code {:
                                new PrintStream(destination_file));
     //System.out.println("modified version");
     //p.debug_parse();
-    p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n.LC0:\n\t.string \"%ld\"\n\t.text\n");
+    p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
     p.parse();
     System.out.println("\n*************** Generating code **************");
     p.ps.print(p.cg.generateCode());
@@ -58,7 +58,7 @@ parser code {:
 :}
 
 terminal INT, VOID, STATIC, LHOOK, RHOOK, LPAREN, RPAREN, LBRACKET, RBRACKET,
-         COMMA, SEMI, EQL, EXIT, RETURN, READ_INT, IF, ELSE, WHILE, MINUS,
+         COMMA, SEMI, EQL, EXIT, RETURN, READ_INT, PRINTF, IF, ELSE, WHILE, MINUS,
          NOT, LESS, GREATER, EQUALS, LEQL, GEQL, DIFF, PLUS, TIMES, DIV, MOD,
          OR, AND;
     
@@ -367,6 +367,9 @@ instruction ::=
           ident.add(new Variable<String>(null, i));
           parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.READ_INT.toString(), ident), InstructionType.READ_INT));
       :}
+    
+    // Basic Printf instruction
+  | PRINTF LPAREN string COMMA args_list RPAREN
   
     // Basic "if else" test on an expression
   | IF {: if(Parser.DEBUG) System.out.println("If detected");

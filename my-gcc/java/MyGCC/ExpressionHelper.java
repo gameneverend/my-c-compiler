@@ -184,7 +184,7 @@ public class ExpressionHelper{
     
     public static StringBuffer handleReadInt(StringBuffer sb, FunctionCall f, Context c) throws Exception {
 			Expression e = f.getArgs().get(0);
-			sb.append(asm(Assembly.MOV, "$" + LabelManager.getStringLabel(), Register.RAX.toString()));
+			sb.append(asm(Assembly.MOV, "$.LC0", Register.RAX.toString()));
 			
       String ident = String.valueOf(((Variable)e).getValue());
       sb.append(asm(Assembly.LEA, c.getVariableLocation(ident), Register.RDX));
@@ -194,6 +194,11 @@ public class ExpressionHelper{
       sb.append(asm(Assembly.CALL, "__isoc99_scanf"));
       
       return sb;
+    }
+    
+    
+    public static StringBuffer handlePrint(StringBuffer sb, FunctionCall f, Context c) throws Exception {
+      
     }
     
     

@@ -25,7 +25,7 @@ IDENT = {ALPHA}({ALPHA_NUM})*
 NEWLINE = \n | \u2028 | \u2029 | \u000B | \u000C | \u0085
 SPACING = [ \t\r\f] | {NEWLINE}
 
-%xstates MULTI_COMMENT, MONO_COMMENT
+%xstates MULTI_COMMENT, MONO_COMMENT, STRING
 
 %%
 
@@ -38,6 +38,11 @@ SPACING = [ \t\r\f] | {NEWLINE}
 <MULTI_COMMENT>{ 
   \*\/       {yybegin(YYINITIAL);}
   . | {NEWLINE} {}
+}
+
+<STRING> {
+  \"          {yybegin(YYINITIAL); }
+  .-\" | \\\"            {return sf.newSymbol("String", sym.STRING, new String(yytext)); }
 }
 
 
@@ -81,6 +86,7 @@ SPACING = [ \t\r\f] | {NEWLINE}
   "exit"     {return sf.newSymbol("Exit instruction", sym.EXIT); }
   "return"   {return sf.newSymbol("Return instruction", sym.RETURN); }
   "read_int" {return sf.newSymbol("Read_int instruction", sym.READ_INT); }
+  "printf"   {return sf.newSymbol("Printf", sym.PRINTF); }
 
   {IDENT}    {return sf.newSymbol("Identificator",
                                  sym.IDENT,
@@ -88,6 +94,8 @@ SPACING = [ \t\r\f] | {NEWLINE}
   [0-9]+     {return sf.newSymbol("Integral Number",
                                  sym.NB_INT,
                                  new Integer(yytext())); }
+                                 
+  \"         {yybegin(STRING);}     
 
   {SPACING}  { /* ignore white space. */ }
   .          { System.err.println("Illegal character: " + yytext()); }

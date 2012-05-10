@@ -4,9 +4,10 @@ public class LabelManager {
   
   static private int nbFunctions = 0;
   static private int labelNb = 0;
+  static private int stringLabel = 0;
   
   public static String getStringLabel() {
-    return ".LC0";
+    return ".LC" + stringLabel++;
   }
   
   public static int getFunctionNumber(){
