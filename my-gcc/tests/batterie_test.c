@@ -26,6 +26,9 @@ int test_fibo(int);
 /* This function tests array access */
 int test_array(int);
 
+/* This function tests the handling of unreachable code */
+int test_unreachable(int);
+
 
 /***** Implémentation *****/
 int test_simple(void){
@@ -92,4 +95,15 @@ int test_scan(int i){
   a = 0;
   read_int(a);
   return a + 42;
+}
+
+int test_unreachable(int i){
+  while(i >= 0){
+    
+    if(i == 0)
+      return 0;
+    ;
+    i = i - 1;
+  }
+  ;
 }

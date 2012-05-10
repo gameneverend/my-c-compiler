@@ -39,6 +39,35 @@ public class Body extends Block{
     }
     return i;
   }
+  
+  public boolean hasLogicalBlock(){
+    int i = 0;
+    for(Object o : this.code){
+      
+      if(o instanceof LogicalBlock){
+        if(((LogicalBlock)o).nbReturns() > 0)
+          i++;
+      }
+      else if(o instanceof LogicalIfElse){
+        if(((LogicalIfElse)o).nbReturns() > 0)
+          i++;
+      }
+    }
+    return i > 0;
+  }
+  
+  
+  public boolean uniqueRet(){
+    int i = 0;
+    for(Object o : this.code){
+      
+      if(o instanceof Instruction){
+        if(((Instruction)o).type.equals(InstructionType.RETURN))
+          i++;
+      }
+    }
+    return i == 1;
+  }
       
   
   public void pushDeclaration(Declaration d) {

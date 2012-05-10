@@ -20,6 +20,10 @@ public class LogicalBlock extends Instruction  {
     return block.nbReturns();
   }
   
+  public boolean uniqueRet(){
+    return block.uniqueRet();
+  }
+  
   public static String instructionToAssembly(LogicalBlock instruct, Context context) throws Exception {
 		StringBuffer sb = new StringBuffer();
     String label1 = LabelManager.getLabel();

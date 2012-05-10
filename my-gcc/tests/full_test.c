@@ -57,6 +57,10 @@ int main(int argc, char ** argv){
   test_validity(test_scan(1), 43);
   printf("OK\n");
   
+  printf("Testing unreachable code: ");
+  test_validity(test_unreachable(5), 0);
+  printf("OK\n");
+  
   printf("\n");
   
 }

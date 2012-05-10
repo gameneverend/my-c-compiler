@@ -22,6 +22,13 @@ public class LogicalIfElse extends LogicalBlock {
     return i + this.block.nbReturns();
   }
   
+  public boolean uniqueRet(){
+    boolean b = this.block.uniqueRet();
+    if(elseBlock != null)
+      return b && elseBlock.uniqueRet();
+    return b;
+  }
+  
   public static String instructionToAssembly(LogicalIfElse instruct, Context context) throws Exception {
 		StringBuffer sb = new StringBuffer();
     String label1 = LabelManager.getLabel();
