@@ -60,7 +60,7 @@ parser code {:
 terminal INT, VOID, STATIC, LHOOK, RHOOK, LPAREN, RPAREN, LBRACKET, RBRACKET,
          COMMA, SEMI, EQL, EXIT, RETURN, READ_INT, PRINTF, IF, ELSE, WHILE, MINUS,
          NOT, LESS, GREATER, EQUALS, LEQL, GEQL, DIFF, PLUS, TIMES, DIV, MOD,
-         OR, AND;
+         OR, AND, STRING;
     
 terminal String IDENT;
 terminal Integer NB_INT;
@@ -369,7 +369,7 @@ instruction ::=
       :}
     
     // Basic Printf instruction
-  | PRINTF LPAREN string COMMA args_list RPAREN
+  | PRINTF LPAREN STRING COMMA args_list RPAREN
   
     // Basic "if else" test on an expression
   | IF {: if(Parser.DEBUG) System.out.println("If detected");

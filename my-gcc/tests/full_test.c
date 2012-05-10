@@ -53,10 +53,14 @@ int main(int argc, char ** argv){
   test_validity(test_array(5), 2);
   printf("OK\n");
   
-  printf("Testing READ_INT: return read_int(a)+42 : ");
-  test_validity(test_scan(1), 43);
+  printf("Testing READ_INT: return read_int(a)+42 : (enter 1) ");
+  test_validity(test_scan(), 43);
   printf("OK\n");
   
+  printf("Testing READ_INT: return read_int(a)+42 : (enter 5) ");
+  test_validity(test_scan(), 47);
+  printf("OK\n");
+
   printf("Testing unreachable code: ");
   test_validity(test_unreachable(5), 0);
   printf("OK\n");
