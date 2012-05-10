@@ -30,7 +30,8 @@ public class FunctionContext extends Context{
 					stackPosition -= 8;
 				}
 				else
-					parametersLocations.put(p.name, (k - 7) * 8);
+				  //offset used by the push in beginning of function and some compiling directives it seems
+					parametersLocations.put(p.name, (k - 7) * 8 + 16);
 				k++;
 			}
 		}

@@ -12,6 +12,7 @@ public class Function{
   public Body body;
   public String endTag;
   private FunctionContext myContext;
+  private int stack_offset;
 
   public Function(String name,
                   Type returnType,
@@ -83,7 +84,11 @@ public class Function{
     //Value should be calculated according to #localVariables, #localArrays, passing args > 6 (use of stack).
     if (body.maxParameters() >= 0){
       sb.append("\t" + Assembly.PUSH + "\t" + Register.RBX + "\n");
-      sb.append("\t" + OperationType.SUB + "\t$"+ 64 +", " + Register.RSP + "\n");
+      int stack_potential_space = 64;
+      stack_offset = myContext.getVariableLocalSize() + body.maxParameters() * 8 + stack_potential_space;
+      sb.append("\t" + OperationType.SUB + "\t$"
+                + stack_offset
+                + ", " + Register.RSP + "\n");
     }
     return sb.toString();
   }
@@ -97,7 +102,7 @@ public class Function{
     
     //deallocate stack frame
     if (body.maxParameters() >= 0){
-      sb.append("\t" + OperationType.ADD + "\t$"+ 64 +", " + Register.RSP + "\n");
+      sb.append("\t" + OperationType.ADD + "\t$"+ stack_offset +", " + Register.RSP + "\n");
       sb.append("\t" + Assembly.POP + "\t" + Register.RBX + "\n");
     }
     sb.append("\tleave\n");

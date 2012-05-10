@@ -5,12 +5,19 @@ import java_cup.runtime.*;
 %%
 
 %cup
+%line
+%column
 %class Scanner
 %{
   public Scanner(java.io.InputStream r, SymbolFactory sf){
     this(r);
     this.sf=sf;
   }
+
+  public int yyline(){
+    return yyline;
+  }
+
   private SymbolFactory sf;
 %}
 

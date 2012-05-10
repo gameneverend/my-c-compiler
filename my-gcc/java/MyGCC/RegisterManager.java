@@ -184,11 +184,17 @@ public class RegisterManager {
   /**
    * Adds the variable to the nth argument register.
    **/
-  public Register getArgReg(String var, int n) {
-    n = n % 6;
-    Register reg = Register.getArgumentRegister(n);
-    reg = addVariableToRegister(var, reg);
-    return reg;
+  public String getArgReg(String var, int n, int nb_params) {
+    //n = n % 6;
+    String result = null;
+    if (n < 6){
+      Register reg = Register.getArgumentRegister(n);
+      reg = addVariableToRegister(var, reg);
+      return reg.toString();
+    }
+    int position = (n - 6) * 8;
+    result = position + "(%rsp)";
+    return result;
   }
   
   public String getRegisterContent(Register reg) {

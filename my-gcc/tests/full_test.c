@@ -6,7 +6,7 @@
 int test_validity(int result, int expected_result){
 	if (result != expected_result){
 		printf("FAILED\n");
-		printf("\tRésultat inattendu : %d, le résultat attendu était : %d\n",
+		printf("\tUnexpected Result : %d, the expected result was : %d\n",
 					 result,
 					 expected_result);
 		exit(EXIT_FAILURE);
@@ -45,6 +45,10 @@ int main(int argc, char ** argv){
   test_validity(test_multi_if(2, 13), 2);
   printf("OK\n");
   
+  printf("Testing stack frame and recursion : ");
+  test_validity(test_somme_rec_multi_param(1,2,3,4,5,6,7,8,9,10,11), 66);
+  printf("OK\n");
+
   printf("WHILE test (while i != 10, i++) : ");
   test_validity(test_while(0), 10);
   printf("OK\n");

@@ -34,9 +34,9 @@ parser code {:
                                sf,
                                new PrintStream(destination_file));
     //System.out.println("modified version");
-    //p.debug_parse();
-    p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
+    //p.debug_parse();    
     p.parse();
+    p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
     System.out.println("\n*************** Generating code **************");
     p.ps.print(p.cg.generateCode());
     p.ps.close();
@@ -44,8 +44,9 @@ parser code {:
   
 
   public void syntax_error(Symbol cur_token) { //overloads the default method
+    Scanner s = (Scanner) this.getScanner();
     report_error("*** Syntax Error at line "
-                 + (cur_token.left+1)
+                 + s.yyline()
                  + ", column "
                  + cur_token.right
 								 + ", while reading :"

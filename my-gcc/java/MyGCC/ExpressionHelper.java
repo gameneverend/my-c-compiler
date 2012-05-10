@@ -138,20 +138,51 @@ public class ExpressionHelper{
       
       Integer num;
       System.out.println("\tTag: " + f.getTag());
-      int i = f.getArgs().size() - 1;
+      int nb_parameters = f.getArgs().size();
+      int i = 0;
       for(Expression e : f.getArgs()){
 				
+        String source = null;
+        String dest = null;
+        
 				if(e.isFullyNumeric()){
 					num = calculateNum(e);
-					sb.append(asm(Assembly.MOV, "$" + num, Parser.regMan.getArgReg(String.valueOf(num), i))); 
+          source = "$" + num;
+          dest = Parser.regMan.getArgReg(String.valueOf(num), nb_parameters - i - 1, nb_parameters);
+          if (i < 6)
+            sb.append(asm(Assembly.MOV, source, dest));
+          else{
+            sb.append(asm(Assembly.MOV, source, Register.RAX));
+            sb.append(asm(Assembly.MOV, Register.RAX, dest));
+          }
 				}
         
+        /*else if(e.op == null){
+					if(e instanceof Variable){
+						tmp = (Variable)e;
+						val = String.valueOf(tmp.getValue());
+						
+						if(Parser.regMan.isListedVariable(val)){
+							reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
+							sb.append(asm(Assembly.MOV, reg, Parser.regMan.getArgReg(val, i, nb_parameters)));
+						}
+						else
+							sb.append(asm(Assembly.MOV, context.getVariableLocation(val), Parser.regMan.getArgReg(val, i, nb_parameters)));
+					}
+					else{
+						sb.append(handleFunctionCall(sb, (FunctionCall)e, context));
+						sb.append(asm(Assembly.MOV, Register.RAX, Parser.regMan.getArgReg(Register.RAX.toString(), i, nb_parameters)));
+					}
+        }*/
+				
         else{
 					sb.append(e.handleExpression(null, context).toString());
-					sb.append(asm(Assembly.MOV, Register.RAX, Parser.regMan.getArgReg(null, i)));  //getArgReg param1: ?
+					source = Register.RAX.toString();
+					dest = Parser.regMan.getArgReg(null, nb_parameters - i - 1, nb_parameters);
+          sb.append(asm(Assembly.MOV, source, dest));
         }
           
-        i--;
+        i++;
       }
         
       sb.append(asm(Assembly.CALL, f.getTag()));

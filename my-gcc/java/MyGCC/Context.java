@@ -71,6 +71,10 @@ public abstract class Context{
 		localVariablesLocated = false;
 	}
 	
+	public int getVariableLocalSize(){
+	  return variablesTotalSize;
+	}
+	
 
 	public String virtualPush(String s){
 		return "\t" + Assembly.MOV + "\t" + s +", " + (stackPosition -= 8) + "(" + Register.RBP + ")\n";
