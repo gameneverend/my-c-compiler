@@ -130,9 +130,9 @@
 
   
   <target name="clean">
-    <delete file="${java}/Parser.java"/>
-    <delete file="${java}/Scanner.java"/>
-    <delete file="${java}/sym.java"/>
+    <delete file="${java}/MyGCC/Parser.java"/>
+    <delete file="${java}/MyGCC/Scanner.java"/>
+    <delete file="${java}/MyGCC/sym.java"/>
     <delete dir="${classes}" />
     <delete dir="${dist}" />
   	<delete dir="${debug}"/>

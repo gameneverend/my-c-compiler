@@ -15,7 +15,11 @@ import java_cup.runtime.*;
   }
 
   public int yyline(){
-    return yyline;
+    return yyline + 1;
+  }
+
+  public int yycolumn(){
+    return yycolumn;
   }
 
   private SymbolFactory sf;

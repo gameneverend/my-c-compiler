@@ -48,9 +48,9 @@ parser code {:
     report_error("*** Syntax Error at line "
                  + s.yyline()
                  + ", column "
-                 + cur_token.right
-								 + ", while reading :"
-								 + cur_token 
+                 + s.yycolumn()
+		 + ", while reading :"
+		 + cur_token 
                  + " ***",
                  null);
     p.debug_stack();
