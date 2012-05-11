@@ -49,24 +49,26 @@ parser code {:
       System.out.println("\nCode generation aborted.\n");
   }
   
-
-  public void syntax_error(Symbol cur_token) { //overrides the default method
-    Scanner s = (Scanner) this.getScanner();
-    String strToken = "UNKNOWN TOKEN";
-    
+  public String getTokenName(Symbol token){
     try {
       java.lang.reflect.Field [] classFields = sym.class.getFields();
       for (int i = 0; i < classFields.length; i++) {
-        if (classFields[i].getInt(null) == cur_token.sym	) {
-          strToken = classFields[i].getName();
+        if (classFields[i].getInt(null) == token.sym) {
+          return classFields[i].getName();
         }
       }
     } catch (Exception e) {
       e.printStackTrace(System.err);
     }
     
+    return "UNKNOWN TOKEN";
+	}
+  
+
+  public void syntax_error(Symbol cur_token) { //overrides the default method
+    Scanner s = (Scanner) this.getScanner();
     report_error("Syntax error at line " + s.yyline() + ", column " + s.yycolumn()
-		 + " : Expected \";\" before " + strToken + " token.", null);
+		 + " : Expected \";\" before " + getTokenName(cur_token) + " token.", null);
     Parser.errors += 1;
     //p.debug_stack();
     //p.debug_shift(cur_token);
