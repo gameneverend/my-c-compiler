@@ -42,6 +42,9 @@ int test_fibo(int);
 /* This function tests array access */
 int test_array(int);
 
+/* This function tests binary operations */
+int test_binary(void);
+
 /* This function tests the handling of unreachable code */
 int test_unreachable(int);
 
@@ -198,6 +201,22 @@ int test_array(int i){
   c[2] = 2;
   
   return c[i%3];
+}
+
+int test_binary(void){
+	int a;
+  int b;
+  a = 1;
+  b = 0;
+  
+  if(!a)
+		return 111;
+	;
+	if(!(a & b))
+		return 222;
+	;
+
+	return 333;
 }
 
 int test_scan(int i){

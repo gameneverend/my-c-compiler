@@ -61,6 +61,10 @@ int main(int argc, char ** argv){
   test_validity(test_array(5), 2);
   printf("OK\n");
   
+  printf("Testing binary operations : ");
+  test_validity(test_binary(), 222);
+  printf("OK\n");
+  
   printf("Testing READ_INT: return read_int(a)+42 : (enter 1) ");
   test_validity(test_scan(), 43);
   printf("OK\n");

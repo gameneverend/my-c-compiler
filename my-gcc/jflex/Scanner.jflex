@@ -9,6 +9,9 @@ import java_cup.runtime.*;
 %column
 %class Scanner
 %{
+	public static int errors = 0;
+	private SymbolFactory sf;
+	
   public Scanner(java.io.InputStream r, SymbolFactory sf){
     this(r);
     this.sf=sf;
@@ -21,8 +24,11 @@ import java_cup.runtime.*;
   public int yycolumn(){
     return yycolumn;
   }
-
-  private SymbolFactory sf;
+  
+  public static int getErrors(){
+		return Scanner.errors;
+  }
+  
 %}
 
 %eofval{
@@ -109,5 +115,6 @@ SPACING = [ \t\r\f] | {NEWLINE}
   \"         {yybegin(STRING);}     
 
   {SPACING}  { /* ignore white space. */ }
-  .          { System.err.println("Illegal character: " + yytext()); }
+  .          { Scanner.errors += 1;
+							 System.err.println("Syntax error at line " + yyline() + ", column " + yycolumn() + " : Illegal character: " + yytext()); }
 }

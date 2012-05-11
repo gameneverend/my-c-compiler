@@ -31,6 +31,9 @@ extern int test_fibo(int);
 /* This function tests array access */
 extern int test_array(int);
 
+/* This function tests binary operations */
+extern int test_binary(void);
+
 /* This function tests the handling of unreachable code */
 extern int test_unreachable(int);
 

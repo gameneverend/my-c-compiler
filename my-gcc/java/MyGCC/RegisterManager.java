@@ -185,7 +185,6 @@ public class RegisterManager {
    * Adds the variable to the nth argument register.
    **/
   public String getArgReg(String var, int n, int nb_params) {
-    //n = n % 6;
     String result = null;
     if (n < 6){
       Register reg = Register.getArgumentRegister(n);
@@ -193,7 +192,7 @@ public class RegisterManager {
       return reg.toString();
     }
     int position = (n - 6) * 8;
-    result = position + "(%rsp)";
+    result = position + "(" + Register.RSP + ")";
     return result;
   }
   

@@ -41,7 +41,7 @@ public class CodeGenerator{
   }
   
   public void pushInstruction(Instruction i){
-    System.out.println("Pushing instruction to function: " + currentFunction.name);
+    if(Parser.DEBUG) System.out.println("Pushing instruction to function: " + currentFunction.name);
     if (currentFunction == null)
       System.err.println("ERROR: currentFunction is null");
     this.currentBlock.pushInstruction(i);
@@ -57,7 +57,7 @@ public class CodeGenerator{
   }
 
   public void openNewContext(){
-    System.out.println("Opening a new context, actual stack size :" + myStack.size());
+    if(Parser.DEBUG) System.out.println("Opening a new context, actual stack size :" + myStack.size());
     myStack.add(new Stack<Object>());
   }
 
@@ -77,7 +77,7 @@ public class CodeGenerator{
       }
     }
     Collections.reverse(parameters);
-    System.out.println("Declaring a prototype with :"
+    if(Parser.DEBUG) System.out.println("Declaring a prototype with :"
                        + "\n\tReturnType : " + returnType
                        + "\n\tname : " + name);
     //globalPrototypes.add(new Prototype(
@@ -85,7 +85,7 @@ public class CodeGenerator{
 
   @SuppressWarnings("unchecked")
 	public void startFunctionDefinition(){
-    System.out.println("Starting function definition");
+    if(Parser.DEBUG) System.out.println("Starting function definition");
     Type returnType = null;
     String name = null;
     ArrayList<Parameter> parameters = new ArrayList<Parameter>();

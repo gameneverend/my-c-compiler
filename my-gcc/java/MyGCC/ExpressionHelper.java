@@ -157,23 +157,6 @@ public class ExpressionHelper{
           }
 				}
         
-        /*else if(e.op == null){
-					if(e instanceof Variable){
-						tmp = (Variable)e;
-						val = String.valueOf(tmp.getValue());
-						
-						if(Parser.regMan.isListedVariable(val)){
-							reg = Parser.regMan.addVariableToRegister(val, Register.RegisterType.CALLER_SAVED);
-							sb.append(asm(Assembly.MOV, reg, Parser.regMan.getArgReg(val, i, nb_parameters)));
-						}
-						else
-							sb.append(asm(Assembly.MOV, context.getVariableLocation(val), Parser.regMan.getArgReg(val, i, nb_parameters)));
-					}
-					else{
-						sb.append(handleFunctionCall(sb, (FunctionCall)e, context));
-						sb.append(asm(Assembly.MOV, Register.RAX, Parser.regMan.getArgReg(Register.RAX.toString(), i, nb_parameters)));
-					}
-        }*/
 				
         else{
 					sb.append(e.handleExpression(null, context).toString());

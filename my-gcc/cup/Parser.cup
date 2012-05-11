@@ -11,9 +11,10 @@ parser code {:
 
   public static Parser p;
   public PrintStream ps;
-  public static Boolean DEBUG = true;
+  public static Boolean DEBUG = false;
   public static RegisterManager regMan = new RegisterManager();
   public CodeGenerator cg = new CodeGenerator();
+  public static int errors = 0;
 
   Parser(Scanner s, SymbolFactory sf, PrintStream ps){
     super(s,sf);
@@ -29,32 +30,46 @@ parser code {:
     else
       destination_file = args[0].substring(0,args[0].lastIndexOf('.')) + ".s";
 
-    System.out.println("Writing to : " + destination_file);
     p = new Parser(new Scanner(new FileInputStream(args[0]),sf),
                                sf,
                                new PrintStream(destination_file));
-    //System.out.println("modified version");
-    //p.debug_parse();    
+  
+		Scanner sc = (Scanner)p.getScanner();
     p.parse();
-    p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
-    System.out.println("\n*************** Generating code **************");
-    p.ps.print(p.cg.generateCode());
-    p.ps.close();
+    
+    if(sc.getErrors() == 0){
+			if(Parser.errors == 0){
+        p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
+        System.out.println("\n*************** Generating code **************");
+        p.ps.print(p.cg.generateCode());
+        p.ps.close();
+      }
+    }
+    else
+      System.out.println("\nCode generation aborted.\n");
   }
   
 
-  public void syntax_error(Symbol cur_token) { //overloads the default method
+  public void syntax_error(Symbol cur_token) { //overrides the default method
     Scanner s = (Scanner) this.getScanner();
-    report_error("*** Syntax Error at line "
-                 + s.yyline()
-                 + ", column "
-                 + s.yycolumn()
-		 + ", while reading :"
-		 + cur_token 
-                 + " ***",
-                 null);
-    p.debug_stack();
-    p.debug_shift(cur_token);
+    String strToken = "UNKNOWN TOKEN";
+    
+    try {
+      java.lang.reflect.Field [] classFields = sym.class.getFields();
+      for (int i = 0; i < classFields.length; i++) {
+        if (classFields[i].getInt(null) == cur_token.sym	) {
+          strToken = classFields[i].getName();
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
+    }
+    
+    report_error("Syntax error at line " + s.yyline() + ", column " + s.yycolumn()
+		 + " : Expected \";\" before " + strToken + " token.", null);
+    Parser.errors += 1;
+    //p.debug_stack();
+    //p.debug_shift(cur_token);
   }
 :}
 
@@ -326,7 +341,8 @@ body ::=
 // A list of instructions, each separated by semicolons
 instruct_list ::=
     instruction SEMI instruct_list
-  | 
+  | error SEMI instruct_list
+  |
   ;
         
 // Every instruction which can be performed
@@ -391,7 +407,7 @@ instruction ::=
         :}
   
     // Basic "while" instruction
-  | WHILE {: System.out.println("While Detected"); :}
+  | WHILE {: if(Parser.DEBUG) System.out.println("While Detected"); :}
       LPAREN expression:e RPAREN 
             {:  parser.cg.startBlockDefinition();
             :}
