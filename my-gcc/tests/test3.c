@@ -36,12 +36,9 @@ int falsemain(void){
   int c;
   a = 1;
   b = 2;
-  
   c = a * 3;
-  c = a * @1;
-  c = a * ~1;
-  c = a * ~1!;
-  c = b + a;
+  //c = b * rand(45);
+  c = b + c;
   return c;
 }
 

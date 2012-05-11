@@ -151,10 +151,27 @@ public class CodeGenerator{
           System.err.println("Unexpected Type :" + r.type);
       }
     }
-    if(currentFunction != null) {
+    if(currentFunction != null)
     	currentFunction.addDeclaration(type, identifier, arraySize);
-    }
   }
+  
+  public void checkValidity(String variable, int line, int col) throws Exception{
+		currentFunction.loadParameters();	//FIXME find a more suitable way to do this
+		try{
+			currentFunction.getFunctionContext().getVariableLocation(variable);
+		}catch (Exception e){
+			Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undeclared.");
+		}
+	}
+	
+	public void checkFunction(String variable, int line, int col){
+		for(Prototype p : globalPrototypes){
+			if(p.identifier.equals(variable))
+				return;
+		}
+		Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undefined function.");
+	}
+	
 
   public String generateCode(){
     StringBuffer sb = new StringBuffer();

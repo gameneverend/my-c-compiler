@@ -108,17 +108,17 @@ public class Expression{
     public StringBuffer handleExpression(Expression e, Context context) throws Exception{
 			StringBuffer sb = new StringBuffer();
 			String lastReg;
-			System.out.println("\nHandling expression: \"" + this.toString() + "\"");
+			if(Parser.DEBUG) System.out.println("\nHandling expression: \"" + this.toString() + "\"");
 			if(this.right == null){
 				//Handle leaf
 				
 				if(this instanceof Variable){
-					System.out.println("\tVariable caught: " + ((Variable)this).getValue());
+					if(Parser.DEBUG) System.out.println("\tVariable caught: " + ((Variable)this).getValue());
 					sb = ExpressionHelper.handleVariable(sb, (Variable)this, Register.RAX, context);	
 				}
 
 				else if(this instanceof FunctionCall){
-					System.out.println("\tFunction-call caught: " + ((FunctionCall)this).getTag());
+					if(Parser.DEBUG) System.out.println("\tFunction-call caught: " + ((FunctionCall)this).getTag());
 					sb = ExpressionHelper.handleFunctionCall(sb, (FunctionCall)this, context);
 				}
 				return sb;

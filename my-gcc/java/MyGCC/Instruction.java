@@ -44,7 +44,7 @@ public class Instruction {
         return sb.toString();
       }
       
-      System.out.println("\tInstruction type: " + instruct.type.toString());
+      if(Parser.DEBUG) System.out.println("\tInstruction type: " + instruct.type.toString());
       switch(instruct.type){
         
         case RETURN:

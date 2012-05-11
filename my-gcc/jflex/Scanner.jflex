@@ -1,7 +1,7 @@
 package MyGCC;
 import java_cup.runtime.SymbolFactory;
 import java_cup.runtime.*;
-
+import java.util.ArrayList;
 %%
 
 %cup
@@ -9,7 +9,7 @@ import java_cup.runtime.*;
 %column
 %class Scanner
 %{
-	public static int errors = 0;
+	public static ArrayList<String> errors = new ArrayList<String>();
 	private SymbolFactory sf;
 	
   public Scanner(java.io.InputStream r, SymbolFactory sf){
@@ -25,8 +25,16 @@ import java_cup.runtime.*;
     return yycolumn;
   }
   
-  public static int getErrors(){
+  public static ArrayList<String> getErrors(){
 		return Scanner.errors;
+  }
+  
+  public String streamToString(java.io.InputStream is){
+		try{
+			return new java.util.Scanner(is).useDelimiter("\\A").next();
+		} catch (java.util.NoSuchElementException e){
+		  return "";
+		}
   }
   
 %}
@@ -115,6 +123,5 @@ SPACING = [ \t\r\f] | {NEWLINE}
   \"         {yybegin(STRING);}     
 
   {SPACING}  { /* ignore white space. */ }
-  .          { Scanner.errors += 1;
-							 System.err.println("Syntax error at line " + yyline() + ", column " + yycolumn() + " : Illegal character: " + yytext()); }
+  .          { Scanner.errors.add(new String(":" + yyline() + ":" + yycolumn() + ": error: illegal character: " + yytext())); }
 }

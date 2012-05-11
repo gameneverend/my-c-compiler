@@ -49,8 +49,8 @@ public class Function{
   /** Initially, some parameters are left in some caller-saved Registers.
    *  This function returns the String that ensures that the parameters are
    *  loaded before starting the code **/
-  private String loadParameters(){
-    System.out.println("Loading parameters for function: " + this.name);
+  public String loadParameters(){
+    if(Parser.DEBUG) System.out.println("Loading parameters for function: " + this.name);
     myContext.prepareParametersLocation();
     StringBuilder sb = new StringBuilder();
     
@@ -113,9 +113,12 @@ public class Function{
   }
 
 
-
   public void addDeclaration(Type type, String identifier, int arraySize) {
 	  myContext.addVariable(type, identifier, arraySize);
   }
+  
+  public FunctionContext getFunctionContext(){
+		return this.myContext;
+	}
     
 }

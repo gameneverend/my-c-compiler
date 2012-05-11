@@ -14,7 +14,7 @@ parser code {:
   public static Boolean DEBUG = false;
   public static RegisterManager regMan = new RegisterManager();
   public CodeGenerator cg = new CodeGenerator();
-  public static int errors = 0;
+  public static ArrayList<String> errors = new ArrayList<String>();
 
   Parser(Scanner s, SymbolFactory sf, PrintStream ps){
     super(s,sf);
@@ -24,6 +24,7 @@ parser code {:
   public static void main(String args[]) throws Exception {
     SymbolFactory sf = new DefaultSymbolFactory();
     String destination_file;
+    ArrayList<String> scanErrors;
 
     if (args.length >= 2)
       destination_file = args[1];
@@ -34,21 +35,30 @@ parser code {:
                                sf,
                                new PrintStream(destination_file));
   
-		Scanner sc = (Scanner)p.getScanner();
+
     p.parse();
+    Scanner sc = (Scanner)p.getScanner();
+    scanErrors = sc.getErrors();
+
+		for(String err : scanErrors)
+			System.err.println("\t" + args[0] + err);
+
+		for(String err : Parser.errors)
+			System.err.println("\t" + args[0] + err);
     
-    if(sc.getErrors() == 0){
-			if(Parser.errors == 0){
-        p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
-        System.out.println("\n*************** Generating code **************");
-        p.ps.print(p.cg.generateCode());
-        p.ps.close();
-      }
+    if(scanErrors.size() == 0 && Parser.errors.size() == 0){
+      p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
+      System.out.println("\n\t>> Generating code...");
+      p.ps.print(p.cg.generateCode());
+      p.ps.close();
+      System.out.println("\t>> Generation completed.");
     }
     else
-      System.out.println("\nCode generation aborted.\n");
+      System.out.println("\n\t>> Code generation aborted.\n");
   }
   
+  //Inspired by:
+  //http://jflex.sourcearchive.com/documentation/1.4.2/classJFlex_1_1LexScan_a5d95c1908b6d04dd694909745750e68f.html#a5d95c1908b6d04dd694909745750e68f
   public String getTokenName(Symbol token){
     try {
       java.lang.reflect.Field [] classFields = sym.class.getFields();
@@ -67,11 +77,8 @@ parser code {:
 
   public void syntax_error(Symbol cur_token) { //overrides the default method
     Scanner s = (Scanner) this.getScanner();
-    report_error("Syntax error at line " + s.yyline() + ", column " + s.yycolumn()
-		 + " : Expected \";\" before " + getTokenName(cur_token) + " token.", null);
-    Parser.errors += 1;
-    //p.debug_stack();
-    //p.debug_shift(cur_token);
+    Parser.errors.add(":" + s.yyline() + ":" + s.yycolumn()
+		 + ": error: expected \";\" before " + getTokenName(cur_token) + " token.");
   }
 :}
 
@@ -353,6 +360,8 @@ instruction ::=
     // Compare the value of a variable with that of an expression
     IDENT:i EQL expression:e
       {: if(Parser.DEBUG) System.out.println("Instruction detected: EQL");
+         Scanner s = (Scanner)Parser.p.getScanner();
+         parser.cg.checkValidity(i, s.yyline(), s.yycolumn());
          parser.cg.pushInstruction(new Instruction(new Variable<String>(null, i), e, InstructionType.EQL)); :}
     
     // Compare the value of an item from an array with that of an expression
@@ -486,6 +495,8 @@ expression ::=
   | IDENT:i
       {: if(Parser.DEBUG) System.out.println("Expression ident: " + i);
          //declare ident in current block
+         Scanner s = (Scanner)Parser.p.getScanner();
+         parser.cg.checkValidity(i, s.yyline(), s.yycolumn());
          RESULT = new Variable<String>(null, i);  :}
 
   | NB_INT:n
@@ -494,7 +505,9 @@ expression ::=
 
     // Allows the use of a function in an expression
   | IDENT:i LPAREN arg_sequence:a RPAREN
-      {: RESULT = new FunctionCall(i, a); :}
+      {: Scanner s = (Scanner)Parser.p.getScanner();
+         parser.cg.checkFunction(i, s.yyline(), s.yycolumn());
+         RESULT = new FunctionCall(i, a); :}
   
     // Allows the use of arrays with expression calculated indexes
   | IDENT:i LHOOK expression:e RHOOK
