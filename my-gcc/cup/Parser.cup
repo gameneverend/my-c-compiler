@@ -48,11 +48,12 @@ parser code {:
     
     if(scanErrors.size() == 0 && Parser.errors.size() == 0){
       p.cg.sm.addString("%d");
+      HashMap<String, String> contents = p.cg.sm.getContents();
       System.out.println("\n\t>> Generating code...");
       p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n");
       
-      for(String e : parser.cg.sm.getKeys())
-        p.ps.print(p.cg.sm.get(e) + ":\t" + e + ":\n\t.string \n");
+      for(String e : contents.keySet())
+        p.ps.print(contents.get(e) + ":\t" + e + ":\n\t.string \n");
         
       p.ps.print("\t.text\n");
       p.ps.print(p.cg.generateCode());
