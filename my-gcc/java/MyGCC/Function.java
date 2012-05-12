@@ -61,8 +61,10 @@ public class Function{
       
       try{
         sb.append(myContext.getVariableLocation(myContext.getParameter(i).name));
-        System.out.println("\tParameter : " + myContext.getParameter(i).name);
-        System.out.println("\tLocation : " + myContext.getVariableLocation(myContext.getParameter(i).name));
+        if (Parser.DEBUG){
+          System.out.println("\tParameter : " + myContext.getParameter(i).name);
+          System.out.println("\tLocation : " + myContext.getVariableLocation(myContext.getParameter(i).name));
+        }
       }catch(Exception e){e.printStackTrace();}
       
       sb.append("\n");

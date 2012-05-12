@@ -59,7 +59,7 @@ SPACING = [ \t\r\f] | {NEWLINE}
 
 <STRING> {
   \"          {yybegin(YYINITIAL); }
-  .-\" | \\\"            {return sf.newSymbol("String", sym.STRING, new String(yytext())); }
+  . | \\\"            {return sf.newSymbol("String", sym.STRING, new String(yytext())); }
 }
 
 

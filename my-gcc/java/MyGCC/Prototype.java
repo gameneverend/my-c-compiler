@@ -1,23 +1,24 @@
 package MyGCC;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 class Prototype{
   
   public Type retType;
   public String identifier;
-  public LinkedList<Type> typeList;
+  public ArrayList<Type> typeList;
   
   public Prototype() {
     this.retType = null;
     this.identifier = new String();
-    this.typeList = new LinkedList<Type>();
+    this.typeList = new ArrayList<Type>();
   }
   
-  public Prototype(Type t, String ident, LinkedList<Type> llt) {
+  public Prototype(Type t, String ident, ArrayList<Type> parameters) {
     this.retType = t;
     this.identifier = ident;
-    this.typeList = llt;
+    this.typeList = parameters;
   }
   
   public void setReturn(Type t) {
@@ -40,7 +41,7 @@ class Prototype{
     return this.identifier;
   }
   
-  public LinkedList<Type> getTypeList() {
+  public ArrayList<Type> getTypeList() {
     return this.typeList;
   }
 }

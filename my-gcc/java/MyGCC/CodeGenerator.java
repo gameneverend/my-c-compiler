@@ -78,10 +78,11 @@ public class CodeGenerator{
       }
     }
     Collections.reverse(parameters);
-    if(Parser.DEBUG) System.out.println("Declaring a prototype with :"
-                       + "\n\tReturnType : " + returnType
-                       + "\n\tname : " + name);
-    //globalPrototypes.add(new Prototype(
+    //if(Parser.DEBUG)
+      System.out.println("Declaring a prototype with :"
+                         + "\n\tReturnType : " + returnType
+                         + "\n\tname : " + name);
+    globalPrototypes.add(new Prototype(returnType, name, parameters));
   }
 
   @SuppressWarnings("unchecked")
@@ -166,7 +167,10 @@ public class CodeGenerator{
 	}
 	
 	public void checkFunction(String variable, int line, int col){
+	  System.out.println("Checking for prototypes");
 		for(Prototype p : globalPrototypes){
+		  //TODO affiner le test pour vérifier que les variables déclarées sont bonnes
+		  System.out.println("\tIdentifier : " + p.identifier);
 			if(p.identifier.equals(variable))
 				return;
 		}
