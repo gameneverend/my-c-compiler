@@ -29,14 +29,6 @@ import java.util.ArrayList;
 		return Scanner.errors;
   }
   
-  public String streamToString(java.io.InputStream is){
-		try{
-			return new java.util.Scanner(is).useDelimiter("\\A").next();
-		} catch (java.util.NoSuchElementException e){
-		  return "";
-		}
-  }
-  
 %}
 
 %eofval{
