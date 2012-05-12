@@ -12,7 +12,7 @@ public class CodeGenerator{
   private LinkedList<Stack<Object>> myStack;
   private LinkedList<Prototype> globalPrototypes = new LinkedList<Prototype>();
   private LinkedList<Function> globalFunctions = new LinkedList<Function>();
-  //public static StringManager sm = new StringManager();
+  public static StringManager sm = new StringManager();
 
   private Context globalContext;
   private Context actualContext;

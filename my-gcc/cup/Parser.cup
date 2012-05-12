@@ -13,7 +13,6 @@ parser code {:
   public PrintStream ps;
   public static Boolean DEBUG = false;
   public static RegisterManager regMan = new RegisterManager();
-  public static StringManager sm = new StringManager();
   public CodeGenerator cg = new CodeGenerator();
   public static ArrayList<String> errors = new ArrayList<String>();
 
@@ -48,12 +47,12 @@ parser code {:
 			System.err.println("\t" + args[0] + err);
     
     if(scanErrors.size() == 0 && Parser.errors.size() == 0){
-      parser.sm.addString("%d");
+      p.cg.sm.addString("%d");
       System.out.println("\n\t>> Generating code...");
       p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n");
       
-      for(String e : parser.sm.getKeys())
-        p.ps.print(parser.sm.get(e) + ":\t" + e + ":\n\t.string \n");
+      for(String e : parser.cg.sm.getKeys())
+        p.ps.print(p.cg.sm.get(e) + ":\t" + e + ":\n\t.string \n");
         
       p.ps.print("\t.text\n");
       p.ps.print(p.cg.generateCode());
@@ -95,7 +94,7 @@ terminal INT, VOID, STATIC, LHOOK, RHOOK, LPAREN, RPAREN, LBRACKET, RBRACKET,
          OR, AND;
     
 terminal String IDENT;
-terminale String STRING;
+terminal String STRING;
 terminal Integer NB_INT;
 
 non terminal program, declarations_list, declaration, prototype,
@@ -408,8 +407,8 @@ instruction ::=
   | PRINTF LPAREN STRING:s COMMA args_list RPAREN
       {:  ArrayList<Expression> args = new ArrayList<Expression>();
           args.add(new Variable<String>(null, s));
-          args.add(parser.cg.getArguments());
-          String label = parser.sm.addString(s);
+          args.addAll(parser.cg.getArguments());
+          String label = parser.cg.sm.addString(s);
           parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.PRINTF.toString(), args), InstructionType.PRINTF));
       :}
   

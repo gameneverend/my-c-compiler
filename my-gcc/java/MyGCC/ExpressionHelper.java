@@ -1,6 +1,7 @@
 package MyGCC;
 
 import java.util.Stack;
+import java.util.HashMap;
 
 public class ExpressionHelper{
     
@@ -175,11 +176,12 @@ public class ExpressionHelper{
     }
 
     
-    public static StringBuffer handlePrint(StringBuffer sb, FunctionCall f, Context c) throws Exception {
+    public static StringBuffer handlePrint(StringBuffer sb, FunctionCall f, Context context) throws Exception {
       boolean first = true;
       int i = 0;
-      String label;
+      String label = null;
       int nb_parameters = f.getArgs().size();
+      int num;
       
       for(Expression e : f.getArgs()) {
         String source = null;
@@ -188,7 +190,7 @@ public class ExpressionHelper{
         if(first) {
           first = false;
           HashMap<String, String> strings  = CodeGenerator.sm.getContents();
-          label = "$" + strings.getValue(e.getValue());
+          label = "$" + strings.get(((Variable)e).getValue());
           dest = Register.RAX.toString();
           
           sb.append(asm(Assembly.MOV, source, dest));
@@ -219,9 +221,9 @@ public class ExpressionHelper{
       sb.append(asm(Assembly.MOV, label, Register.RAX.toString()));
       
       if(nb_parameters == 1)
-        sb.append(asm(Assembly.CALL, puts));
+        sb.append(asm(Assembly.CALL, "puts"));
       else
-        sb.append(asm(Assembly.CALL, printf));
+        sb.append(asm(Assembly.CALL, "printf"));
       
       return sb;
     }
