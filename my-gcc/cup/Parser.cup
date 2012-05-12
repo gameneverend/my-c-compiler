@@ -181,6 +181,8 @@ hybrid_param ::=
     // a function ends with a }
   | param_list RPAREN LBRACKET
       {:
+        Scanner s = (Scanner)Parser.p.getScanner();
+        parser.cg.checkFunction(parser.cg.getIdentifierOnStack(), s.yyline(), s.yycolumn());
         parser.cg.startFunctionDefinition();
       :}
     body RBRACKET
@@ -209,6 +211,8 @@ dec_or_func_end ::=
     // And followed by a list of functions
   | LBRACKET
       {:
+        Scanner s = (Scanner)Parser.p.getScanner();
+        parser.cg.checkFunction(parser.cg.getIdentifierOnStack(), s.yyline(), s.yycolumn());
         parser.cg.startFunctionDefinition();
       :}
       body RBRACKET functions_list
@@ -299,6 +303,8 @@ functions_list ::=
 // Core structure of a function in C
 function ::=
     header LBRACKET {:
+    			      Scanner s = (Scanner)Parser.p.getScanner();
+                      parser.cg.checkFunction(parser.cg.getIdentifierOnStack(), s.yyline(), s.yycolumn());
                       parser.cg.startFunctionDefinition();
                     :}
                     body RBRACKET

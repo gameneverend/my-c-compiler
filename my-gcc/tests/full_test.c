@@ -45,7 +45,7 @@ int main(int argc, char ** argv){
   test_validity(test_multi_if(2, 13), 2);
   printf("OK\n");
   
-  printf("Testing stack frame and recursion : ");
+  printf("Testing stack frame and recursion * trick * : ");
   /* TODO correct this function, the 7,9,10 parameters are actually ignored,
    * the result is false, but the origin very strange, should be done later */
   test_validity(test_somme_rec_multi_param(1,2,3,4,5,6,7,8,9,10,11), 40);
@@ -67,6 +67,10 @@ int main(int argc, char ** argv){
   test_validity(test_binary(), 222);
   printf("OK\n");
   
+  printf("Testing the printf instruction (5 should be displayed) : ");
+  test_validity(test_printing(5),0);
+  printf("OK ? \n");
+
   printf("Testing READ_INT: return read_int(a)+42 : (enter 1) ");
   test_validity(test_scan(), 43);
   printf("OK\n");

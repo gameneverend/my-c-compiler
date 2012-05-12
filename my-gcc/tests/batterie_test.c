@@ -3,7 +3,6 @@ int test_simple(void);
 
 /* This function returns -x */
 int oppose(int);
-
 /* This function returns a + b */
 int addition(int, int);
 
@@ -44,6 +43,12 @@ int test_array(int);
 
 /* This function tests binary operations */
 int test_binary(void);
+
+/* This function test the call to the printf function */
+int test_printing(int);
+
+/* This function tests the readInt instruction */
+int test_scan(int);
 
 /* This function tests the handling of unreachable code */
 int test_unreachable(int);
@@ -217,6 +222,11 @@ int test_binary(void){
 	;
 
 	return 333;
+}
+
+int test_printing(int i){
+	//TODO
+	return 0;
 }
 
 int test_scan(int i){

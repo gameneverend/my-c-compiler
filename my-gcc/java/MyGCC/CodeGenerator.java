@@ -84,6 +84,17 @@ public class CodeGenerator{
                          + "\n\tname : " + name);
     globalPrototypes.add(new Prototype(returnType, name, parameters));
   }
+  
+  public String getIdentifierOnStack(){
+    for (Object o : myStack.getLast()){
+      ParsingResult r = (ParsingResult) o;
+      if (r.type == ResultType.ID){
+        return ((ParsingResult<String>)r).getValue();
+      }
+        
+    }
+    return null;
+  }
 
   @SuppressWarnings("unchecked")
 	public void startFunctionDefinition(){
@@ -167,14 +178,14 @@ public class CodeGenerator{
 	}
 	
 	public void checkFunction(String variable, int line, int col){
-	  System.out.println("Checking for prototypes");
+	  //System.out.println("Checking for prototypes matching the following name : " + variable);
 		for(Prototype p : globalPrototypes){
 		  //TODO affiner le test pour vérifier que les variables déclarées sont bonnes
-		  System.out.println("\tIdentifier : " + p.identifier);
+		  //System.out.println("\tIdentifier : " + p.identifier);
 			if(p.identifier.equals(variable))
 				return;
 		}
-		Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undefined function.");
+		Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undefined reference to function.");
 	}
 	
 
