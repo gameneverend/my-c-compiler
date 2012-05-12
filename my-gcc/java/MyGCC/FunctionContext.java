@@ -35,7 +35,7 @@ public class FunctionContext extends Context{
 				k++;
 			}
 		}
-		parametersLocated = false;
+		parametersLocated = true;
 	}
 	
 	public int nbParameters(){
