@@ -19,7 +19,7 @@ public class CodeGenerator{
   private Function currentFunction;
   private Block currentBlock = null;
   private Stack<Expression> args;
-  public static boolean mode64 = false;
+  public static boolean mode64 = true;
 
   public CodeGenerator(){
     myStack = new LinkedList<Stack<Object>>();
