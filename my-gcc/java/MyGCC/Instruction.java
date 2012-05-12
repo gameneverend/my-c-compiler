@@ -81,6 +81,11 @@ public class Instruction {
           fc = (FunctionCall)r;
           sb = ExpressionHelper.handleReadInt(sb, fc, context);
           break;
+          
+        case PRINTF:
+          fc = (FunctionCall)r;
+          sb = ExpressionHelper.handlePrint(sb, fc, context);
+          break;
 
         default:
           // case null, ie. for instructions like "1+2;"

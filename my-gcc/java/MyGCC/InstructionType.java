@@ -6,5 +6,6 @@ public enum InstructionType{
   EQL,
   IF,
   WHILE,
-  READ_INT;
+  READ_INT,
+  PRINTF;
 }

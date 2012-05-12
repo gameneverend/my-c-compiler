@@ -397,7 +397,12 @@ instruction ::=
       :}
     
     // Basic Printf instruction
-  | PRINTF LPAREN STRING COMMA args_list RPAREN
+  | PRINTF LPAREN STRING:s COMMA args_list RPAREN
+      {:  ArrayList<Expresion> string = new ArrayList<Expression>();
+          string.add(new Variable<String>(null, s));
+          String label = parser.cg.sm.addString(s);
+          parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.PRINTF.toString(), string), InstructionType.PRINTF));
+      :}
   
     // Basic "if else" test on an expression
   | IF {: if(Parser.DEBUG) System.out.println("If detected");

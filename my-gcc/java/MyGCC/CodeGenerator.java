@@ -12,13 +12,14 @@ public class CodeGenerator{
   private LinkedList<Stack<Object>> myStack;
   private LinkedList<Prototype> globalPrototypes = new LinkedList<Prototype>();
   private LinkedList<Function> globalFunctions = new LinkedList<Function>();
+  public static StringManager sm = new StringManager();
 
   private Context globalContext;
   private Context actualContext;
   private Function currentFunction;
   private Block currentBlock = null;
   private Stack<Expression> args;
-  public static boolean mode64 = true;
+  public static boolean mode64 = false;
 
   public CodeGenerator(){
     myStack = new LinkedList<Stack<Object>>();
