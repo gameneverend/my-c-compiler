@@ -1,5 +1,6 @@
 package MyGCC;
 
+import java.util.HashMap;
 
 public class StringManager {
   private HashMap<String, String> contents;
@@ -17,9 +18,10 @@ public class StringManager {
         this.contents.put(string, label);
         return label;
       }
+    return null;
   }
   
   public HashMap<String, String> getContents() {
-    return this.contents.clone();
+    return (HashMap<String, String>)this.contents.clone();
   }
 }

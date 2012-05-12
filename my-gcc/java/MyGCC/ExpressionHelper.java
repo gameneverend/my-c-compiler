@@ -173,6 +173,58 @@ public class ExpressionHelper{
 				sb.append(asm(Assembly.NEG, Register.RAX));
       return sb;
     }
+
+    
+    public static StringBuffer handlePrint(StringBuffer sb, FunctionCall f, Context c) throws Exception {
+      boolean first = true;
+      int i = 0;
+      String label;
+      int nb_parameters = f.getArgs().size();
+      
+      for(Expression e : f.getArgs()) {
+        String source = null;
+        String dest = null;
+        
+        if(first) {
+          first = false;
+          HashMap<String, String> strings  = CodeGenerator.sm.getContents();
+          label = "$" + strings.getValue(e.getValue());
+          dest = Register.RAX.toString();
+          
+          sb.append(asm(Assembly.MOV, source, dest));
+        } else {
+          if(e.isFullyNumeric()){
+            num = calculateNum(e);
+            source = "$" + num;
+            dest = Parser.regMan.getArgReg(String.valueOf(num), nb_parameters - i - 1, nb_parameters);
+            if (i < 6)
+              sb.append(asm(Assembly.MOV, source, dest));
+            else{
+              sb.append(asm(Assembly.MOV, source, Register.RAX));
+              sb.append(asm(Assembly.MOV, Register.RAX, dest));
+            }
+          }
+        
+          else{
+            sb.append(e.handleExpression(null, context).toString());
+            source = Register.RAX.toString();
+            dest = Parser.regMan.getArgReg(null, nb_parameters - i - 1, nb_parameters);
+            sb.append(asm(Assembly.MOV, source, dest));
+          }
+            
+          i++;
+        }
+      }
+      
+      sb.append(asm(Assembly.MOV, label, Register.RAX.toString()));
+      
+      if(nb_parameters == 1)
+        sb.append(asm(Assembly.CALL, puts));
+      else
+        sb.append(asm(Assembly.CALL, printf));
+      
+      return sb;
+    }
     
     
     public static StringBuffer handleReadInt(StringBuffer sb, FunctionCall f, Context c) throws Exception {
@@ -187,12 +239,6 @@ public class ExpressionHelper{
       sb.append(asm(Assembly.CALL, "__isoc99_scanf"));
       
       return sb;
-    }
-    
-    
-    public static StringBuffer handlePrint(StringBuffer sb, FunctionCall f, Context c) throws Exception {
-      //TODO needs to be implemented
-      return null;      
     }
     
     

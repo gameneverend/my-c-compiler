@@ -13,6 +13,7 @@ parser code {:
   public PrintStream ps;
   public static Boolean DEBUG = false;
   public static RegisterManager regMan = new RegisterManager();
+  public static StringManager sm = new StringManager();
   public CodeGenerator cg = new CodeGenerator();
   public static ArrayList<String> errors = new ArrayList<String>();
 
@@ -47,8 +48,14 @@ parser code {:
 			System.err.println("\t" + args[0] + err);
     
     if(scanErrors.size() == 0 && Parser.errors.size() == 0){
-      p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n" + LabelManager.getStringLabel() + ":\n\t.string \"%ld\"\n\t.text\n");
+      parser.sm.addString("%d");
       System.out.println("\n\t>> Generating code...");
+      p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n");
+      
+      for(String e : parser.sm.getKeys())
+        p.ps.print(parser.sm.get(e) + ":\t" + e + ":\n\t.string \n");
+        
+      p.ps.print("\t.text\n");
       p.ps.print(p.cg.generateCode());
       p.ps.close();
       System.out.println("\t>> Generation completed.");
@@ -85,9 +92,10 @@ parser code {:
 terminal INT, VOID, STATIC, LHOOK, RHOOK, LPAREN, RPAREN, LBRACKET, RBRACKET,
          COMMA, SEMI, EQL, EXIT, RETURN, READ_INT, PRINTF, IF, ELSE, WHILE, MINUS,
          NOT, LESS, GREATER, EQUALS, LEQL, GEQL, DIFF, PLUS, TIMES, DIV, MOD,
-         OR, AND, STRING;
+         OR, AND;
     
 terminal String IDENT;
+terminale String STRING;
 terminal Integer NB_INT;
 
 non terminal program, declarations_list, declaration, prototype,
@@ -398,10 +406,11 @@ instruction ::=
     
     // Basic Printf instruction
   | PRINTF LPAREN STRING:s COMMA args_list RPAREN
-      {:  ArrayList<Expresion> string = new ArrayList<Expression>();
-          string.add(new Variable<String>(null, s));
-          String label = parser.cg.sm.addString(s);
-          parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.PRINTF.toString(), string), InstructionType.PRINTF));
+      {:  ArrayList<Expression> args = new ArrayList<Expression>();
+          args.add(new Variable<String>(null, s));
+          args.add(parser.cg.getArguments());
+          String label = parser.sm.addString(s);
+          parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.PRINTF.toString(), args), InstructionType.PRINTF));
       :}
   
     // Basic "if else" test on an expression
