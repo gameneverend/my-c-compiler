@@ -78,7 +78,9 @@ To solve this issue, we have implemented Context objects, that contain declarati
 
 
 \section{Register Manager}
-TODO
+At the start of the project, we decided that it would be useful to have a register manager that would serve us to get a free register, or get the register in which we've loaded a certain variable.\\
+But it turns out that it was far too complex to manage (for instance, when all registers are used, based on what criteria should we free a register?), and that it wasn't needed for expression handling, because only two registers are enough for this operation.\\
+The register manager turned out to be useful for retrieving registers for a function call. Note that when more than 6 parameters are needed, we would pass the rest of the parameters on the stack.
 
 \section{Expression handling}
 One of the major challenges encountered was the correct handling of expressions.
@@ -140,8 +142,12 @@ These features include:
 \end{itemize}
 
 \section{Conclusion}
-Ce travail de groupe a été bien plus complexe que tous ceux que nous avons fait en cours jusqu'à présent, mais il a aussi été très enrichissant en nous permettant de nous confronter à des difficultés qui dépassaient parfois ce qui avait été vu en cours. Toutes les notions de programmation que nous avons pu voir au cours de la licence y ont été réunies. De l'architecture au C, en passant par le langage objet, l'analyse syntaxique n'a de loin pas été la seule compétence nécessaire à la réalisation de ce travail.\\
-Nous avons su tirer parti des enseignements de nos précédents projets en nous organisant plus rapidement et en nous répartissant le travail dès le début. Cela ne nous a pas pour autant empêché de faire de nombreuses erreurs\footnote{Par exemple, le manque de commentaires pendant l'écriture du code, le fait de rusher le rapport à la dernière minute} qui nous permettront de tirer de nouveaux enseignements pour la suite de notre parcours.\\
-Nous avons pu aussi prendre conscience plus fortement de l'utilité du travail en groupe, l'entraide nous ayant plusieurs fois permis d'éviter de rester bloquer plusieurs heures sur certains bugs. Nous avons pu profité des spécialités de chacuns tout en gardant une vision globale du projet.
+This project turned out to be far more complex than any of the previous projects, but it was also quite rewarding, since we had the chance to encounter some difficult situations. All of the programming notions we have studied at university were omnipresent in this project. From architecture, to C language, to object-oriented paradigm, syntax analysis was definitely not the only skill required for this task.\\
+
+We realised that one of the toughest criterias of a good compiler, is to be 100\% reliable.
+We have learned from our past projects that thorough organisation was primordial, which helped us get a good start on the project. But that still did not prevent us from commiting a few mistakes\footnote{Such as the lack of commentary, and the last-minute report}.\\
+
+We are now even more aware about the benefits of team work, since mutual aid prevented us from wasting hours on certain problems. We took advantage of our personal experiences, while keeping in mind the final goal.
+
 
 \end{document}
