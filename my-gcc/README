@@ -1,0 +1,10 @@
+##### COMPILING #####
+For compiling the project, just enter : ant
+The project can also be compiled in debug mode with : ant debug
+
+##### USING THE COMPILER #####
+java -jar jar/Compiler.jar <fichier.c>
+
+##### MAIN TEST #####
+A test showing what our compiler is able to do is provided with the script unitary_test.sh
+It can be launched with : ./unitary_test.sh
