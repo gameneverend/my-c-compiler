@@ -1,10 +1,94 @@
-%SVN
-Our first step in the project was creating a svn, it seemed obvious that
-without it we would really waste our time.\\
-%GRAMMAR
-Once we got this working, we choosed to start by working on the
-Parser\footnote{Written in cup} and it's Scanner\footnote{Written in jflex}.\\
-The grammar that was given to us needed a lot of changes in order to
-work with cup. We searched the possible issues and found that one of the
-main issues was that the declaration of a function and the function
-itself, there wasn't
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[fleqn]{amsmath}
+\usepackage{amsfonts}
+
+
+\begin{document}
+\title{Project Report: MyGCC}
+\author{Ben Hadj Yahia Elyas\\Herbert Ryan\\Hofer Ludovic}
+
+\maketitle
+\newpage
+\begin{abstract}
+This document describes the work accomplished in the context of our undergraduate projet for the IN6012 course. The aim of the project was to implement a basic C compiler using multiple parsing tools.
+One of the main goals was to be compatible with GCC, ie. to be able to generate code for the same target language (X86 AT&T syntax), following the same standards as GCC.
+The report focuses primarily on the tasks handled, work environment, successes and shortcomings that we encountered throughout the project.
+\end{abstract}
+
+\newpage 
+\tableofcontents
+\newpage 
+
+\section{Accomplished Tasks}
+The following is a list of the implemented functionalities:
+\begin{itemize}
+\item JFlex scanner.
+\item CUP parser.
+\item Syntax error management.
+\item Compatibility mode for both 32 and 64 bits architectures.
+\item Optimised computation of numeric-only expressions.
+\item Dynamic allocation of stack frame.
+\item Register manager, Label manager and String manager.
+\item Elimination of unreachable code.
+\end{itemize}
+
+The following is a list of the handled C features:
+\begin{itemize}
+\item Arithmetic operations.
+\item Binary comparisons.
+\item Parentheses and priority management.
+\item IF,ELSE and WHILE blocks.
+\item Function calls and recursion.
+\item Array type handling.
+\item Handling of printf().
+\item Special function: read\_int(n) (equivalent to scanf).
+\end{itemize}
+
+
+\section{Collaborative Work}
+It may seem trivial, but communication was absolutely the key for working efficiently on our project. Through constant emailing and frequent meetings, we were always in touch and up to date regarding the project's status.\\
+Our first step was to study thoroughly the subject, in order to set up a proper and structured implementation.
+We then established an SVN repository\footnote{http://code.google.com/p/my-c-compiler/} in order to get started as soon as possible.
+
+\section{Scanner}
+Our lexical scanner was implemented using JFlex\footnote{http://jflex.de/}, which turned out to be quite efficient and easy to use. The scanner generates and collects tokens based on the declared regular expressions. These tokens are then passed to the parser in order to begin the parsing phase.
+
+\section{Parser}
+The parser was implemented using CUP\footnote{http://www2.cs.tum.edu/projects/cup/}. The role of the parser is to reduce the sequence of tokens collected by the scanner, in order to determine its grammatical structure with respect to a formal grammar.\\
+The first version of the grammar (as suggested in the project details) needed a lot of changes. One of the main issues was the shift/reduce errors because the grammar was ambiguous. This problem was very delicate when handling a declaration of a function and the function
+itself. This was solved by resorting to a pseudo-Chomsky normal form approach.
+
+\section{Code Generator}
+The CodeGenerator.java is the main backbone of our compiler. Whenever a grammar rule is reduced, we push the necessary informations into the CodeGenerator stack. That way, we can retrieve the data and process it accordingly. The advantage of this method is that we can externalize the data (instead of accumulating it in the CUP file during the parse phase), which gives us a lot more possibilities (such as error management and code optimization).
+
+\section{Register Manager}
+TODO
+
+\section{Expression handling}
+One of the major challenges encountered was the correct handling of expressions.
+The expressions were implemented using a binary tree structure. In order to process correctly an expression, we had to explore the tree for priorities (namely parentheses and higher precedences). The generalization of the algorithm is as follows:
+
+\begin{enumerate}
+\item handle left child
+\item if (right child not null)\{
+\item   push left child's result
+\item   handle right child
+\item   pop
+\item   compute the two results
+\item \}
+\end{enumerate}
+
+Note that the result will always be stored in EAX at the end of the execution.
+
+\section{Error Management}
+Unless you are Linus Torvalds, compiling errors are inevitable due to our human nature. We currently detect 3 types of errors:
+
+\begin{itemize}
+\item Lexical errors, such as illegal characters.
+\item Parsing errors, when encountering a parsing issue.
+\item Syntax errors, when there's an undefined variable, or undefined reference to a function.
+\end{itemize}
+
+\end{document}

@@ -16,4 +16,3 @@ gcc -g $TEST1.s tests/full_test.c -o full
 
 ./full
 #./exec
-

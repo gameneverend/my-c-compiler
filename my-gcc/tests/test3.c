@@ -38,6 +38,7 @@ int falsemain(void){
   b = 2;
   c = a * 3;
   //c = b * rand(45);
+  printf("Hello world", 4);
   c = b + c;
   return c;
 }
