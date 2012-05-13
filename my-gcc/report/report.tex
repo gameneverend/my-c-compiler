@@ -8,7 +8,9 @@
 
 \begin{document}
 \title{Project Report: MyGCC}
+%\subtitle{MyGCC: A basic C compiler}
 \author{Ben Hadj Yahia Elyas\\Herbert Ryan\\Hofer Ludovic}
+%\institution{University of Bordeaux 1 Science and Technology}
 
 \maketitle
 \newpage
@@ -17,6 +19,7 @@ This document describes the work accomplished in the context of our undergraduat
 One of the main goals was to be compatible with GCC, ie. to be able to generate code for the same target language (X86 AT\&T syntax), following the same standards as GCC.
 The report focuses primarily on the tasks handled, work environment, successes and shortcomings that we encountered throughout the project.
 \end{abstract}
+
 \vspace{2cm}
 \tableofcontents
 \newpage 
@@ -48,7 +51,7 @@ The following is a list of the handled C features:
 
 
 \section{Collaborative Work}
-It may seem trivial, but communication was absolutely the key for working efficiently on our project. Through constant emailing and frequent meetings, we were always in touch and up to date regarding the project's status.\\
+It may seem trivial, but communication was absolutely the key for working efficiently on our project. Through constant emailing and frequent meetings, we were always in touch and up to date regarding the project status.\\
 Our first step was to study thoroughly the subject, in order to set up a proper and structured implementation.
 We then established an SVN repository\footnote{http://code.google.com/p/my-c-compiler/} in order to get started as soon as possible.
 
@@ -57,16 +60,22 @@ Our lexical scanner was implemented using JFlex\footnote{http://jflex.de/}, whic
 
 \section{Parser}
 The parser was implemented using CUP\footnote{http://www2.cs.tum.edu/projects/cup/}. The role of the parser is to reduce the sequence of tokens collected by the scanner, in order to determine its grammatical structure with respect to a formal grammar.\\
-The first version of the grammar (as suggested in the project details) needed a lot of changes. One of the main issues was the shift/reduce errors because the grammar was ambiguous. This problem was very delicate when handling a declaration of a function and the function
-itself. This was solved by resorting to a pseudo-Chomsky normal form approach.
+The first version of the grammar (as suggested in the project details) needed a lot of changes. One of the main issues was the shift/reduce errors because the grammar was ambiguous. This problem turned out to be very delicate when handling a declaration of a function and the function itself. This was solved by decomposing the ambiguous rules into several nested non-terminal rules.
 
 \section{Code Generator}
-The CodeGenerator.java is the main backbone of our compiler. Whenever a grammar rule is reduced, we push the necessary informations into the CodeGenerator stack. That way, we can retrieve the data and process it accordingly. The advantage of this method is that we can externalize the data (instead of accumulating it in the CUP file during the parse phase), which gives us a lot more possibilities (such as error management and code optimization).\\
-Implémenter notre propre pile alors que cup en fournit une était un choix discutable, mais il nous a paru judicieux pour plusieurs raisons. La principale étant qu'une gestion trop basée sur le cup nous semblait rendre beaucoup plus complexe la gestion des identifiants incorrect. De plus, suite aux modifications effectuées sur notre grammaire, de nombreuses tâches similaires étaient répétées dans différentes règles. Afin de factoriser notre code, et en restant axé sur une optique programmation objet, il nous a semblé très intéressant d'avoir un méchanisme assez générique capable de traiter plusieurs règles d'un coup.\\
-Le fonctionnement du générateur de code est relativement simple, sa pile est alimentée par le parser, qui signale dès qu'il le peut ce que le générateur doit faire des informations reçues. Il pourra par exemple demander à ce que le code générateur assimile les informations comme un prototype ou comme une fonction. Une fois le travail du parser terminé, le générateur de code va transformer toutes les informations reçues en code assembleur, et si aucune erreur n'est détectée, le code sera écrit dans le fichier de destination.
+The CodeGenerator.java is the main backbone of our compiler. Whenever a grammar rule is reduced, we push the necessary informations into the code generator stack. That way, we can retrieve the data and process it accordingly. The advantage of this method is that we can externalize the data (instead of accumulating it in the CUP file during the parse phase), which gives us a lot more possibilities (such as error management and code optimization).
+
+
+Implementing our own stack while knowing that CUP already provides one might be an arguable decision, but it seemed appropriate for several reasons. The main reason is that using the CUP stack would make the handling of erroneous identifiers much more complex. Furthermore, following our modifications on the grammar, several similar tasks were repeated in different rules. In order to factorize the code (and to remain in an object-oriented perspective), it seemed that it would be quite useful to have a generic mechanism capable of handling several rules at once.\\
+
+The functioning of the code generator is relatively simple. It's stack is supplied by the parser, which alerts the code generator about how to process the collected data. For instance, it could tell the code generator to perceive the data as a prototype or as a function.\\
+Once the parsing is complete, the code generator will take charge of producing assembly code corresponding to the collected data. If no errors are detected, the code will be written in the destination file.
+
 
 \section{Context}
-Une des notions essentielle pour la compilation est la portée des variables. Ne sachant pas jusqu'où nous pourrions développer notre compilateur, nous avons décidé de ne pas nous contenter d'avoir des variables globales et des variables locales à la fonction, mais nous avons prévu de pouvoir avoir des déclarations à l'intérieur de blocs logiques ou de boucles par exemple. Pour résoudre ce problème, nous avons choisi d'utiliser des objets Context, qui comportent des déclarations, ainsi qu'un lien vers leur parent, cela permet de gérer des blocs avec un niveau d'imbrication très élevé. Malheureusement, nous n'avons pas eu le temps de faire évoluer notre grammaire et les déclarations ne sont donc toujours possibles qu'au début des fonctions.
+One of the fundamental notions of compiling is the variables scope. Not knowing how far we could go, we have decided to go beyond global variables and variables local to a function. We have anticipated to be able to have declarations within a logical block or a loop, for example.\\
+To solve this issue, we have implemented Context objects, that contain declarations, as well as a link to their parent. This would allow us to manage nested blocks. Unfortunately, we did not have the time to modify the grammar in order to be able to have declarations beyond the beginning of a function.
+
 
 \section{Register Manager}
 TODO
@@ -92,20 +101,21 @@ In order to build the project, we have set up an Ant build. This build will setu
 In order to automate the process, we developed a script that would ensure the building process, as well as the project's integrity. The script enabled us to measure our work progress by launching it with a test module.\\
 The test module allowed us to verify the consistency of the implemented functionalities throughout the different revisions. The tests became more and more complex as the project progressed.
 
-\section{Debugging our project}
-Dans ce projet, une des grande difficulté à laquelle nous avons du faire face est l'immense variété de nature des erreurs que nous avons rencontrées. Afin de pouvoir corriger nos erreurs, nous avons du nous adapter pour ne pas être totalement bloqués par un type d'erreur dans lequel nous étions néophytes.\\
-Contrairement aux projets que nous avons effectué jusqu'ici où presque la totalité des erreurs étaient dans un seul langage, nous avions ici de nombreuses sources d'erreurs possible.\\
+\section{Debugging}
+One of the greatest challenges we have encountered during this project was the huge diversity of errors. As opposed to our previous projects, where almost all of the errors were from a single language, we had the pleasure of enjoying multiple sources of errors.\\
+
 \begin{itemize}
-\item Les erreurs provenant du scanner (expressions mal choisies, erreurs de code java)
-\item Les erreurs provenant du parser (conflits shift/reduce, mauvais envois au CodeGenerator, etc..)
-\item Les erreurs java
-\item Les erreurs dans nos fichiers de test c
-\item Les erreurs dans le code assembleur produit
-\item Les erreurs dans notre fichier de build (ant)
-\item Les erreurs dans nos scripts de tests
+\item Scanner-related errors: erroneous regular expressions, Java errors.
+\item Parser-related errors: shift/reduce conflicts, incorrect data transmission to the CodeGenerator, etc...
+\item Java-related errors.
+\item Errors in our C test files.
+\item Errors in the produced assembly code.
+\item Errors in the build files (Ant).
+\item Erros in the test scripts.
 \end{itemize}
-Si pour certaines de ces erreurs l'origine était facile à cerner (typiquement les erreurs donnant lieu à un échec de compilation), pour d'autres, nous nagions parfois dans le brouillard. Lorsque l'exécution du code produit ne correspondait pas à nos attentes, il nous a fallu plusieurs fois explorer toutes les différentes facettes du projet pour déterminer la source de l'erreur. Heureusement l'existence d'outils efficaces pour débuguer le code assembleur a pu nous sauver pour certains aspects assez critiques.\\
-La grande variété des outils utilisés qui a introduit cette complexité de débogage était cependant nécessaire à la réalisation d'une tâche aussi complexe.
+
+Some of these errors were easily traceable (namely a compilation failure), while some others were very mysterious. When the execution of the generated code did not meet our expectations, we had to explore all the aspects of the project in order to determine the source of the problem. Thankfully we had access to GDB and Valgrind, which came a long way in helping us debugging critical sections.\\
+
 
 \section{Error Management}
 Unless you are Linus Torvalds, compiling errors are inevitable due to our human nature. We currently detect 3 types of errors:
