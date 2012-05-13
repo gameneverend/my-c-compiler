@@ -136,10 +136,8 @@ public class ExpressionHelper{
     
     
 		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception {
-      
+      if (Parser.DEBUG) System.out.println("\tTag: " + f.getTag());
       Integer num;
-      if (Parser.DEBUG)
-        System.out.println("\tTag: " + f.getTag());
       int nb_parameters = f.getArgs().size();
       int i = 0;
       for(Expression e : f.getArgs()){
@@ -216,9 +214,8 @@ public class ExpressionHelper{
         }
       }
       
-      sb.append(asm(Assembly.MOV, label, Register.RDI.toString()));
-
-      sb.append("movl  $0, %eax\n");//needed?
+      sb.append(asm(Assembly.MOV, label, Register.RDI));
+      sb.append(asm(Assembly.MOV, "$0", Register.RAX));//needed?
       
       if(nb_parameters == 1)
         sb.append(asm(Assembly.CALL, "puts"));
@@ -343,6 +340,8 @@ public class ExpressionHelper{
 		
 		
     public static String asm(Object instruction, Object r){
+			if(r == null)
+				System.err.println("r is null");
 			return "\t" + instruction + "\t" + r + "\n";
 		}
     
