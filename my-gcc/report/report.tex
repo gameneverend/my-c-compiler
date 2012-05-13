@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{scrartcl}
 
 \usepackage[utf8]{inputenc}
 \usepackage[fleqn]{amsmath}
@@ -10,9 +10,10 @@
 
 \begin{document}
 \title{Project Report: MyGCC}
-%\subtitle{MyGCC: A basic C compiler}
-\author{Ben Hadj Yahia Elyas\\Herbert Ryan\\Hofer Ludovic}
-%\institution{University of Bordeaux 1 Science and Technology}
+\subtitle{MyGCC: A basic C compiler}
+\author{Ben Hadj Yahia Elyas\\Herbert Ryan\\Hofer Ludovic\\\\\\
+  \vspace{5cm}{\em University of Bordeaux 1 Science and Technology}}
+%\lowertitleback{University of Bordeaux 1 Science and Technology}
 
 \maketitle
 \newpage
@@ -38,7 +39,7 @@ The following is a list of the implemented functionalities:
 \item Register manager, Label manager and String manager.
 \item Elimination of unreachable code.
 \end{itemize}
-
+\vspace{0.5cm}
 The following is a list of the handled C features:
 \begin{itemize}
 \item Arithmetic operations.
@@ -65,8 +66,7 @@ The parser was implemented using CUP\footnote{http://www2.cs.tum.edu/projects/cu
 The first version of the grammar (as suggested in the project details) needed a lot of changes. One of the main issues was the shift/reduce errors because the grammar was ambiguous. This problem turned out to be very delicate when handling a declaration of a function and the function itself. This was solved by decomposing the ambiguous rules into several nested non-terminal rules.
 
 \section{Code Generator}
-The CodeGenerator.java is the main backbone of our compiler. Whenever a grammar rule is reduced, we push the necessary informations into the code generator stack. That way, we can retrieve the data and process it accordingly. The advantage of this method is that we can externalize the data (instead of accumulating it in the CUP file during the parse phase), which gives us a lot more possibilities (such as error management and code optimization).
-
+The CodeGenerator.java is the main backbone of our compiler. Whenever a grammar rule is reduced, we push the necessary informations into the code generator stack. That way, we can retrieve the data and process it accordingly. The advantage of this method is that we can externalize the data (instead of accumulating it in the CUP file during the parse phase), which gives us a lot more possibilities (such as error management and code optimization).\\
 
 Implementing our own stack while knowing that CUP already provides one might be an arguable decision, but it seemed appropriate for several reasons. The main reason is that using the CUP stack would make the handling of erroneous identifiers much more complex. Furthermore, following our modifications on the grammar, several similar tasks were repeated in different rules. In order to factorize the code (and to remain in an object-oriented perspective), it seemed that it would be quite useful to have a generic mechanism capable of handling several rules at once.\\
 
@@ -84,10 +84,10 @@ At the start of the project, we decided that it would be useful to have a regist
 But it turns out that it was far too complex to manage (for instance, when all registers are used, based on what criteria should we free a register?), and that it wasn't needed for expression handling, because only two registers are enough for this operation.\\
 The register manager turned out to be useful for retrieving registers for a function call. Note that when more than 6 parameters are needed, we would pass the rest of the parameters on the stack.
 
-\section{Expression handling}
+\section{Expression Handling}
 One of the major challenges encountered was the correct handling of expressions.
 The expressions were implemented using a binary tree structure. In order to process correctly an expression, we had to explore the tree for priorities (namely parentheses and higher precedences). The generalization of the algorithm is as follows:
-
+\vspace{0.5cm}
 \begin{algorithmic}
 \State $handle(left\_child)$
 \If{$right\_child \neq null$}
@@ -97,16 +97,15 @@ The expressions were implemented using a binary tree structure. In order to proc
 \State $compute\_results()$
 \EndIf
 \end{algorithmic}
+\vspace{0.5cm}
+Note that the result will always be stored in EAX at the end of the execution.\\
 
-Note that the result will always be stored in EAX at the end of the execution.
-
-\subsection{Numeric expressions}
 We have implemented a slight optimization for our compiler: when evaluating expressions, we have noticed that GCC optimizes its computation if the expression is entirely numeric. For example, the instruction \emph{((5-1)*10)+2} will be immediately evaluated to \emph{42}, and won't go through the usual handling algorithm.
 
 \section{Building and Testing}
 In order to build the project, we have set up an Ant build. This build will setup a proper building environment.\\
 In order to automate the process, we developed a script that would ensure the building process, as well as the project's integrity. The script enabled us to measure our work progress by launching it with a test module.\\
-The test module allowed us to verify the consistency of the implemented functionalities throughout the different revisions. The tests became more and more complex as the project progressed.
+The test module allowed us to verify the consistency of the implemented functionalities throughout the different revisions. The tests became more and more complex as the project expanded.
 
 \section{Debugging}
 One of the greatest challenges we have encountered during this project was the huge diversity of errors. As opposed to our previous projects, where almost all of the errors were from a single language, we had the pleasure of enjoying multiple sources of errors.\\
