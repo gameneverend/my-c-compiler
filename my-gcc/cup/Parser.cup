@@ -421,7 +421,7 @@ instruction ::=
       :}
     
     // Basic Printf instruction
-  | PRINTF {:System.out.println("Printf detected");:} LPAREN {:System.out.println("LPAREN detected");:} STRING:s {:System.out.println("String detected : " + s);:} COMMA arg_sequence:a RPAREN
+  | PRINTF LPAREN STRING:s COMMA arg_sequence:a RPAREN
       {:
           a.add(0, new Variable<String>(null, s));
           String label = parser.cg.sm.addString(s);

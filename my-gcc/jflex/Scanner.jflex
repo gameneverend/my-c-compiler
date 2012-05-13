@@ -59,12 +59,10 @@ SPACING = [ \t\r\f] | {NEWLINE}
 }
 
 <STRING> {
-  \"          { System.out.println("returning to yyinitial");
-  				yybegin(YYINITIAL);
+  \"          { yybegin(YYINITIAL);
   				tmpString.append('"');
   				return sf.newSymbol("String",sym.STRING, tmpString.toString());}
-  . | \\\"    { System.out.println("adding a char");
-  				tmpString.append(yytext());}
+  . | \\\"    { tmpString.append(yytext());}
 }
 
 

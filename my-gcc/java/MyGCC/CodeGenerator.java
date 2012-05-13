@@ -78,7 +78,7 @@ public class CodeGenerator{
       }
     }
     Collections.reverse(parameters);
-    //if(Parser.DEBUG)
+    if(Parser.DEBUG)
       System.out.println("Declaring a prototype with :"
                          + "\n\tReturnType : " + returnType
                          + "\n\tname : " + name);

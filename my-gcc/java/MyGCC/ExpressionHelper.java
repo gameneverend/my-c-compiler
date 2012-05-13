@@ -138,7 +138,8 @@ public class ExpressionHelper{
 		public static StringBuffer handleFunctionCall(StringBuffer sb, FunctionCall f, Context context) throws Exception {
       
       Integer num;
-      System.out.println("\tTag: " + f.getTag());
+      if (Parser.DEBUG)
+        System.out.println("\tTag: " + f.getTag());
       int nb_parameters = f.getArgs().size();
       int i = 0;
       for(Expression e : f.getArgs()){
