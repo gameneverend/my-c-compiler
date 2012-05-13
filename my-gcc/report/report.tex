@@ -4,7 +4,8 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{amsfonts}
 \usepackage[margin=0.9in]{geometry}
-
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 
 \begin{document}
 \title{Project Report: MyGCC}
@@ -86,15 +87,15 @@ The register manager turned out to be useful for retrieving registers for a func
 One of the major challenges encountered was the correct handling of expressions.
 The expressions were implemented using a binary tree structure. In order to process correctly an expression, we had to explore the tree for priorities (namely parentheses and higher precedences). The generalization of the algorithm is as follows:
 
-\begin{enumerate}
-\item handle left child
-\item if (right child not null)\{
-\item   push left child's result
-\item   handle right child
-\item   pop
-\item   compute the two results
-\item \}
-\end{enumerate}
+\begin{algorithmic}
+\State $handle(left\_child)$
+\If{$right\_child \neq null$}
+\State $push(result(left\_child))$
+\State $handle(right\_child)$
+\State $pop()$
+\State $compute\_results()$
+\EndIf
+\end{algorithmic}
 
 Note that the result will always be stored in EAX at the end of the execution.
 
