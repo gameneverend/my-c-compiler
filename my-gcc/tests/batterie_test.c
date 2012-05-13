@@ -45,7 +45,7 @@ int test_array(int);
 int test_binary(void);
 
 /* This function test the call to the printf function */
-int test_printing(int);
+int test_printing(int, int);
 
 /* This function tests the readInt instruction */
 int test_scan(int);
@@ -224,8 +224,8 @@ int test_binary(void){
 	return 333;
 }
 
-int test_printing(int i){
-	printf("%d   ",i);
+int test_printing(int a, int b){
+	printf("%d + %d = %d:", a, b, a + b);
 	return 0;
 }
 

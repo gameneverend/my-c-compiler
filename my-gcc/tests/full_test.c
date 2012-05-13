@@ -67,8 +67,8 @@ int main(int argc, char ** argv){
   test_validity(test_binary(), 222);
   printf("OK\n");
   
-  printf("Testing the printf instruction (5 should be displayed) : ");
-  //test_validity(test_printing(5),0);
+  printf("Testing the printf instruction (2 + 3 = 5 should be displayed) : ");
+  test_validity(test_printing(2,3),0);
   printf("OK ? \n");
 
   printf("Testing READ_INT: return read_int(a)+42 : (enter 1) ");
