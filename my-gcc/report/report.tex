@@ -92,6 +92,21 @@ In order to build the project, we have set up an Ant build. This build will setu
 In order to automate the process, we developed a script that would ensure the building process, as well as the project's integrity. The script enabled us to measure our work progress by launching it with a test module.\\
 The test module allowed us to verify the consistency of the implemented functionalities throughout the different revisions. The tests became more and more complex as the project progressed.
 
+\section{Debugging our project}
+Dans ce projet, une des grande difficulté à laquelle nous avons du faire face est l'immense variété de nature des erreurs que nous avons rencontrées. Afin de pouvoir corriger nos erreurs, nous avons du nous adapter pour ne pas être totalement bloqués par un type d'erreur dans lequel nous étions néophytes.\\
+Contrairement aux projets que nous avons effectué jusqu'ici où presque la totalité des erreurs étaient dans un seul langage, nous avions ici de nombreuses sources d'erreurs possible.\\
+\begin{itemize}
+\item Les erreurs provenant du scanner (expressions mal choisies, erreurs de code java)
+\item Les erreurs provenant du parser (conflits shift/reduce, mauvais envois au CodeGenerator, etc..)
+\item Les erreurs java
+\item Les erreurs dans nos fichiers de test c
+\item Les erreurs dans le code assembleur produit
+\item Les erreurs dans notre fichier de build (ant)
+\item Les erreurs dans nos scripts de tests
+\end{itemize}
+Si pour certaines de ces erreurs l'origine était facile à cerner (typiquement les erreurs donnant lieu à un échec de compilation), pour d'autres, nous nagions parfois dans le brouillard. Lorsque l'exécution du code produit ne correspondait pas à nos attentes, il nous a fallu plusieurs fois explorer toutes les différentes facettes du projet pour déterminer la source de l'erreur. Heureusement l'existence d'outils efficaces pour débuguer le code assembleur a pu nous sauver pour certains aspects assez critiques.\\
+La grande variété des outils utilisés qui a introduit cette complexité de débogage était cependant nécessaire à la réalisation d'une tâche aussi complexe.
+
 \section{Error Management}
 Unless you are Linus Torvalds, compiling errors are inevitable due to our human nature. We currently detect 3 types of errors:
 
