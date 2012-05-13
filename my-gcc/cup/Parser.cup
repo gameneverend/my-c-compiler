@@ -25,6 +25,7 @@ parser code {:
     SymbolFactory sf = new DefaultSymbolFactory();
     String destination_file;
     ArrayList<String> scanErrors;
+    
 
     if (args.length >= 2)
       destination_file = args[1];
@@ -35,6 +36,8 @@ parser code {:
                                sf,
                                new PrintStream(destination_file));
   
+    // This line is here in order to ensure that the readint function can work
+      p.cg.sm.addString("\"%d\"");
 
     p.parse();
     Scanner sc = (Scanner)p.getScanner();
@@ -48,7 +51,6 @@ parser code {:
     
     if(scanErrors.size() == 0 && Parser.errors.size() == 0){
       StringBuilder sb = new StringBuilder();
-      p.cg.sm.addString("\"%d\"");
       HashMap<String, String> contents = p.cg.sm.getContents();
       System.out.println("\n\t>> Generating code...");
       sb.append("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n");

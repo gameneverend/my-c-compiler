@@ -68,7 +68,7 @@ int main(int argc, char ** argv){
   printf("OK\n");
   
   printf("Testing the printf instruction (5 should be displayed) : ");
-  test_validity(test_printing(5),0);
+  //test_validity(test_printing(5),0);
   printf("OK ? \n");
 
   printf("Testing READ_INT: return read_int(a)+42 : (enter 1) ");
