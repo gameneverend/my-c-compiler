@@ -3,7 +3,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[fleqn]{amsmath}
 \usepackage{amsfonts}
-\usepackage[margin=0.8in]{geometry}
+\usepackage[margin=0.9in]{geometry}
+
 
 \begin{document}
 \title{Project Report: MyGCC}
@@ -82,13 +83,31 @@ The expressions were implemented using a binary tree structure. In order to proc
 
 Note that the result will always be stored in EAX at the end of the execution.
 
+\section{Building and Testing}
+In order to build the project, we have set up an Ant build. This build will setup a proper building environment.\\
+In order to automate the process, we developed a script that would ensure the building process, as well as the project's integrity. The script enabled us to measure our work progress by launching it with a test module.\\
+The test module allowed us to verify the consistency of the implemented functionalities throughout the different revisions. The tests became more and more complex as the project progressed.
+
 \section{Error Management}
 Unless you are Linus Torvalds, compiling errors are inevitable due to our human nature. We currently detect 3 types of errors:
 
 \begin{itemize}
 \item Lexical errors, such as illegal characters.
 \item Parsing errors, when encountering a parsing issue.
-\item Syntax errors, when there's an undefined variable, or undefined reference to a function.
+\item Syntax errors, when there is an undefined variable, or an undefined reference to a function.
+\end{itemize}
+
+When encountering any type of error, the compiler will issue an error message, and abort the code generation phase.
+
+\section{Extensions}
+In the near future, we intend to add a few more functionalities to MyGCC.\\
+These features include:
+
+\begin{itemize}
+\item Static key-word.
+\item Pointers.
+\item Proper function calls with over 6 parameters.
+\item Increment operators.
 \end{itemize}
 
 \end{document}
