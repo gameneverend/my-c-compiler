@@ -85,29 +85,27 @@ public class Block {
     return this.code;
   }
     
-  public String toString(){
+  public String toCode() throws Exception{
     StringBuffer sb = new StringBuffer();
     boolean unreachable = false;
     Block b = this;
     while(b.parent != null)
       b = b.parent;
-    
+
     for(Object o : code){
-      try{
-        if(!unreachable){
-          if(o instanceof LogicalIfElse) {
-            sb.append(LogicalIfElse.instructionToAssembly((LogicalIfElse)o, myContext));
-          } else if(o instanceof LogicalBlock) {
-            sb.append(LogicalBlock.instructionToAssembly((LogicalBlock)o, myContext));
-          } else if(o instanceof Instruction) {
-            if(((Instruction)o).type.equals(InstructionType.RETURN))
-              unreachable = true;
-            sb.append(Instruction.instructionToAssembly((Instruction)o, myContext, ((Body)b).mFunction));
-          }
+      if(!unreachable){
+        if(o instanceof LogicalIfElse) {
+          sb.append(LogicalIfElse.instructionToAssembly((LogicalIfElse)o, myContext));
+        } else if(o instanceof LogicalBlock) {
+          sb.append(LogicalBlock.instructionToAssembly((LogicalBlock)o, myContext));
+        } else if(o instanceof Instruction) {
+          if(((Instruction)o).type.equals(InstructionType.RETURN))
+            unreachable = true;
+          sb.append(Instruction.instructionToAssembly((Instruction)o, myContext, ((Body)b).mFunction));
         }
-      }catch(Exception e){e.printStackTrace();}
+      }
     }
-    
+
     return sb.toString();
   }
 }

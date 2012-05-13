@@ -191,8 +191,13 @@ public class CodeGenerator{
 
   public String generateCode(){
     StringBuffer sb = new StringBuffer();
-    for (Function f : globalFunctions){
-      sb.append("\n" + f.toString() + "\n");
+    try{
+      for (Function f : globalFunctions){
+        sb.append("\n" + f.toCode() + "\n");
+      }
+    }catch(Exception e){
+      Parser.errors.add(":An internal error has occured, no code will be produced");
+      e.printStackTrace();
     }
     return sb.toString();
   }

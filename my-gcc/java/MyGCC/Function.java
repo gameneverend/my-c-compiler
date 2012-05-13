@@ -27,7 +27,7 @@ public class Function{
   
   
 
-  public String toString(){
+  public String toCode() throws Exception{
     if(body.nbReturns() > 1 || body.hasLogicalBlock())
       endTag = LabelManager.getLabel();
 
@@ -39,7 +39,7 @@ public class Function{
     sb.append(LabelManager.getBeginLabel(i)); sb.append(":\n");
     sb.append(prelude());
     sb.append(loadParameters());
-    sb.append(body.toString());  
+    sb.append(body.toCode());  
     sb.append(epilogue());
     sb.append(LabelManager.getEndLabel(i)); sb.append(":\n");
     sb.append("\t.size "); sb.append(name); sb.append(", .-"); sb.append(name); sb.append('\n');

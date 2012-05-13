@@ -9,6 +9,7 @@ import java.util.ArrayList;
 %column
 %class Scanner
 %{
+	public StringBuilder tmpString;
 	public static ArrayList<String> errors = new ArrayList<String>();
 	private SymbolFactory sf;
 	
@@ -58,8 +59,12 @@ SPACING = [ \t\r\f] | {NEWLINE}
 }
 
 <STRING> {
-  \"          {yybegin(YYINITIAL); }
-  . | \\\"            {return sf.newSymbol("String", sym.STRING, new String(yytext())); }
+  \"          { System.out.println("returning to yyinitial");
+  				yybegin(YYINITIAL);
+  				tmpString.append('"');
+  				return sf.newSymbol("String",sym.STRING, tmpString.toString());}
+  . | \\\"    { System.out.println("adding a char");
+  				tmpString.append(yytext());}
 }
 
 
@@ -112,7 +117,10 @@ SPACING = [ \t\r\f] | {NEWLINE}
                                  sym.NB_INT,
                                  new Integer(yytext())); }
                                  
-  \"         {yybegin(STRING);}     
+  \"         {tmpString = new StringBuilder();
+  		      tmpString.append('"');
+  		      yybegin(STRING);
+  		     }     
 
   {SPACING}  { /* ignore white space. */ }
   .          { Scanner.errors.add(new String(":" + yyline() + ":" + yycolumn() + ": error: illegal character: " + yytext())); }

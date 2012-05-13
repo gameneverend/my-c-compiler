@@ -225,7 +225,7 @@ int test_binary(void){
 }
 
 int test_printing(int i){
-	//TODO
+	printf("%d",i);
 	return 0;
 }
 

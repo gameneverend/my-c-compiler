@@ -47,16 +47,24 @@ parser code {:
 			System.err.println("\t" + args[0] + err);
     
     if(scanErrors.size() == 0 && Parser.errors.size() == 0){
+      StringBuilder sb = new StringBuilder();
       p.cg.sm.addString("\"%d\"");
       HashMap<String, String> contents = p.cg.sm.getContents();
       System.out.println("\n\t>> Generating code...");
-      p.ps.print("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n");
+      sb.append("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n");
       
       for(String e : contents.keySet())
-        p.ps.print(contents.get(e) + ":\n\t.string\t" + e + "\n");
+        sb.append(contents.get(e) + ":\n\t.string\t" + e + "\n");
         
-      p.ps.print("\t.text\n");
-      p.ps.print(p.cg.generateCode());
+      sb.append("\t.text\n");
+      sb.append(p.cg.generateCode());
+      if (Parser.errors.size() != 0) {
+      	for(String err : Parser.errors)
+		  System.err.println("\t" + args[0] + err);
+        System.out.println("\n\t>> Code generation aborted.\n");
+        return;
+      }
+      p.ps.print(sb.toString());
       p.ps.close();
       System.out.println("\t>> Generation completed.");
     }
@@ -411,12 +419,11 @@ instruction ::=
       :}
     
     // Basic Printf instruction
-  | PRINTF LPAREN STRING:s COMMA args_list RPAREN
+  | PRINTF {:System.out.println("Printf detected");:} LPAREN {:System.out.println("LPAREN detected");:} STRING:s {:System.out.println("String detected : " + s);:} COMMA arg_sequence:a RPAREN
       {:  ArrayList<Expression> args = new ArrayList<Expression>();
-          args.add(new Variable<String>(null, s));
-          args.addAll(parser.cg.getArguments());
+          a.add(new Variable<String>(null, s));
           String label = parser.cg.sm.addString(s);
-          parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.PRINTF.toString(), args), InstructionType.PRINTF));
+          parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.PRINTF.toString(), a), InstructionType.PRINTF));
       :}
   
     // Basic "if else" test on an expression

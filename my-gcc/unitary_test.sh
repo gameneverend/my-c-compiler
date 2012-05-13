@@ -1,8 +1,8 @@
 #!/bin/sh
 ant clean
-ant
+ant debug
 
-OUR_COMPILER="java -jar jar/Compiler.jar"
+OUR_COMPILER="java -jar jar/CompilerDebug.jar"
 
 TEST1="tests/batterie_test"
 TEST2="tests/test3"
