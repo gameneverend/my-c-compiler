@@ -32,9 +32,9 @@ public class Instruction {
   }
   
   public static String instructionToAssembly(Instruction instruct, Context context, Function f) throws Exception{
-		StringBuffer sb = new StringBuffer();
-		Expression l = instruct.lexpr;
-		Expression r = instruct.rexpr;
+    StringBuffer sb = new StringBuffer();
+    Expression l = instruct.lexpr;
+    Expression r = instruct.rexpr;
     Variable a;
     FunctionCall fc;
     if(instruct != null){
@@ -47,50 +47,50 @@ public class Instruction {
       if(Parser.DEBUG) System.out.println("\tInstruction type: " + instruct.type.toString());
       switch(instruct.type){
         
-        case RETURN:
-          a = (Variable)l;
-					sb.append(r.handleExpression(a, context));
-          if(f.endTag != null)
-            sb.append("\t" + Assembly.JUMP + " " + f.endTag + "\n");
-          break;
+      case RETURN:
+        a = (Variable)l;
+        sb.append(r.handleExpression(a, context));
+        if(f.endTag != null)
+          sb.append("\t" + Assembly.JUMP + " " + f.endTag + "\n");
+        break;
           
-        case EXIT:
-          fc = (FunctionCall)l;
-          sb.append(r.handleExpression(fc, context));
-          //TODO: do not generate ret/leave when function contains an exit and no RETURN instructions
-          break;
+      case EXIT:
+        fc = (FunctionCall)l;
+        sb.append(r.handleExpression(fc, context));
+        //TODO: do not generate ret/leave when function contains an exit and no RETURN instructions
+        break;
           
-        case EQL:
-          a = (Variable)l;
+      case EQL:
+        a = (Variable)l;
           
-          if(r.isFullyNumeric()){
-            if(a.index != null)
-              sb.append(a.index.handleExpression(null, context));
-            sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
-          }
+        if(r.isFullyNumeric()){
+          if(a.index != null)
+            sb.append(a.index.handleExpression(null, context));
+          sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+        }
           
-          else{
-							sb.append(r.handleExpression(a, context));
-							if(a.index != null)
-								sb.append(a.index.handleExpression(null, context));
-              sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
-          }
-          break;
+        else{
+          sb.append(r.handleExpression(a, context));
+          if(a.index != null)
+            sb.append(a.index.handleExpression(null, context));
+          sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
+        }
+        break;
           
-        case READ_INT:
-          fc = (FunctionCall)r;
-          sb = ExpressionHelper.handleReadInt(sb, fc, context);
-          break;
+      case READ_INT:
+        fc = (FunctionCall)r;
+        sb = ExpressionHelper.handleReadInt(sb, fc, context);
+        break;
           
-        case PRINTF:
-          fc = (FunctionCall)r;
-          sb = ExpressionHelper.handlePrint(sb, fc, context);
-          break;
+      case PRINTF:
+        fc = (FunctionCall)r;
+        sb = ExpressionHelper.handlePrint(sb, fc, context);
+        break;
 
-        default:
-          // case null, ie. for instructions like "1+2;"
-          // optimize and don't calculate
-          break;
+      default:
+        // case null, ie. for instructions like "1+2;"
+        // optimize and don't calculate
+        break;
       }
       
       return sb.toString();

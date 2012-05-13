@@ -23,7 +23,7 @@ public class LogicalIfElse extends LogicalBlock {
   }
   
   public static String instructionToAssembly(LogicalIfElse instruct, Context context) throws Exception {
-		StringBuffer sb = new StringBuffer();
+    StringBuffer sb = new StringBuffer();
     String label1 = LabelManager.getLabel();
     String label2 = LabelManager.getLabel();
     if(instruct != null){
@@ -37,11 +37,11 @@ public class LogicalIfElse extends LogicalBlock {
       sb.append("\t");
       
       if(instruct.rexpr.flag != null && instruct.rexpr.flag.equals(Flag.NOT))
-				sb.append(OperationType.EQUALS + " ");
-			else
-				sb.append(instruct.rexpr.op + " ");
-				
-			sb.append(label1); sb.append("\n");
+        sb.append(OperationType.EQUALS + " ");
+      else
+        sb.append(instruct.rexpr.op + " ");
+        
+      sb.append(label1); sb.append("\n");
       sb.append(instruct.block.toCode());
        
       if(instruct.elseBlock != null) {

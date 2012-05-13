@@ -27,15 +27,15 @@ public class CodeGenerator{
   }
   
   public void pushArgument(Expression e){
-		args.push(e);
-	}
-	
-	public ArrayList<Expression> getArguments(){
-		ArrayList<Expression> lst = new ArrayList<Expression>();
-		while(!args.empty())
-			lst.add(args.pop());
-		return lst;
-	}
+    args.push(e);
+  }
+  
+  public ArrayList<Expression> getArguments(){
+    ArrayList<Expression> lst = new ArrayList<Expression>();
+    while(!args.empty())
+      lst.add(args.pop());
+    return lst;
+  }
   
   public Block getCurrentBlock() {
     return this.currentBlock;
@@ -63,7 +63,7 @@ public class CodeGenerator{
   }
 
   @SuppressWarnings("unchecked")
-	public void declarePrototype(){
+    public void declarePrototype(){
     Type returnType = null;
     String name = null;
     ArrayList<Type> parameters = new ArrayList<Type>();
@@ -72,9 +72,9 @@ public class CodeGenerator{
     while (!tmpStack.isEmpty()){
       ParsingResult r = (ParsingResult) tmpStack.pop();
       switch (r.type){
-        case TYPE :        returnType = ((ParsingResult<Type>)r).getValue();          break;
-        case ID:           name       = ((ParsingResult<String>)r).getValue();        break;
-        case PARAMETER :   parameters.add(((ParsingResult<Type>)r).getValue());       break;
+      case TYPE :        returnType = ((ParsingResult<Type>)r).getValue();          break;
+      case ID:           name       = ((ParsingResult<String>)r).getValue();        break;
+      case PARAMETER :   parameters.add(((ParsingResult<Type>)r).getValue());       break;
       }
     }
     Collections.reverse(parameters);
@@ -97,7 +97,7 @@ public class CodeGenerator{
   }
 
   @SuppressWarnings("unchecked")
-	public void startFunctionDefinition(){
+    public void startFunctionDefinition(){
     if(Parser.DEBUG) System.out.println("Starting function definition");
     Type returnType = null;
     String name = null;
@@ -107,9 +107,9 @@ public class CodeGenerator{
       ParsingResult r = (ParsingResult) tmpStack.pop();
         
       switch (r.type){
-        case TYPE :        returnType = ((ParsingResult<Type>)r).getValue();          break;
-        case ID:           name       = ((ParsingResult<String>)r).getValue();        break;
-        case PARAMETER :   parameters.add(((ParsingResult<Parameter>)r).getValue());  break;
+      case TYPE :        returnType = ((ParsingResult<Type>)r).getValue();          break;
+      case ID:           name       = ((ParsingResult<String>)r).getValue();        break;
+      case PARAMETER :   parameters.add(((ParsingResult<Parameter>)r).getValue());  break;
       }
     }
     Collections.reverse(parameters);
@@ -135,7 +135,7 @@ public class CodeGenerator{
     this.currentBlock = b;
     if(this.currentBlock.parent != null)
       this.currentBlock.myContext = this.currentBlock.parent.myContext;
-    }
+  }
   
   public void closeBlockDefinition() {
     this.currentBlock = this.currentBlock.parent;
@@ -143,7 +143,7 @@ public class CodeGenerator{
 
 
   @SuppressWarnings("unchecked")
-	public void declareVariable(){
+    public void declareVariable(){
     Type type = null;
     String identifier = null; 
     int arraySize = 0;
@@ -151,43 +151,43 @@ public class CodeGenerator{
     while(!tmpStack.isEmpty()) {
       ParsingResult r = (ParsingResult) tmpStack.pop();
       switch(r.type) {
-        case TYPE : 
-          type = ((ParsingResult<Type>)r).getValue();
-          break;
-        case ID : 
-          identifier = ((ParsingResult<String>)r).getValue();
-          break;
-        case VARIABLE :
-          arraySize = ((ParsingResult<Integer>)r).getValue();
-          break;
-        default:
-          System.err.println("Unexpected Type :" + r.type);
+      case TYPE : 
+        type = ((ParsingResult<Type>)r).getValue();
+        break;
+      case ID : 
+        identifier = ((ParsingResult<String>)r).getValue();
+        break;
+      case VARIABLE :
+        arraySize = ((ParsingResult<Integer>)r).getValue();
+        break;
+      default:
+        System.err.println("Unexpected Type :" + r.type);
       }
     }
     if(currentFunction != null)
-    	currentFunction.addDeclaration(type, identifier, arraySize);
+      currentFunction.addDeclaration(type, identifier, arraySize);
   }
   
   public void checkValidity(String variable, int line, int col) throws Exception{
-		currentFunction.loadParameters();	//FIXME find a more suitable way to do this
-		try{
-			currentFunction.getFunctionContext().getVariableLocation(variable);
-		}catch (Exception e){
-			Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undeclared.");
-		}
-	}
-	
-	public void checkFunction(String variable, int line, int col){
-	  //System.out.println("Checking for prototypes matching the following name : " + variable);
-		for(Prototype p : globalPrototypes){
-		  //TODO affiner le test pour vérifier que les variables déclarées sont bonnes
-		  //System.out.println("\tIdentifier : " + p.identifier);
-			if(p.identifier.equals(variable))
-				return;
-		}
-		Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undefined reference to function.");
-	}
-	
+    currentFunction.loadParameters(); //FIXME find a more suitable way to do this
+    try{
+      currentFunction.getFunctionContext().getVariableLocation(variable);
+    }catch (Exception e){
+      Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undeclared.");
+    }
+  }
+  
+  public void checkFunction(String variable, int line, int col){
+    //System.out.println("Checking for prototypes matching the following name : " + variable);
+    for(Prototype p : globalPrototypes){
+      //TODO affiner le test pour vérifier que les variables déclarées sont bonnes
+      //System.out.println("\tIdentifier : " + p.identifier);
+      if(p.identifier.equals(variable))
+        return;
+    }
+    Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undefined reference to function.");
+  }
+  
 
   public String generateCode(){
     StringBuffer sb = new StringBuffer();

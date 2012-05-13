@@ -3,9 +3,9 @@ package MyGCC;
 import java.util.ArrayList;
 
 public class FunctionCall extends Expression{
-	
-	private String tag;
-	private ArrayList<Expression> args;
+  
+  private String tag;
+  private ArrayList<Expression> args;
   
 
   public FunctionCall(String tag, ArrayList<Expression> arguments){
@@ -23,7 +23,7 @@ public class FunctionCall extends Expression{
   }
   
   public ArrayList<Expression> getArgs(){
-		return args;
-	}
+    return args;
+  }
 
 }

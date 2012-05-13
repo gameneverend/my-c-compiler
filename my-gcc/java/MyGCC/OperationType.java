@@ -48,7 +48,7 @@ public enum OperationType{
     conditional.add(DIFF);
     
      
-}
+  }
 
   private OperationType(String s32, String s64, String s){
     this.name32 = s32;
@@ -57,31 +57,31 @@ public enum OperationType{
   }
   
   public static OperationType getOp(String s){
-		for(OperationType op : ops){
-			if(op.name32.equals(s) || op.name64.equals(s))
-				return op;
-		}
-		return null;
-	}
+    for(OperationType op : ops){
+      if(op.name32.equals(s) || op.name64.equals(s))
+        return op;
+    }
+    return null;
+  }
   
   public static boolean isConditional(OperationType op){
-		if(conditional.contains(op))
+    if(conditional.contains(op))
       return true;
     return false;
-	}
-	
-	public static boolean isLogical(OperationType op){
-		return logical.contains(op); 
-	}
+  }
+  
+  public static boolean isLogical(OperationType op){
+    return logical.contains(op); 
+  }
   
   public String getString(){
     return this.str;
   }
   
   public String toString(){
-		if(CodeGenerator.mode64)
-			return this.name64;
-		return this.name32;	
+    if(CodeGenerator.mode64)
+      return this.name64;
+    return this.name32; 
   }
 
 }

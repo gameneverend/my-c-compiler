@@ -58,7 +58,7 @@ public enum Register {
   
   private Register (String name32, String name64, String comment, RegisterType t) {
 
-		this.name32 = name32;
+    this.name32 = name32;
     this.name64 = name64;
     this.comment = comment;
     this.type = t;
@@ -70,32 +70,32 @@ public enum Register {
   
   private static void addRegister(Register reg) {
     switch(reg.type) {
-      case CALLEE_SAVED:
-        calleeSaved.add(reg);
-        break;
-      case CALLER_SAVED:
-        callerSaved.add(reg);
-        break;
-      case SPECIAL:
-        special.add(reg);
-        break;
-      default:
-        System.err.println("The RegisterType passed to this function is incorrect");
+    case CALLEE_SAVED:
+      calleeSaved.add(reg);
+      break;
+    case CALLER_SAVED:
+      callerSaved.add(reg);
+      break;
+    case SPECIAL:
+      special.add(reg);
+      break;
+    default:
+      System.err.println("The RegisterType passed to this function is incorrect");
     }
   }
   
   @SuppressWarnings("unchecked")
-  public static HashSet<Register> getCalleeSaved() {
+    public static HashSet<Register> getCalleeSaved() {
     return (HashSet<Register>)calleeSaved.clone();
   }
   
   @SuppressWarnings("unchecked")
-  public static HashSet<Register> getCallerSaved() {
+    public static HashSet<Register> getCallerSaved() {
     return (HashSet<Register>)callerSaved.clone();
   }
   
   @SuppressWarnings("unchecked")
-  public static HashSet<Register> getSpecial() {
+    public static HashSet<Register> getSpecial() {
     return (HashSet<Register>)special.clone();
   }
   
@@ -105,19 +105,19 @@ public enum Register {
   
   public String getTypeString() {
     switch(this.type) {
-      case CALLEE_SAVED:
-        return new String("CALLEE_SAVED");
-      case CALLER_SAVED:
-        return new String("CALLER_SAVED");
-      default:
-        return new String("SPECIAL");
+    case CALLEE_SAVED:
+      return new String("CALLEE_SAVED");
+    case CALLER_SAVED:
+      return new String("CALLER_SAVED");
+    default:
+      return new String("SPECIAL");
     }
   }
   
   public String toString() {
-		if(CodeGenerator.mode64)
-			return this.name64;
-		return this.name32;
+    if(CodeGenerator.mode64)
+      return this.name64;
+    return this.name32;
   }
 }
 

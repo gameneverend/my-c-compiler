@@ -116,11 +116,11 @@ public class Function{
 
 
   public void addDeclaration(Type type, String identifier, int arraySize) {
-	  myContext.addVariable(type, identifier, arraySize);
+    myContext.addVariable(type, identifier, arraySize);
   }
   
   public FunctionContext getFunctionContext(){
-		return this.myContext;
-	}
+    return this.myContext;
+  }
     
 }

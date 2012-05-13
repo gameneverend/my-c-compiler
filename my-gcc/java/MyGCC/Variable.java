@@ -2,7 +2,7 @@ package MyGCC;
 
 public class Variable<T> extends Expression{
   
-	private T value;
+  private T value;
   public Expression index = null;
 
   public Variable(OperationType op, T value){
