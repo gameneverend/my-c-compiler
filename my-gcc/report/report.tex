@@ -17,8 +17,7 @@ This document describes the work accomplished in the context of our undergraduat
 One of the main goals was to be compatible with GCC, ie. to be able to generate code for the same target language (X86 AT\&T syntax), following the same standards as GCC.
 The report focuses primarily on the tasks handled, work environment, successes and shortcomings that we encountered throughout the project.
 \end{abstract}
-
-\newpage 
+\vspace{2cm}
 \tableofcontents
 \newpage 
 
@@ -62,7 +61,9 @@ The first version of the grammar (as suggested in the project details) needed a 
 itself. This was solved by resorting to a pseudo-Chomsky normal form approach.
 
 \section{Code Generator}
-The CodeGenerator.java is the main backbone of our compiler. Whenever a grammar rule is reduced, we push the necessary informations into the CodeGenerator stack. That way, we can retrieve the data and process it accordingly. The advantage of this method is that we can externalize the data (instead of accumulating it in the CUP file during the parse phase), which gives us a lot more possibilities (such as error management and code optimization).
+The CodeGenerator.java is the main backbone of our compiler. Whenever a grammar rule is reduced, we push the necessary informations into the CodeGenerator stack. That way, we can retrieve the data and process it accordingly. The advantage of this method is that we can externalize the data (instead of accumulating it in the CUP file during the parse phase), which gives us a lot more possibilities (such as error management and code optimization).\\
+Implémenter notre propre pile alors que cup en fournit une était un choix discutable, mais il nous a paru judicieux pour plusieurs raisons. La principale étant qu'une gestion trop basée sur le cup nous semblait rendre beaucoup plus complexe la gestion des identifiants incorrect. De plus, suite aux modifications effectuées sur notre grammaire, de nombreuses tâches similaires étaient répétées dans différentes règles. Afin de factoriser notre code, et en restant axé sur une optique programmation objet, il nous a semblé très intéressant d'avoir un méchanisme assez générique capable de traiter plusieurs règles d'un coup.\\
+Le fonctionnement du générateur de code est relativement simple, sa pile est alimentée par le parser, qui signale dès qu'il le peut ce que le générateur doit faire des informations reçues. Il pourra par exemple demander à ce que le code générateur assimile les informations comme un prototype ou comme une fonction. Une fois le travail du parser terminé, le générateur de code va transformer toutes les informations reçues en code assembleur, et si aucune erreur n'est détectée, le code sera écrit dans le fichier de destination.
 
 \section{Register Manager}
 TODO
