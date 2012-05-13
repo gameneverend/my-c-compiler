@@ -7,6 +7,7 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 
+
 \begin{document}
 \title{Project Report: MyGCC}
 %\subtitle{MyGCC: A basic C compiler}
@@ -99,6 +100,9 @@ The expressions were implemented using a binary tree structure. In order to proc
 
 Note that the result will always be stored in EAX at the end of the execution.
 
+\subsection{Numeric expressions}
+We have implemented a slight optimization for our compiler: when evaluating expressions, we have noticed that GCC optimizes its computation if the expression is entirely numeric. For example, the instruction \emph{((5-1)*10)+2} will be immediately evaluated to \emph{42}, and won't go through the usual handling algorithm.
+
 \section{Building and Testing}
 In order to build the project, we have set up an Ant build. This build will setup a proper building environment.\\
 In order to automate the process, we developed a script that would ensure the building process, as well as the project's integrity. The script enabled us to measure our work progress by launching it with a test module.\\
@@ -129,7 +133,7 @@ Unless you are Linus Torvalds, compiling errors are inevitable due to our human 
 \item Syntax errors, when there is an undefined variable, or an undefined reference to a function.
 \end{itemize}
 
-When encountering any type of error, the compiler will issue an error message, and abort the code generation phase.
+When encountering any type of error, the compiler will issue an error message, and abort the code generation phase. Note that the parser will continue the parsing phase and will detect further errors.
 
 \section{Extensions}
 In the near future, we intend to add a few more functionalities to MyGCC.\\
