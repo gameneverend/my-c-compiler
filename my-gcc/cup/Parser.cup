@@ -420,8 +420,8 @@ instruction ::=
     
     // Basic Printf instruction
   | PRINTF {:System.out.println("Printf detected");:} LPAREN {:System.out.println("LPAREN detected");:} STRING:s {:System.out.println("String detected : " + s);:} COMMA arg_sequence:a RPAREN
-      {:  ArrayList<Expression> args = new ArrayList<Expression>();
-          a.add(new Variable<String>(null, s));
+      {:
+          a.add(0, new Variable<String>(null, s));
           String label = parser.cg.sm.addString(s);
           parser.cg.pushInstruction(new Instruction(new FunctionCall(InstructionType.PRINTF.toString(), a), InstructionType.PRINTF));
       :}

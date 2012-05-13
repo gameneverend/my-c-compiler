@@ -186,14 +186,11 @@ public class ExpressionHelper{
       for(Expression e : f.getArgs()) {
         String source = null;
         String dest = null;
-        
+
         if(first) {
           first = false;
           HashMap<String, String> strings  = CodeGenerator.sm.getContents();
           label = "$" + strings.get(((Variable)e).getValue());
-          dest = Register.RAX.toString();
-          
-          sb.append(asm(Assembly.MOV, source, dest));
         } else {
           if(e.isFullyNumeric()){
             num = calculateNum(e);
@@ -206,19 +203,21 @@ public class ExpressionHelper{
               sb.append(asm(Assembly.MOV, Register.RAX, dest));
             }
           }
-        
+
           else{
             sb.append(e.handleExpression(null, context).toString());
             source = Register.RAX.toString();
             dest = Parser.regMan.getArgReg(null, nb_parameters - i - 1, nb_parameters);
             sb.append(asm(Assembly.MOV, source, dest));
           }
-            
+
           i++;
         }
       }
       
-      sb.append(asm(Assembly.MOV, label, Register.RAX.toString()));
+      sb.append(asm(Assembly.MOV, label, Register.RDI.toString()));
+
+      sb.append("movl  $0, %eax\n");//needed?
       
       if(nb_parameters == 1)
         sb.append(asm(Assembly.CALL, "puts"));
@@ -332,6 +331,12 @@ public class ExpressionHelper{
     
     
     public static String asm(Object instruction, Object src, Object dst){
+      if (instruction == null)
+        System.err.println("instruction is null");
+      if (src == null)
+        System.err.println("src is null");
+      if (dst == null)
+        System.err.println("dst is null");
 			return "\t" + instruction.toString() + "\t" + src.toString() + ", " + dst.toString() + "\n";
 		}
 		

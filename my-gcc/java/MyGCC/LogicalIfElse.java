@@ -42,7 +42,7 @@ public class LogicalIfElse extends LogicalBlock {
 				sb.append(instruct.rexpr.op + " ");
 				
 			sb.append(label1); sb.append("\n");
-      sb.append(instruct.block.toString());
+      sb.append(instruct.block.toCode());
        
       if(instruct.elseBlock != null) {
         sb.append("\t"); sb.append(Assembly.JUMP + " "); sb.append(label2); sb.append("\n");
@@ -51,7 +51,7 @@ public class LogicalIfElse extends LogicalBlock {
       sb.append(label1); sb.append(":\n");
         
       if(instruct.elseBlock != null) {
-        sb.append(instruct.elseBlock.toString());
+        sb.append(instruct.elseBlock.toCode());
         sb.append(label2); sb.append(":\n");
       }
       
