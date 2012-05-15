@@ -1,14 +1,4 @@
-int test_somme_rec_multi_param(int,
-                               int,
-                               int,
-                               int,
-                               int,
-                               int,
-                               int,
-                               int,
-                               int,
-                               int,
-                               int);
+int test_somme_rec_multi_param(int, int, int, int, int, int, int, int, int, int, int);
 
 int test_somme_rec_multi_param(int a,
 							   int b,

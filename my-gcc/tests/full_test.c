@@ -6,7 +6,7 @@
 
 void test_validity(int result, int expected_result){
 	if (result != expected_result){
-		printf("\033[1;31mFAILED\n\033[0m");
+		printf("\033[1;31mFAILED : \033[0m");
 		printf("\tUnexpected Result : %d, the expected result was : %d\n",
 					 result,
 					 expected_result);
@@ -51,7 +51,7 @@ int main(int argc, char ** argv){
   printf("Testing fibo(5): result = 8 : ");
   test_validity(test_fibo(5), 8);
   
-  printf("Testing arrays: return c[i%3] : ");
+  printf("Testing arrays: return c\[i%3\] : ");
   test_validity(test_array(5), 2);
   
   printf("Testing binary operations : ");

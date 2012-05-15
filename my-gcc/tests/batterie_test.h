@@ -1,40 +1,21 @@
 #ifndef BATTERIE_TEST
 #define BATTERIE_TEST
-/* This test returns 42, test of function with no parameters */
-extern int test_simple();
 
-/* This function returns -x */
-extern int test_oppose(int x);
-
-/* This function returns a + b */
-extern int test_addition(int a,int b);
-
-/* This function returns a * b + c */
-extern int test_polynome_simple(int a ,int b,int c);
-
-/* This function tests nested function calls,
-	 it returns (a + 2) + (b + c) */
-extern int test_appel_imbrique(int a, int b, int c);
-
-/* This function tests logic blocks */
-extern int test_logic(int);
-
-/* This function tests nested IF conditions */
-extern int test_multi_if(int, int);
-
-/* This function tests loops */
-extern int test_while(int);
-
-/* This function tests recursion */
-extern int test_fibo(int);
-
-/* This function tests array access */
+extern int test_addition(int, int);
+extern int addition(int, int);
+extern int test_appel_imbrique(int, int, int);
 extern int test_array(int);
-
-/* This function tests binary operations */
 extern int test_binary(void);
-
-/* This function tests the handling of unreachable code */
+extern int test_fibo(int);
+extern int test_logic(int);
+extern int test_multi_if(int, int);
+extern int test_oppose(int);
+extern int test_polynome_simple(int, int, int);
+extern int test_printing(int, int);
+extern int test_scan(void);
+extern int test_simple(void);
+extern int test_somme_rec_multi_param(int, int, int, int, int, int, int, int, int, int, int);
 extern int test_unreachable(int);
+extern int test_while(int);
 
 #endif
