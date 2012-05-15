@@ -4,17 +4,17 @@
 extern int test_simple();
 
 /* This function returns -x */
-extern int oppose(int x);
+extern int test_oppose(int x);
 
 /* This function returns a + b */
-extern int addition(int a,int b);
+extern int test_addition(int a,int b);
 
 /* This function returns a * b + c */
-extern int polynome_simple(int a ,int b,int c);
+extern int test_polynome_simple(int a ,int b,int c);
 
 /* This function tests nested function calls,
 	 it returns (a + 2) + (b + c) */
-extern int appel_imbrique(int a, int b, int c);
+extern int test_appel_imbrique(int a, int b, int c);
 
 /* This function tests logic blocks */
 extern int test_logic(int);

@@ -2,16 +2,16 @@
 int test_simple(void);
 
 /* This function returns -x */
-int oppose(int);
+int test_oppose(int);
 /* This function returns a + b */
-int addition(int, int);
+int test_addition(int, int);
 
 /* This function returns a * b + c */
-int polynome_simple(int, int, int);
+int test_polynome_simple(int, int, int);
 
 /* This function tests nested function calls,
 	 it returns (a + 2) + (b + c) */
-int appel_imbrique(int, int, int);
+int test_appel_imbrique(int, int, int);
 
 /* This function tests logic blocks */
 int test_logic(int);
@@ -63,19 +63,19 @@ int test_simple(void){
 	return a * b; 
 }
 
-int oppose(int x){
+int test_oppose(int x){
 	return -x;
 }
 
-int addition(int a, int b){
+int test_addition(int a, int b){
 	return a + b;
 }
 
-int polynome_simple(int a, int b, int c){
+int test_polynome_simple(int a, int b, int c){
 	return a * b + c;
 }
 
-int appel_imbrique(int a, int b, int c){
+int test_appel_imbrique(int a, int b, int c){
 	return addition(a,b) + addition(b,c);
 }
 
