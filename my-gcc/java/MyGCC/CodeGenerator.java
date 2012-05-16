@@ -14,7 +14,7 @@ public class CodeGenerator{
   private LinkedList<Function> globalFunctions = new LinkedList<Function>();
   public static StringManager sm = new StringManager();
 
-  private Context globalContext;
+  private Context globalContext = new GlobalContext();
   private Context actualContext;
   private Function currentFunction;
   private Block currentBlock = null;
@@ -63,7 +63,7 @@ public class CodeGenerator{
   }
 
   @SuppressWarnings("unchecked")
-    public void declarePrototype(){
+  public void declarePrototype(){
     Type returnType = null;
     String name = null;
     ArrayList<Type> parameters = new ArrayList<Type>();
@@ -113,7 +113,7 @@ public class CodeGenerator{
       }
     }
     Collections.reverse(parameters);
-    Function f = new Function(name, returnType, parameters);
+    Function f = new Function(name, returnType, parameters, globalContext);
     globalFunctions.add(f);
     this.currentFunction = f;
     this.currentBlock = f.body;
@@ -166,12 +166,18 @@ public class CodeGenerator{
     }
     if(currentFunction != null)
       currentFunction.addDeclaration(type, identifier, arraySize);
+    else {
+      this.globalContext.addVariable(type, identifier, arraySize);
+      this.globalContext.prepareLocalVariablesLocation();
+    }
   }
   
   public void checkValidity(String variable, int line, int col) throws Exception{
     currentFunction.loadParameters(); //FIXME find a more suitable way to do this
     try{
-      currentFunction.getFunctionContext().getVariableLocation(variable);
+      System.out.println("helloooo from variable : " + variable);
+      String s = currentFunction.getFunctionContext().getVariableLocation(variable);
+      System.out.println("RESULT : " + s);
     }catch (Exception e){
       Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undeclared.");
     }

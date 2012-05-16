@@ -16,10 +16,11 @@ public class Function{
 
   public Function(String name,
                   Type returnType,
-                  ArrayList<Parameter> parameters){
+                  ArrayList<Parameter> parameters,
+                  Context globalContext){
     this.name = name;
     this.returnType = returnType;
-    this.myContext = new FunctionContext(null);
+    this.myContext = new FunctionContext(globalContext);
     myContext.setParameters(parameters);
     body = new Body(myContext, this);
     endTag = null;

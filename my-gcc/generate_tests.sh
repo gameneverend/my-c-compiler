@@ -5,7 +5,7 @@ then
   rm seperate_tests.sh
 fi
 
-if [ -e tests/batterie_test.sh ]
+if [ -e tests/batterie_test.h ]
 then
   rm tests/batterie_test.h
 fi

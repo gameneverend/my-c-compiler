@@ -69,6 +69,9 @@ int main(int argc, char ** argv){
   printf("Testing unreachable code: ");
   test_validity(test_unreachable(5), 2);
   
+  printf("Testing global variables: ");
+  test_validity(test_globals(5), 20);
+  
   printf("\n");
   
 }

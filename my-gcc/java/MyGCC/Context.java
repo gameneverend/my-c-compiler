@@ -38,10 +38,15 @@ public abstract class Context{
     ContextEntry ce = localVariables.get(name);
     Integer result = variablesLocations.get(name);
     if (result != null) {
-      if(ce.arraySize == 0) return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
+      if(ce.arraySize == 0) {
+        System.out.println("Found variable : " + name);
+        return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
+      }
       return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";
     }
-    if (inheritedContext != null) return inheritedContext.getVariableLocation(name);
+    if (inheritedContext != null) {
+      return inheritedContext.getVariableLocation(name);
+     }
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
 

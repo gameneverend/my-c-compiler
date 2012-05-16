@@ -11,7 +11,7 @@ parser code {:
 
   public static Parser p;
   public PrintStream ps;
-  public static Boolean DEBUG = false;
+  public static Boolean DEBUG = true;
   public static RegisterManager regMan = new RegisterManager();
   public CodeGenerator cg = new CodeGenerator();
   public static ArrayList<String> errors = new ArrayList<String>();
@@ -156,7 +156,9 @@ dec_func_list ::=
         
 // End of the declaration a non-static variable or of a function's prototype
 dec_end ::=
-    arr SEMI dec_func_list
+    arr
+      {:  parser.cg.declareVariable(); :}
+    SEMI dec_func_list
   | proto_func
   ;
        
