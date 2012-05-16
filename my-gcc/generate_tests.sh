@@ -1,9 +1,20 @@
 #!/bin/sh
 
-rm seperate_tests.sh
-rm tests/batterie_test.h
+if [ -e seperate_tests.sh ]
+then
+  rm seperate_tests.sh
+fi
+
+if [ -e tests/batterie_test.sh ]
+then
+  rm tests/batterie_test.h
+fi
 touch seperate_tests.sh
 touch tests/batterie_test.h
+
+PATH_1="tests/"
+PATH_2=$PATH_1"singular_tests/"
+PATH_3=$PATH_2"asm/"
 
 echo "#!/bin/sh" >> seperate_tests.sh
 echo "ant clean" >> seperate_tests.sh
@@ -16,12 +27,14 @@ echo >> seperate_tests.sh
 echo "#ifndef BATTERIE_TEST"  >> tests/batterie_test.h
 echo "#define BATTERIE_TEST" >> tests/batterie_test.h
 echo >> tests/batterie_test.h
+
 i=0
 END=.c
-for entry in $(ls tests/singular_tests/*$END)
+cd tests/singular_tests/
+for entry in $(ls *$END)
 do
   substring=${entry%$END}
-  echo "TEST$i="$substring >> seperate_tests.sh
+  echo "TEST$i="$substring >> ../../seperate_tests.sh
   files[$i]="TEST$i"
   i=$(($i + 1))
   str=""
@@ -30,15 +43,16 @@ do
     if [[ "$prototypes" == *\; ]]
     then
       str="extern"$str" "$prototypes"\r"
-      echo -e $str >> tests/batterie_test.h
+      echo -e $str >> ../batterie_test.h
       str=""
     else
       str=$str" "$prototypes
     fi
   done
-  echo -n $str >> tests/batterie_test.h
+  echo -n $str >> ../batterie_test.h
   str=""
 done
+cd ../..
 
 echo >> tests/batterie_test.h
 echo "#endif" >> tests/batterie_test.h
@@ -47,24 +61,24 @@ echo >> seperate_tests.sh
 i=0
 for compile in ${files[@]}
 do
-  echo "if [ -e \$$compile.s ]" >> seperate_tests.sh
+  echo "if [ -e $PATH_2\$$compile.s ]" >> seperate_tests.sh
   echo "then" >> seperate_tests.sh
-  echo "  rm \$$compile.s" >> seperate_tests.sh
+  echo "  rm $PATH_2\$$compile.s" >> seperate_tests.sh
   echo "fi" >> seperate_tests.sh
-  echo "\$OUR_COMPILER \$$compile"$END >> seperate_tests.sh
+  echo "\$OUR_COMPILER $PATH_2\$$compile"$END >> seperate_tests.sh
   echo >> seperate_tests.sh
 done
 
-#echo "mv *.s tests/singular_tests/asm"
+echo "mv $PATH_2*.s tests/singular_tests/asm" >> seperate_tests.sh
 
 echo >> seperate_tests.sh
 
 echo -n gcc -g" " >> seperate_tests.sh
 for gcc in ${files[@]}
 do
-  echo -n \$$gcc.s" " >> seperate_tests.sh
+  echo -n $PATH_3\$$gcc.s" " >> seperate_tests.sh
 done
-echo -n tests/full_test.c -o full >> seperate_tests.sh
+echo -n $PATH_1"full_test.c -o full" >> seperate_tests.sh
 
 echo >> seperate_tests.sh
 
