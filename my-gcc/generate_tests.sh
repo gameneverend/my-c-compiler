@@ -12,7 +12,13 @@ fi
 if [ -e tests/batterie_test.h ]
 then
   rm tests/batterie_test.h
-fi
+fi		
+
+if [ ! -e tests/singular_tests/asm ]		
+	then		
+  mkdir tests/singular_tests/asm		
+fi		
+
 touch seperate_tests.sh
 touch tests/batterie_test.h
 
@@ -28,7 +34,7 @@ echo "ant" >> seperate_tests.sh
 echo >> seperate_tests.sh
 echo "OUR_COMPILER=\"java -jar jar/Compiler.jar\"" >> seperate_tests.sh
 echo >> seperate_tests.sh
-echo "rm full" >> seperate_tests.sh
+echo "rm -f full" >> seperate_tests.sh
 echo >> seperate_tests.sh
 echo "#ifndef BATTERIE_TEST"  >> tests/batterie_test.h
 echo "#define BATTERIE_TEST" >> tests/batterie_test.h
@@ -51,10 +57,12 @@ do
   # Extract the prototypes from the files (needs refining to include everything that is needed, and exclude the rest
   for prototypes in `grep '^\<int\>' $entry | grep ';$'`
   do
+    echo ${prototypes}
     if [[ "$prototypes" == *\; ]]
     then
       # a complete prototype have been extracted, print it to the file
       str="extern"$str" "$prototypes"\r"
+      echo ${str}
       echo -e $str >> ../batterie_test.h
       str=""
     else
@@ -84,7 +92,7 @@ do
 done
 
 # Move all the .s files that were generated to the asm subdirectory
-echo "mv $PATH_2*.s tests/singular_tests/asm" >> seperate_tests.sh
+echo "mv $PATH_2*.s tests/singular_tests/asm/" >> seperate_tests.sh
 
 echo >> seperate_tests.sh
 
@@ -100,3 +108,6 @@ echo >> seperate_tests.sh
 
 # Execute the test
 echo ./full >> seperate_tests.sh
+
+# Only useful for execution with "./seperate_tests.sh", "sh seperate_tests.sh would have been fine
+chmod 755 seperate_tests.sh
