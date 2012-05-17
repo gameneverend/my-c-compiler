@@ -5,6 +5,7 @@ int falsemain(void);
 int somme(int);
 int oppose(int);
 int appel_imbrique(int, int, int);
+int getIndexOne(int[3], int);
 
 
 
@@ -30,48 +31,22 @@ int appel_imbrique(int, int, int);
 	return addition(a,b) + addition(b,c);
 }*/
 
-int falsemain(void){
-  int a;
-  int b;
-  int c;
-  a = 1;
-  b = 2;
-  c = a * 3;
-  //c = b * rand(45);
-  printf("Hello world", 4);
-  c = b + c;
-  return c;
+int getIndexOne(int tab[], int i){
+  int t;
+  t = tab[i] + 10;
+  return t;
 }
 
-/*int falsemain(int a,
-							   int b,
-							   int c,
-							   int s){
-	int somme;
-	somme = s;
-	if (a == 0){
-		if (b == 0){
-			if (c == 0){
-				return somme;
-			};
-		};
-	};
-	if (a > 0){
-		a = a -1;
-		somme = somme + 1;
-	};
-	if (b > 0){
-		b = b -1;
-		somme = somme + 1;
-	};
-	if (c > 0){
-		c = c -1;
-		somme = somme + 1;
-	};
-	
-	return falsemain(a,b,c,somme);
+int falsemain(void){
+  int a;
+  int t[3];
+  a = 2;
+  t[0] = 0;
+  t[1] = 1;
+  t[2] = 2;
+
+  return getIndexOne(t, 2);
 }
-*/
 
 
 

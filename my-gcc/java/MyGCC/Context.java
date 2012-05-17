@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 public abstract class Context{
 
   protected Context inheritedContext;
-  private ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+  public ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 
   /** Contain all the variables local to the context with their type **/
   protected HashMap<String,ContextEntry> localVariables = new HashMap<String,ContextEntry>();
@@ -34,9 +34,10 @@ public abstract class Context{
   }
 
   public String getVariableLocation(String name) throws Exception{
-    // searching in Local Variables
-    ContextEntry ce = localVariables.get(name);
+		ContextEntry ce = localVariables.get(name);
     Integer result = variablesLocations.get(name);
+		
+    // searching in Local Variables
     if (result != null) {
       if(ce.arraySize == 0) {
         System.out.println("Found variable : " + name);
@@ -49,7 +50,35 @@ public abstract class Context{
      }
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
+  
+  
+  public String getArrayLocation(String name) throws Exception{
+		ContextEntry ce = localVariables.get(name);
+    Integer result = variablesLocations.get(name);
+    
+		for(Parameter p : parameters){
+			if(p.name.equals(name) && p.arraySize != 0){
+				return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";
+			}
+		}
+    throw new Exception("No parameter with the specified name : <" + name + "> found");
+  }
 
+  public boolean isArrayType(String name) throws Exception{
+		for(Parameter p : parameters){
+			if(p.name.equals(name))
+				return !(p.arraySize == 0);
+		}
+		
+		ContextEntry ce = localVariables.get(name);
+		Integer result = variablesLocations.get(name);
+		if(result != null)
+			return !(ce.arraySize == 0);
+				
+		if(inheritedContext != null)
+			return inheritedContext.isArrayType(name);
+		throw new Exception("No parameter with the specified name: <" + name + "> found");
+	}
   /**
    * When a function is called,
    * local variables will always be used like <i>-...(%rbp)</i>

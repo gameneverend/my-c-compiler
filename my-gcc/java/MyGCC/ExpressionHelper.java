@@ -244,7 +244,10 @@ public class ExpressionHelper{
   public static StringBuffer handleVariable(StringBuffer sb, Variable a, Register dst, Context context) throws Exception{
     if(a.index != null){
       sb.append(a.index.handleExpression(null, context).toString());
-      sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
+      //sb.append(asm(Assembly.MOV, context.getArrayLocation((String)a.getValue()), dst ));
+      sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), Register.RCX));
+      sb.append(asm(Assembly.MOV, "(" + Register.RCX + ", " + Register.RAX + ", 8)", Register.RAX));
+      //
     }
       
     else if(a.getValue() != null){
@@ -258,7 +261,12 @@ public class ExpressionHelper{
       }
         
       else if(a.getValue() instanceof String){
-        sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
+				if(context.isArrayType((String)a.getValue())){
+					sb.append(asm(Assembly.MOV, "$0", Register.RAX));
+					sb.append(asm(Assembly.LEA, context.getVariableLocation((String)a.getValue()), dst));
+				}
+				else
+					sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
         if(a.flag != null){ 
           if(a.flag.equals(Flag.UMINUS))
             sb.append(asm(Assembly.NEG, dst));

@@ -9,7 +9,7 @@ public class FunctionContext extends Context{
    *  for example: if the parameter <i>p</i> is in <i>-4(%rbp)</i>, the tuple will be <i>(p.name,-4)</i> **/
   private HashMap<String,Integer> parametersLocations = new HashMap<String,Integer>();
   private boolean parametersLocated = false;
-  private ArrayList<Parameter> parameters;
+  //private ArrayList<Parameter> parameters;
 
   public FunctionContext(Context inheritedContext){
     this.inheritedContext = inheritedContext;     
@@ -41,11 +41,24 @@ public class FunctionContext extends Context{
   public int nbParameters(){
     return parameters.size();
   }
+  
+  public String getArrayLocation(String name) throws Exception{
+		Integer result = parametersLocations.get(name);
+		if (result != null){
+			for(Parameter p : parameters){
+				if(p.name.equals(name) && p.arraySize != 0)
+					return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + "8" + ")";
+			}
+			
+			return result.intValue() + "(" + Register.RBP + ")";
+		}
+		throw new Exception("No parameter with the specified name : <" + name + "> found");
+	}
 
   public String getVariableLocation(String name) throws Exception{
     // searching in Parameters
     Integer result = parametersLocations.get(name);
-    if (result != null) return result.intValue() + "(" + Register.RBP + ")";
+    if (result != null)	return result.intValue() + "(" + Register.RBP + ")";
     return super.getVariableLocation(name);
   }
   

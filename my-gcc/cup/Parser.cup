@@ -305,13 +305,13 @@ types_sequence ::=
 
 // Used for defining the types required for the arguments of a function
 types_list ::=
-    type:t
+    type:t arr
       {:
         parser.cg.pushInformation(new ParsingResult<Type>(ResultType.PARAMETER, t));
       :}
     
     // each variable type is separated by a comma
-  | type:t
+  | type:t arr
       {: 
         parser.cg.pushInformation(new ParsingResult<Type>(ResultType.PARAMETER, t));
       :}
@@ -378,9 +378,10 @@ parameter ::=
       :}
     
     // The variable can be an array
-  | type:t IDENT:id LHOOK NB_INT:n RHOOK
+  //| type:t IDENT:id LHOOK NB_INT:n RHOOK
+  | type:t IDENT:id LHOOK RHOOK
       {:
-        RESULT = new Parameter(t, id, n);
+        RESULT = new Parameter(t, id, 3);    //FIXME: temporary change
       :}
   ;
      
@@ -576,7 +577,7 @@ expression ::=
   | IDENT:i
       {:
         if(Parser.DEBUG) System.out.println("Expression ident: " + i);
-        //declare ident in current block
+        //use of ident in current block
         Scanner s = (Scanner)Parser.p.getScanner();
         parser.cg.checkValidity(i, s.yyline(), s.yycolumn());
         RESULT = new Variable<String>(null, i);
