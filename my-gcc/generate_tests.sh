@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -e seperate_tests.sh ]
 then
@@ -9,6 +9,12 @@ if [ -e tests/batterie_test.h ]
 then
   rm tests/batterie_test.h
 fi
+
+if [ ! -e tests/singular_tests/asm ]
+then
+  mkdir tests/singular_tests/asm
+fi
+
 touch seperate_tests.sh
 touch tests/batterie_test.h
 
@@ -16,13 +22,13 @@ PATH_1="tests/"
 PATH_2=$PATH_1"singular_tests/"
 PATH_3=$PATH_2"asm/"
 
-echo "#!/bin/sh" >> seperate_tests.sh
+echo "#!/bin/bash" >> seperate_tests.sh
 echo "ant clean" >> seperate_tests.sh
 echo "ant" >> seperate_tests.sh
 echo >> seperate_tests.sh
 echo "OUR_COMPILER=\"java -jar jar/Compiler.jar\"" >> seperate_tests.sh
 echo >> seperate_tests.sh
-echo "rm full" >> seperate_tests.sh
+echo "rm -f full" >> seperate_tests.sh
 echo >> seperate_tests.sh
 echo "#ifndef BATTERIE_TEST"  >> tests/batterie_test.h
 echo "#define BATTERIE_TEST" >> tests/batterie_test.h
@@ -40,9 +46,11 @@ do
   str=""
   for prototypes in `grep '^\<int\>' $entry | grep ';$'`
   do
+		echo ${prototypes}
     if [[ "$prototypes" == *\; ]]
     then
       str="extern"$str" "$prototypes"\r"
+			echo ${str}
       echo -e $str >> ../batterie_test.h
       str=""
     else
@@ -69,7 +77,7 @@ do
   echo >> seperate_tests.sh
 done
 
-echo "mv $PATH_2*.s tests/singular_tests/asm" >> seperate_tests.sh
+echo "mv $PATH_2*.s tests/singular_tests/asm/" >> seperate_tests.sh
 
 echo >> seperate_tests.sh
 
@@ -83,3 +91,5 @@ echo -n $PATH_1"full_test.c -o full" >> seperate_tests.sh
 echo >> seperate_tests.sh
 
 echo ./full >> seperate_tests.sh
+
+chmod 755 seperate_tests.sh

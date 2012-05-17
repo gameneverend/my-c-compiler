@@ -86,6 +86,11 @@ int test_logic(int i) {
   return i;
 }
 
+/* Pour le septième paramètre, le souci est qu'après le
+	 movq 16(%rbp),%rax
+	 le contenu de %rax est sur 12 octets au lieu de 8, il y a
+	 en fait 4 octets qui viennent s'ajouter d'on ne sait pas trop où...
+	 il faudrait pouvoir déterminer comment ça se fait*/
 int test_somme_rec_multi_param(int a,
 							   int b,
 							   int c,
@@ -106,15 +111,15 @@ int test_somme_rec_multi_param(int a,
 				if (d == 0){
 					if (e == 0){
 						if (f == 0){
-							//if (g == 0){
+							if (g == 0){
 								if (h == 0){
-									//if (i == 0){
-										//if (j == 0){
+									if (i == 0){
+										if (j == 0){
 											return somme;
-										//};
-									//};
+										};
+									};
 								};
-							//};
+							};
 						};
 					};
 				};
@@ -145,22 +150,22 @@ int test_somme_rec_multi_param(int a,
 		f = f -1;
 		somme = somme + 1;
 	};
-	/*if (g > 0){
+	if (g > 0){
 		g = g -1;
 		somme = somme + 1;
-	};*/
+	};
 	if (h > 0){
 		h = h -1;
 		somme = somme + 1;
 	};
-	/*if (i > 0){
+	if (i > 0){
 		i = i -1;
 		somme = somme + 1;
 	};
 	if (j > 0){
 		j = j -1;
 		somme = somme + 1;
-	};*/
+	};
 	tmp = test_somme_rec_multi_param(a,b,c,d,e,f,g,h,i,j,somme);
 	return tmp;
 }
