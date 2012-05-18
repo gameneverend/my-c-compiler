@@ -191,7 +191,15 @@ public class Expression{
             sb = ExpressionHelper.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue());
 				}  
         else{
+					
+					if(((Variable)this.right).index != null)
+						sb.append(context.virtualPush(Register.RAX.toString()));
           sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RDX, context);
+          
+          if(((Variable)this.right).index != null){
+						sb.append(ExpressionHelper.asm(Assembly.MOV, Register.RAX, Register.RDX));
+						sb.append(context.virtualPop(Register.RAX.toString()));
+					}
           sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);
         }
       }

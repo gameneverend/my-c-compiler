@@ -11,7 +11,7 @@ parser code {:
 
   public static Parser p;
   public PrintStream ps;
-  public static Boolean DEBUG = true;
+  public static Boolean DEBUG = false;
   public static RegisterManager regMan = new RegisterManager();
   public CodeGenerator cg = new CodeGenerator();
   public static ArrayList<String> errors = new ArrayList<String>();
@@ -378,10 +378,10 @@ parameter ::=
       :}
     
     // The variable can be an array
-  //| type:t IDENT:id LHOOK NB_INT:n RHOOK
-  | type:t IDENT:id LHOOK RHOOK
+  | type:t IDENT:id LHOOK NB_INT:n RHOOK
+  //| type:t IDENT:id LHOOK RHOOK
       {:
-        RESULT = new Parameter(t, id, 3);    //FIXME: temporary change
+        RESULT = new Parameter(t, id, n);
       :}
   ;
      

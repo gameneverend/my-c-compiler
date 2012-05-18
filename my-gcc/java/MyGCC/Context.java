@@ -40,7 +40,7 @@ public abstract class Context{
     // searching in Local Variables
     if (result != null) {
       if(ce.arraySize == 0) {
-        System.out.println("Found variable : " + name);
+        if(Parser.DEBUG) System.out.println("Found variable : " + name);
         return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
       }
       return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";

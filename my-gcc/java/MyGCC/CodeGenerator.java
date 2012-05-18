@@ -175,9 +175,7 @@ public class CodeGenerator{
   public void checkValidity(String variable, int line, int col) throws Exception{
     currentFunction.loadParameters(); //FIXME find a more suitable way to do this
     try{
-      System.out.println("helloooo from variable : " + variable);
-      String s = currentFunction.getFunctionContext().getVariableLocation(variable);
-      System.out.println("RESULT : " + s);
+      currentFunction.getFunctionContext().getVariableLocation(variable);
     }catch (Exception e){
       Parser.errors.add(":" + line + ":" + col + ": error: <" + variable + "> undeclared.");
     }
