@@ -46,9 +46,11 @@ public abstract class Context{
       }
       return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";
     } else {
-      result = staticContext.variablesLocations.get(name);
-      if(result != null)
-        return staticContext.getVariableLocation(name);
+			if(this.staticContext != null) {
+				result = staticContext.variablesLocations.get(name);
+				if(result != null)
+					return staticContext.getVariableLocation(name);
+			}
     }
     if (inheritedContext != null) {
       return inheritedContext.getVariableLocation(name);
@@ -113,9 +115,8 @@ public abstract class Context{
   }
 
   public void addVariable(Type type, String identifier, int arraySize, String qualifier) {
-    if(qualifier.equals("static")) {
-      staticContext.localVariables.put(identifier, new ContextEntry(type, arraySize));
-      staticContext.localVariablesLocated = false;
+    if(qualifier.equals("static") && this.staticContext != null) {
+      staticContext.addVariable(type, identifier, arraySize, qualifier);
     } else {
       localVariables.put(identifier, new ContextEntry(type, arraySize));
       localVariablesLocated = false;
@@ -138,7 +139,9 @@ public abstract class Context{
   }
   
   public String makeStaticLabels() {
-    return this.staticContext.makeLabels();
+		if(this.staticContext != null)
+			return this.staticContext.makeLabels();
+		return ((StaticContext)this).makeLabels();
   }
 
 }

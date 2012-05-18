@@ -148,6 +148,7 @@ dec_func_list ::=
           if(Parser.DEBUG) System.out.println("Identifier : " + id);
           parser.cg.pushInformation(new ParsingResult<String>(ResultType.ID, id));
           parser.cg.pushInformation(new ParsingResult<String>(ResultType.QUALIFIER, s));
+					parser.cg.declareVariable();
       :}
       dec_func_list
     
