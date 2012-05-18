@@ -4,7 +4,8 @@
 extern int test_addition(int, int);
 extern int addition(int, int);
 extern int test_appel_imbrique(int, int, int);
-extern int test_array(int);
+extern int test_array(void);
+extern int total_sum(int[3]);
 extern int test_binary(void);
 extern int test_fibo(int);
 extern int modify_it(void);

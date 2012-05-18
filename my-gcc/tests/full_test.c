@@ -51,8 +51,8 @@ int main(int argc, char ** argv){
   printf("Testing fibo(5): result = 8 : ");
   test_validity(test_fibo(5), 8);
   
-  printf("Testing arrays: return c\[i%3\] : ");
-  test_validity(test_array(5), 2);
+  printf("Testing arrays: ");
+  test_validity(test_array(), 2);
   
   printf("Testing binary operations : ");
   test_validity(test_binary(), 222);

@@ -23,8 +23,14 @@ public class GlobalContext extends Context{
   
    public String makeLabels() {
     StringBuffer sb = new StringBuffer();
-    for(String c : localVariables.keySet())
-      sb.append("\t.comm " + c + ",4,4\n");
+    for(String c : localVariables.keySet()) {
+      ContextEntry ce = localVariables.get(c);
+      int as = ce.arraySize;
+      if(as == 0)
+        as++;
+      as *= ce.type.size;
+      sb.append("\t.comm " + c + "," + as +"," + as + "\n");
+    }
     return sb.toString();
   }
 }
