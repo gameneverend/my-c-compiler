@@ -47,7 +47,7 @@ public class FunctionContext extends Context{
 		if (result != null){
 			for(Parameter p : parameters){
 				if(p.name.equals(name) && p.arraySize != 0)
-					return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + "8" + ")";
+					return "(" + Register.RCX + ", " + Register.RDX + ", " + "8" + ")";
 			}
 			
 			return result.intValue() + "(" + Register.RBP + ")";

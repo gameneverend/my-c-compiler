@@ -54,11 +54,10 @@ public abstract class Context{
   
   public String getArrayLocation(String name) throws Exception{
 		ContextEntry ce = localVariables.get(name);
-    Integer result = variablesLocations.get(name);
     
 		for(Parameter p : parameters){
 			if(p.name.equals(name) && p.arraySize != 0){
-				return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";
+				return "(" + Register.RCX + ", " + Register.RDX + ", " + ce.type.size + ")";
 			}
 		}
     throw new Exception("No parameter with the specified name : <" + name + "> found");

@@ -71,9 +71,15 @@ public class Instruction {
           
         else{
           sb.append(r.handleExpression(a, context));
-          if(a.index != null)
-            sb.append(a.index.handleExpression(null, context));
-          sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
+          if(a.index != null){
+						sb.append(context.virtualPush(Register.RAX.toString()));
+						sb.append(a.handleExpression(a, context));
+						sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + Register.RDX + "\n");	//Index of left-side array
+						sb.append(context.virtualPop(Register.RAX.toString()));
+            sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getArrayLocation(String.valueOf(a.getValue())) + "\n");
+					}
+          else
+            sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n");
         }
         break;
           

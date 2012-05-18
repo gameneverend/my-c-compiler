@@ -189,8 +189,7 @@ public class Expression{
             sb = ExpressionHelper.handleOperation(sb, this.op, "$-"+((Variable)this.right).getValue());
           else
             sb = ExpressionHelper.handleOperation(sb, this.op, "$"+((Variable)this.right).getValue());
-        }
-            
+				}  
         else{
           sb = ExpressionHelper.handleVariable(sb, (Variable)this.right, Register.RDX, context);
           sb = ExpressionHelper.handleOperation(sb, this.op, Register.RDX, Register.RAX);

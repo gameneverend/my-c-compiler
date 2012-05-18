@@ -243,11 +243,10 @@ public class ExpressionHelper{
     
   public static StringBuffer handleVariable(StringBuffer sb, Variable a, Register dst, Context context) throws Exception{
     if(a.index != null){
-      sb.append(a.index.handleExpression(null, context).toString());
-      //sb.append(asm(Assembly.MOV, context.getArrayLocation((String)a.getValue()), dst ));
+			sb.append(a.index.handleExpression(null, context).toString());
+			sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));
       sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), Register.RCX));
-      sb.append(asm(Assembly.MOV, "(" + Register.RCX + ", " + Register.RAX + ", 8)", Register.RAX));
-      //
+      sb.append(asm(Assembly.MOV, "(" + Register.RCX + ", " + Register.RDX + ", 8)", Register.RAX));
     }
       
     else if(a.getValue() != null){

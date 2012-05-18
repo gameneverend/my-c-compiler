@@ -32,9 +32,8 @@ int getIndexOne(int[3], int);
 }*/
 
 int getIndexOne(int tab[], int i){
-  int t;
-  t = tab[i] + 10;
-  return t;
+  tab[1] = tab[i] + 10;
+  return tab[1];
 }
 
 int falsemain(void){
