@@ -48,8 +48,7 @@ public class FunctionContext extends Context{
 				if(p.name.equals(name) && p.arraySize != 0)
 					return "(" + Register.RCX + ", " + Register.RDX + ", " + "8" + ")";
 			}
-			
-			return result.intValue() + "(" + Register.RBP + ")";
+			return null;
 		}
 		throw new Exception("No parameter with the specified name : <" + name + "> found");
 	}

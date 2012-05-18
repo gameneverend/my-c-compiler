@@ -245,8 +245,14 @@ public class ExpressionHelper{
     if(a.index != null){
 			sb.append(a.index.handleExpression(null, context).toString());
 			sb.append(asm(Assembly.MOV, Register.RAX, Register.RDX));
-      sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), Register.RCX));
-      sb.append(asm(Assembly.MOV, "(" + Register.RCX + ", " + Register.RDX + ", 8)", Register.RAX));
+			
+			if(context.isArrayArgument((String)a.getValue())){
+				// If the handled array is a parameter, we need to dereference its pointer first.
+        sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), Register.RCX));
+        sb.append(asm(Assembly.MOV, "(" + Register.RCX + ", " + Register.RDX + ", 8)", Register.RAX));
+			}
+			else
+				sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
     }
       
     else if(a.getValue() != null){

@@ -62,6 +62,14 @@ public abstract class Context{
 		}
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
+  
+  public boolean isArrayArgument(String name) throws Exception{
+		for(Parameter p : parameters){
+			if(p.name.equals(name))
+				return !(p.arraySize == 0);
+		}
+		return false;
+	}
 
   public boolean isArrayType(String name) throws Exception{
 		for(Parameter p : parameters){

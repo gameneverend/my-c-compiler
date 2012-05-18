@@ -17,11 +17,12 @@ int total_sum(int tab[3]){
 int falsemain(void){
   int a;
   int t[3];
-  a = 2;
+  a = 5;
   t[0] = 8;
   t[1] = 9;
   t[2] = 10;
 
+	//return t[a%3] + 10;
   return total_sum(t);
 }
 

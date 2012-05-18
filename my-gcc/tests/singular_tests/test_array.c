@@ -15,13 +15,10 @@ int total_sum(int tab[3]){
 }
 
 int test_array(void){
-  int a;
   int t[3];
-  a = 2;
   t[0] = 8;
   t[1] = 9;
   t[2] = 10;
 
-  //return total_sum(t);
-  return t[a%3];
+  return total_sum(t);
 }
