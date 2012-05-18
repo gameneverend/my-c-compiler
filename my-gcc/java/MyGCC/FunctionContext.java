@@ -21,6 +21,7 @@ public class FunctionContext extends Context{
   public void prepareParametersLocation(){
     if (parametersLocated) return;
     prepareLocalVariablesLocation();
+    staticContext.prepareLocalVariablesLocation();
     int k = 1;
     if (parameters != null){// TODO usually parameters should never be null but that's an issue coming from the parser
       for (Parameter p : parameters){

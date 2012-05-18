@@ -102,12 +102,13 @@ parser code {:
   }
 :}
 
-terminal INT, VOID, STATIC, LHOOK, RHOOK, LPAREN, RPAREN, LBRACKET, RBRACKET,
+terminal INT, VOID, LHOOK, RHOOK, LPAREN, RPAREN, LBRACKET, RBRACKET,
          COMMA, SEMI, EQL, EXIT, RETURN, READ_INT, PRINTF, IF, ELSE, WHILE,
          MINUS, NOT, LESS, GREATER, EQUALS, LEQL, GEQL, DIFF, PLUS, TIMES, DIV,
          MOD, OR, AND;
     
 terminal String IDENT;
+terminal String STATIC;
 terminal String STRING;
 terminal Integer NB_INT;
 
@@ -141,7 +142,14 @@ dec_func_list ::=
 
     // Format for the declaration of a static variable, each declaration is
     // separated by a semicolon
-    STATIC type IDENT arr SEMI dec_func_list
+    STATIC:s type:t IDENT:id arr SEMI
+      {:  if(Parser.DEBUG) System.out.println("Type : static " + t);
+          parser.cg.pushInformation(new ParsingResult<Type>(ResultType.TYPE, t));
+          if(Parser.DEBUG) System.out.println("Identifier : " + id);
+          parser.cg.pushInformation(new ParsingResult<String>(ResultType.ID, id));
+          parser.cg.pushInformation(new ParsingResult<String>(ResultType.QUALIFIER, s));
+      :}
+      dec_func_list
     
     // Format for the declaration of a non-static variable, or a prototype
   | type:t IDENT:id

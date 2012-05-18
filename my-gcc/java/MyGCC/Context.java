@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 public abstract class Context{
 
   protected Context inheritedContext;
+  protected StaticContext staticContext = new StaticContext();
   public ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 
   /** Contain all the variables local to the context with their type **/
@@ -44,6 +45,10 @@ public abstract class Context{
         return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
       }
       return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";
+    } else {
+      result = staticContext.variablesLocations.get(name);
+      if(result != null)
+        return staticContext.getVariableLocation(name);
     }
     if (inheritedContext != null) {
       return inheritedContext.getVariableLocation(name);
@@ -107,9 +112,14 @@ public abstract class Context{
     localVariablesLocated = true;
   }
 
-  public void addVariable(Type type, String identifier, int arraySize) {
-    localVariables.put(identifier, new ContextEntry(type, arraySize));
-    localVariablesLocated = false;
+  public void addVariable(Type type, String identifier, int arraySize, String qualifier) {
+    if(qualifier.equals("static")) {
+      staticContext.localVariables.put(identifier, new ContextEntry(type, arraySize));
+      staticContext.localVariablesLocated = false;
+    } else {
+      localVariables.put(identifier, new ContextEntry(type, arraySize));
+      localVariablesLocated = false;
+    }
   }
   
   public int getVariableLocalSize(){
@@ -125,6 +135,10 @@ public abstract class Context{
     int tmp = stackPosition;
     stackPosition += 8;
     return "\t" + Assembly.MOV + "\t" + tmp + "(" + Register.RBP + "), " + s + "\n";
+  }
+  
+  public String makeStaticLabels() {
+    return this.staticContext.makeLabels();
   }
 
 }

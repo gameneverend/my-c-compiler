@@ -44,6 +44,7 @@ public class Function{
     sb.append(epilogue());
     sb.append(LabelManager.getEndLabel(i)); sb.append(":\n");
     sb.append("\t.size "); sb.append(name); sb.append(", .-"); sb.append(name); sb.append('\n');
+    sb.append(myContext.makeStaticLabels());
     return sb.toString();
   }
   
@@ -116,8 +117,8 @@ public class Function{
   }
 
 
-  public void addDeclaration(Type type, String identifier, int arraySize) {
-    myContext.addVariable(type, identifier, arraySize);
+  public void addDeclaration(Type type, String identifier, int arraySize, String qualifier) {
+    myContext.addVariable(type, identifier, arraySize, qualifier);
   }
   
   public FunctionContext getFunctionContext(){

@@ -10,5 +10,6 @@ public enum ResultType{
   PROTOTYPE,
   FUNCTION,
   VARIABLE,
+  QUALIFIER,
   UNKNOWN;
 }
