@@ -21,7 +21,8 @@ public enum Register {
   //R12 ("Unused", RegisterType.UNUSED)  // We have no need for this registry as we will only be compiling C
   R13 ("%r13d", "%r13", "", RegisterType.CALLEE_SAVED),
   R14 ("%r14d", "%r14", "", RegisterType.CALLEE_SAVED),
-  R15 ("%r15d", "%r15", "", RegisterType.CALLEE_SAVED);
+  R15 ("%r15d", "%r15", "", RegisterType.CALLEE_SAVED),
+  RIP ("%eip", "%rip", "", RegisterType.CALLEE_SAVED);
   
   public enum RegisterType {
     CALLEE_SAVED,

@@ -54,8 +54,9 @@ do
   files[$i]="TEST$i"
   i=$(($i + 1))
   str=""
+
   # Extract the prototypes from the files (needs refining to include everything that is needed, and exclude the rest
-  for prototypes in `grep '^\<int\>' $entry | grep ';$'`
+    for prototypes in `grep '^[\<int\>\<void\>]' $entry | grep '[^=]*' | grep '.*(.*)' | grep ';$'`
   do
     echo ${prototypes}
     if [[ "$prototypes" == *\; ]]

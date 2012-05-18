@@ -14,7 +14,7 @@ public class CodeGenerator{
   private LinkedList<Function> globalFunctions = new LinkedList<Function>();
   public static StringManager sm = new StringManager();
 
-  private Context globalContext = new GlobalContext();
+  private GlobalContext globalContext = new GlobalContext();
   private Context actualContext;
   private Function currentFunction;
   private Block currentBlock = null;
@@ -168,11 +168,11 @@ public class CodeGenerator{
       currentFunction.addDeclaration(type, identifier, arraySize);
     else {
       this.globalContext.addVariable(type, identifier, arraySize);
-      this.globalContext.prepareLocalVariablesLocation();
     }
   }
   
-  public void checkValidity(String variable, int line, int col) throws Exception{
+  public void checkValidity(String variable, int line, int col) throws Exception {
+		this.globalContext.prepareLocalVariablesLocation();
     currentFunction.loadParameters(); //FIXME find a more suitable way to do this
     try{
       currentFunction.getFunctionContext().getVariableLocation(variable);
@@ -208,6 +208,10 @@ public class CodeGenerator{
   
   public void closeFunction(){
     currentFunction = null;
+  }
+  
+  public GlobalContext getGlobalContext() {
+    return this.globalContext;
   }
 
 }

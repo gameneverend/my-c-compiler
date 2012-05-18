@@ -55,6 +55,9 @@ parser code {:
       System.out.println("\n\t>> Generating code: " + args[0]);
       sb.append("\t.file \"" + args[0] + "\"\n\t.section\t.rodata\n");
       
+      GlobalContext globalContext = p.cg.getGlobalContext();
+      sb.append(globalContext.makeLabels());
+        
       for(String e : contents.keySet())
         sb.append(contents.get(e) + ":\n\t.string\t" + e + "\n");
         
