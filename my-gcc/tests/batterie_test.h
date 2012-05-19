@@ -23,6 +23,10 @@ extern int staticAux(int);
 extern int test_static_arrays(int);
 extern int aux(int);
 extern int test_static(int);
+extern int test_sga_aux(int);
+extern int test_static_global_array(int);
+extern int test_sg_aux(int);
+extern int test_static_global(int);
 extern int test_unreachable(int);
 extern int test_while(int);
 

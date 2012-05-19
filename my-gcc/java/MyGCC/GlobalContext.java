@@ -43,6 +43,8 @@ public class GlobalContext extends Context{
       as *= ce.type.size;
 			// Find the closest power of 2 to as;
 			double as2 = Math.pow(2, Math.ceil(Math.log(as)));
+			if(ce.isStatic)
+				sb.append("\t.local " + c + "\n");
       sb.append("\t.comm " + c + "," + as +"," + (int)as2 + "\n");
     }
     return sb.toString();

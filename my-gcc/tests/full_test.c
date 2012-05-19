@@ -80,6 +80,12 @@ int main(int argc, char ** argv){
 
 	printf("Testing static arrays : ");
 	test_validity(test_static_arrays(5), 10);
+
+	printf("Testing static globals : ");
+	test_validity(test_static_global(5), 13);
+
+	printf("Testing static global arrays : ");
+	test_validity(test_static_global_array(5), 13);
   
   printf("\n");
   
