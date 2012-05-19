@@ -16,7 +16,7 @@ public class GlobalContext extends Context{
       if(ce.arraySize == 0) {
         return name + "(" + Register.RIP + ")";// TO PERFECT
       }
-			return name + "(" + ", " + Register.RAX + ", " + ce.type.size + ")";
+			return name + "(, " + Register.RAX + ", " + ce.type.size + ")";
     }
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
@@ -26,12 +26,20 @@ public class GlobalContext extends Context{
     
 		if(ce != null)
 			if(ce.arraySize != 0)
-				return name + "(" + ", " + Register.RDX + ", " + ce.type.size + ")";
+				return name + "(, " + Register.RDX + ", " + ce.type.size + ")";
 		
 		if(inheritedContext != null)
 			return inheritedContext.getArrayLocation(name);
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
+  
+  public boolean isGlobalArray(String name) throws Exception{
+		ContextEntry ce = localVariables.get(name);
+		if(ce != null)
+			if(ce.arraySize != 0)
+				return true;
+		return false;
+	}
   
    public String makeLabels() {
     StringBuffer sb = new StringBuffer();

@@ -64,7 +64,7 @@ public abstract class Context{
       if(ce.arraySize == 0) {
         return name + "." + label + "(" + Register.RIP + ")";// TO PERFECT
       }
-      return name + "." + label  + "(" /*+ Register.RIP*/ + ", " + Register.RAX + ", " + ce.type.size + ")";
+      return name + "." + label  + "(, " + Register.RAX + ", " + ce.type.size + ")";
     }
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
@@ -89,6 +89,10 @@ public abstract class Context{
 			return inheritedContext.getArrayLocation(name);
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
+  
+  public boolean isGlobalArray(String name) throws Exception{
+		return inheritedContext.isGlobalArray(name);
+	}
   
   public boolean isArrayArgument(String name) throws Exception{
 		for(Parameter p : parameters){

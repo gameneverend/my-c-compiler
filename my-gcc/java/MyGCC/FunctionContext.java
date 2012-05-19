@@ -63,5 +63,9 @@ public class FunctionContext extends Context{
   public Parameter getParameter(int index){
     return parameters.get(index);
   }
+  
+  public boolean isGlobalArray(String name) throws Exception{
+		return inheritedContext.isGlobalArray(name);
+	}
 
 }

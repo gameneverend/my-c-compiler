@@ -174,7 +174,7 @@ public class Expression{
       
     else{
       //Handle simple node (l op r)
-        
+      
       if(this.right.priority){
         sb.append(context.virtualPush(Register.RAX.toString()));
         sb.append(this.right.handleExpression(e, context));

@@ -74,7 +74,9 @@ public class Instruction {
           if(a.index != null){
 						sb.append(context.virtualPush(Register.RAX.toString()));
 						sb.append(a.handleExpression(a, context));
-						sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + Register.RDX + "\n");	//Index of left-side array
+
+						if(!context.isGlobalArray(String.valueOf(a.getValue())))	//Shouldn't execute this instruction when handling global arrays.
+						  sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + Register.RDX + "\n");	//Index of left-side array
 						sb.append(context.virtualPop(Register.RAX.toString()));
             sb.append("\t" + Assembly.MOV + "\t" + Register.RAX + ", " + context.getArrayLocation(String.valueOf(a.getValue())) + "\n");
 					}

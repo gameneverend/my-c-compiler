@@ -1,4 +1,4 @@
-int falsemain(void);
+/*int falsemain(void);
 int total_sum(int[3]);
 
 
@@ -24,9 +24,27 @@ int falsemain(void){
 
 	//return t[a%3] + 10;
   return total_sum(t);
+}*/
+
+
+int falsemain(void);
+
+int array[10];
+
+int falsemain(void) {
+	int a;
+	int b;
+	int tab[5];
+	a = 7;
+	b = 0;
+	//tab[0] = 452;
+	array[4] = a;
+	tab[0] = array[4];
+	return tab[0];
+	//array[b + 5] = array[b+4] + 5;
+	//return array[b + 5];
+	//return array[b + 4];
 }
-
-
 
 
 
