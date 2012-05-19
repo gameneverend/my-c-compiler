@@ -1,10 +1,16 @@
 package MyGCC;
 
+import java.util.HashMap;
+
 public class LabelManager {
   
   static private int nbFunctions = 0;
   static private int labelNb = 0;
+
   static private int stringLabel = 0;
+
+	static private int staticLabel = 0;
+	static private HashMap<String, Integer> labels = new HashMap<String, Integer>();
   
   public static String getStringLabel() {
     return ".LC" + stringLabel++;
@@ -28,4 +34,10 @@ public class LabelManager {
     return ".LFE" + i;
   }
 
+	public static String getStaticLabel(String name) {
+		if(labels.containsKey(name))
+			return labels.get(name).toString();
+		labels.put(name, new Integer(staticLabel));
+		return labels.get(name).toString();
+	}
 }

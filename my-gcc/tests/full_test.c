@@ -66,14 +66,20 @@ int main(int argc, char ** argv){
   printf("Testing READ_INT: return read_int(a)+42 : (enter 5) ");
   test_validity(test_scan(), 47);
 
-  printf("Testing unreachable code: ");
+  printf("Testing unreachable code : ");
   test_validity(test_unreachable(5), 2);
   
-  printf("Testing global variables: ");
+  printf("Testing global variables : ");
   test_validity(test_globals(5), 20);
 
-	/*printf("Testing static variable : ");
-		test_validity(test_static(5), 5);*/
+	printf("Testing global arrays : ");
+	test_validity(test_global_arrays(5), 5);
+
+	printf("Testing static variable : ");
+	test_validity(test_static(5), 10);
+
+	printf("Testing static arrays : ");
+	test_validity(test_static_arrays(5), 10);
   
   printf("\n");
   

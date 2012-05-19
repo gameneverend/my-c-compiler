@@ -58,27 +58,35 @@ public abstract class Context{
 	public String getStaticVariableLocation(String name) throws Exception{
     // searching in Local Variables
     ContextEntry ce = localVariables.get(name);
+		String label;
     if (!(ce == null)) {
-      
-      /*if(!this.pairing.containsKey(name))
-        this.pairing.put(name, generateId());
-				int num = this.pairing.get(name);*/
+      label = LabelManager.getStaticLabel(name);
       if(ce.arraySize == 0) {
-        return name + "." /*+ num*/ + "(" + Register.RIP + ")";// TO PERFECT
+        return name + "." + label + "(" + Register.RIP + ")";// TO PERFECT
       }
-      return name + "." /*+ num*/  + "(" + Register.RIP + ", " + Register.RAX + ", " + ce.type.size + ")";
+      return name + "." + label  + "(" /*+ Register.RIP*/ + ", " + Register.RAX + ", " + ce.type.size + ")";
     }
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
   
   public String getArrayLocation(String name) throws Exception{
 		ContextEntry ce = localVariables.get(name);
-    
+    String label = null;
 		for(Parameter p : parameters){
 			if(p.name.equals(name) && p.arraySize != 0){
-				return "(" + Register.RCX + ", " + Register.RDX + ", " + ce.type.size + ")";
+				return "(" + Register.RCX + ", " + Register.RDX + ", 8)";
 			}
 		}
+		if(ce != null)
+			if(ce.arraySize != 0) {
+				if(ce.isStatic) {
+					return getStaticVariableLocation(name);
+				}
+				return "(" /*+ Register.RCX*/ + ", " + Register.RDX + ", " + ce.type.size + ")";
+			}
+		
+		if(inheritedContext != null)
+			return inheritedContext.getArrayLocation(name);
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
   
@@ -97,14 +105,19 @@ public abstract class Context{
 		}
 		
 		ContextEntry ce = localVariables.get(name);
+		if(ce != null)
+			if(ce.isStatic)
+				return ce.arraySize != 0;
+
 		Integer result = variablesLocations.get(name);
 		if(result != null)
 			return !(ce.arraySize == 0);
-				
+
 		if(inheritedContext != null)
 			return inheritedContext.isArrayType(name);
 		throw new Exception("No parameter with the specified name: <" + name + "> found");
 	}
+
   /**
    * When a function is called,
    * local variables will always be used like <i>-...(%rbp)</i>
@@ -146,6 +159,31 @@ public abstract class Context{
     int tmp = stackPosition;
     stackPosition += 8;
     return "\t" + Assembly.MOV + "\t" + tmp + "(" + Register.RBP + "), " + s + "\n";
+  }
+
+	public String makeLabels() {
+		StringBuffer sb = new StringBuffer();
+		ContextEntry ce = null;
+		String name = null;
+		String label = null;
+		int as;
+
+		for(Entry<String, ContextEntry> e : localVariables.entrySet()) {
+			name = e.getKey();
+			ce = e.getValue();
+			if(ce.isStatic) {
+				as = ce.arraySize;
+				label = LabelManager.getStaticLabel(name);
+
+				if(as == 0)
+					as++;
+				as *= ce.type.size;
+				double as2 = Math.pow(2, Math.ceil(Math.log(as)));
+				sb.append("\t.local " + name + "." + label + "\n");
+				sb.append("\t.comm " + name + "." + label + "," + as +"," + (int)as2 + "\n");
+			}
+		}
+    return sb.toString();
   }
 
 }

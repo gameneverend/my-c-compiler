@@ -154,23 +154,29 @@ public class CodeGenerator{
       switch(r.type) {
       case TYPE : 
         type = ((ParsingResult<Type>)r).getValue();
+				if(Parser.DEBUG) System.out.println("type : " + type);
         break;
       case ID : 
         identifier = ((ParsingResult<String>)r).getValue();
+				if(Parser.DEBUG) System.out.println("identifier : " + identifier);
         break;
       case VARIABLE :
         arraySize = ((ParsingResult<Integer>)r).getValue();
+				if(Parser.DEBUG) System.out.println("arraySize : " + arraySize);
         break;
 			case QUALIFIER :
-				if(((ParsingResult<String>)r).getValue().equals("static"))
+				//				if(((ParsingResult<String>)r).getValue().equals("static"))
 					isStatic = true;
+					if(Parser.DEBUG) System.out.println("isStatic : " + isStatic);
 				break;
       default:
         System.err.println("Unexpected Type :" + r.type);
       }
     }
-    if(currentFunction != null)
+    if(currentFunction != null) {
+			if(Parser.DEBUG) System.out.println("Adding to function : " + type + ", " + identifier + ", " + arraySize + ", " + isStatic);
       currentFunction.addDeclaration(type, identifier, arraySize, isStatic);
+		}
     else {
       this.globalContext.addVariable(type, identifier, arraySize, isStatic);
     }

@@ -9,7 +9,6 @@ public class StaticContext extends Context {
   private HashMap<String, Integer> pairing = new HashMap<String, Integer>();
   
 	public StaticContext() {
-		this.staticContext = null;
     this.inheritedContext = null;
   }
   

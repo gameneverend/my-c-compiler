@@ -21,7 +21,6 @@ public class FunctionContext extends Context{
   public void prepareParametersLocation(){
     if (parametersLocated) return;
     prepareLocalVariablesLocation();
-    staticContext.prepareLocalVariablesLocation();
     int k = 1;
     if (parameters != null){// TODO usually parameters should never be null but that's an issue coming from the parser
       for (Parameter p : parameters){
@@ -49,9 +48,9 @@ public class FunctionContext extends Context{
 				if(p.name.equals(name) && p.arraySize != 0)
 					return "(" + Register.RCX + ", " + Register.RDX + ", " + "8" + ")";
 			}
-			return null;
 		}
-		throw new Exception("No parameter with the specified name : <" + name + "> found");
+		return super.getArrayLocation(name);
+		//throw new Exception("No parameter with the specified name : <" + name + "> found");
 	}
 
   public String getVariableLocation(String name) throws Exception{
@@ -60,7 +59,7 @@ public class FunctionContext extends Context{
     if (result != null)	return result.intValue() + "(" + Register.RBP + ")";
     return super.getVariableLocation(name);
   }
-  
+
   public Parameter getParameter(int index){
     return parameters.get(index);
   }

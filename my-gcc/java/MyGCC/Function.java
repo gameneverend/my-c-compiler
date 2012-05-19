@@ -44,6 +44,7 @@ public class Function{
     sb.append(epilogue());
     sb.append(LabelManager.getEndLabel(i)); sb.append(":\n");
     sb.append("\t.size "); sb.append(name); sb.append(", .-"); sb.append(name); sb.append('\n');
+		sb.append(myContext.makeLabels());
     return sb.toString();
   }
   
