@@ -46,9 +46,6 @@ public class CodeGenerator{
     if (currentFunction == null)
       System.err.println("ERROR: currentFunction is null");
     this.currentBlock.pushInstruction(i);
-    if(InstructionType.isLogical(i.type)) {
-      startBlockDefinition();
-    }
   }
   
   public void pushInformation(Object o){
@@ -148,9 +145,9 @@ public class CodeGenerator{
   @SuppressWarnings("unchecked")
     public void declareVariable(){
     Type type = null;
-    String identifier = null;
-    String qualifier = null;
+    String identifier = null; 
     int arraySize = 0;
+		boolean isStatic = false;
     Stack<Object> tmpStack = myStack.getLast();
     while(!tmpStack.isEmpty()) {
       ParsingResult r = (ParsingResult) tmpStack.pop();
@@ -164,16 +161,18 @@ public class CodeGenerator{
       case VARIABLE :
         arraySize = ((ParsingResult<Integer>)r).getValue();
         break;
-      case QUALIFIER :
-        qualifier = ((ParsingResult<String>)r).getValue();
+			case QUALIFIER :
+				if(((ParsingResult<String>)r).getValue().equals("static"))
+					isStatic = true;
+				break;
       default:
         System.err.println("Unexpected Type :" + r.type);
       }
     }
     if(currentFunction != null)
-      currentFunction.addDeclaration(type, identifier, arraySize, qualifier);
+      currentFunction.addDeclaration(type, identifier, arraySize, isStatic);
     else {
-      this.globalContext.addVariable(type, identifier, arraySize, qualifier);
+      this.globalContext.addVariable(type, identifier, arraySize, isStatic);
     }
   }
   

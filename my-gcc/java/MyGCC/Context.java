@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 public abstract class Context{
 
   protected Context inheritedContext;
-  protected StaticContext staticContext = new StaticContext();
   public ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 
   /** Contain all the variables local to the context with their type **/
@@ -38,6 +37,10 @@ public abstract class Context{
 		ContextEntry ce = localVariables.get(name);
     Integer result = variablesLocations.get(name);
 		
+		if(ce != null)
+			if(ce.isStatic)
+				return getStaticVariableLocation(name);
+
     // searching in Local Variables
     if (result != null) {
       if(ce.arraySize == 0) {
@@ -45,12 +48,6 @@ public abstract class Context{
         return result.intValue() + "(" + Register.RBP + ")";// TO PERFECT
       }
       return result.intValue() + "(" + Register.RBP + ", " + Register.RAX + ", " + ce.type.size + ")";
-    } else {
-			if(this.staticContext != null) {
-				result = staticContext.variablesLocations.get(name);
-				if(result != null)
-					return staticContext.getVariableLocation(name);
-			}
     }
     if (inheritedContext != null) {
       return inheritedContext.getVariableLocation(name);
@@ -58,6 +55,21 @@ public abstract class Context{
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
   
+	public String getStaticVariableLocation(String name) throws Exception{
+    // searching in Local Variables
+    ContextEntry ce = localVariables.get(name);
+    if (!(ce == null)) {
+      
+      /*if(!this.pairing.containsKey(name))
+        this.pairing.put(name, generateId());
+				int num = this.pairing.get(name);*/
+      if(ce.arraySize == 0) {
+        return name + "." /*+ num*/ + "(" + Register.RIP + ")";// TO PERFECT
+      }
+      return name + "." /*+ num*/  + "(" + Register.RIP + ", " + Register.RAX + ", " + ce.type.size + ")";
+    }
+    throw new Exception("No parameter with the specified name : <" + name + "> found");
+  }
   
   public String getArrayLocation(String name) throws Exception{
 		ContextEntry ce = localVariables.get(name);
@@ -103,24 +115,22 @@ public abstract class Context{
     variablesTotalSize = 0;
     for (Entry<String, ContextEntry> e : localVariables.entrySet()){
       ContextEntry ce = e.getValue();
-      int i = ce.arraySize;
-      if(i == 0)
-        i++;
-      variablesTotalSize += i * ce.type.size;
-      variablesLocations.put(e.getKey(), -variablesTotalSize);
+			if(!(ce.isStatic)) {
+				int i = ce.arraySize;
+				if(i == 0)
+					i++;
+				variablesTotalSize += i * ce.type.size;
+				variablesLocations.put(e.getKey(), -variablesTotalSize);
+			}
     }
     variablesTotalSize = variablesTotalSize + (16 -variablesTotalSize % 16);
     stackPosition = -variablesTotalSize;
     localVariablesLocated = true;
   }
 
-  public void addVariable(Type type, String identifier, int arraySize, String qualifier) {
-    if(qualifier.equals("static") && this.staticContext != null) {
-      staticContext.addVariable(type, identifier, arraySize, qualifier);
-    } else {
-      localVariables.put(identifier, new ContextEntry(type, arraySize));
-      localVariablesLocated = false;
-    }
+  public void addVariable(Type type, String identifier, int arraySize, boolean isStatic) {
+    localVariables.put(identifier, new ContextEntry(type, arraySize, isStatic));
+    localVariablesLocated = false;
   }
   
   public int getVariableLocalSize(){
@@ -136,12 +146,6 @@ public abstract class Context{
     int tmp = stackPosition;
     stackPosition += 8;
     return "\t" + Assembly.MOV + "\t" + tmp + "(" + Register.RBP + "), " + s + "\n";
-  }
-  
-  public String makeStaticLabels() {
-		if(this.staticContext != null)
-			return this.staticContext.makeLabels();
-		return ((StaticContext)this).makeLabels();
   }
 
 }

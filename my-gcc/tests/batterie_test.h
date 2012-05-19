@@ -18,6 +18,7 @@ extern int test_printing(int, int);
 extern int test_scan(void);
 extern int test_simple(void);
 extern int test_somme_rec_multi_param(int, int, int, int, int, int, int, int, int, int, int);
+extern int test_static(int);
 extern int test_unreachable(int);
 extern int test_while(int);
 

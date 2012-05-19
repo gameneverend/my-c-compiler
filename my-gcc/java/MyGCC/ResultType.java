@@ -10,6 +10,18 @@ public enum ResultType{
   PROTOTYPE,
   FUNCTION,
   VARIABLE,
-  QUALIFIER,
+	QUALIFIER,
   UNKNOWN;
+
+	public static boolean isLogical(InstructionType it) {
+		switch(it) {
+	    case IF:
+			  return true;
+			case WHILE:
+			  return true;
+			default:
+			  return false;
+		  }
+		}
+
 }
