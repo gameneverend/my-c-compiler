@@ -76,13 +76,18 @@ Once the parsing is complete, the code generator will take charge of producing a
 
 \section{Context}
 One of the fundamental notions of compiling is the variables scope. Not knowing how far we could go, we have decided to go beyond global variables and variables local to a function. We have anticipated to be able to have declarations within a logical block or a loop, for example.\\
-To solve this issue, we have implemented Context objects, that contain declarations, as well as a link to their parent. This would allow us to manage nested blocks. Unfortunately, we did not have the time to modify the grammar in order to be able to have declarations beyond the beginning of a function.
+
+To solve this issue, we have implemented Context objects, that contain declarations, as well as a link to their parent. This would allow us to manage nested blocks. The Context is also the key to managing variables on the stack, allowing us to keep track of each variable declared in each function, as well as their position on the stack when loaded. Without this, we wouldn't be able to perform complex arithmetic operations, or have functions with large numbers of parameters.\\
+
+Unfortunately, we did not have the time to modify the grammar in order to be able to have declarations beyond the beginning of a function.
 
 
 \section{Register Manager}
-At the start of the project, we decided that it would be useful to have a register manager that would serve us to get a free register, or get the register in which we've loaded a certain variable.\\
-But it turns out that it was far too complex to manage (for instance, when all registers are used, based on what criteria should we free a register?), and that it wasn't needed for expression handling, because only two registers are enough for this operation.\\
-The register manager turned out to be useful for retrieving registers for a function call. Note that when more than 6 parameters are needed, we would pass the rest of the parameters on the stack.
+At the beginning of the project, we decided to implement a Register manager. The idea was that it would keep track of the contents of each register, and be able to make informed decisions of which register to pass to the user (potentially freeing the register containing the least important variable among all the registers in the process). And so we would not only save on execution complexity (potentially less freeing and assigning of variables to registers), but it would make the implementation of expressions and instructions easier, as the register manager would make sure the correct values were secure during each operation.\\
+
+However, we soon came to realize the task was rather complex, and would have demanded a great deal of time to be implemented correctly, all the while preserving the security it would have provided. We considered using a number of data structures in order to insure the safest decision making process possible, but they proved to be a little too insecure to warrant the time it would take us to implement the security measures we required.\\
+
+We eventually decided to abandon the idea of the Register Manager, and simply used it to pass registers for parameters in functions. As for handling expressions, we noticed that, most of the times, only two registers were needed, along with the stack to store intermediate values.
 
 \section{Expression Handling}
 One of the major challenges encountered was the correct handling of expressions.
@@ -102,10 +107,37 @@ Note that the result will always be stored in EAX at the end of the execution.\\
 
 We have implemented a slight optimization for our compiler: when evaluating expressions, we have noticed that GCC optimizes its computation if the expression is entirely numeric. For example, the instruction \emph{((5-1)*10)+2} will be immediately evaluated to \emph{42}, and won't go through the usual handling algorithm.
 
+\section{Logical Blocks}
+The implementation of the logical blocks proved to be quite simple, given our method for retrieving instructions, and the tree-like manner of managing nested blocks it was simply a case of treating the conditions in order to perform the jumps correctly.\\
+
+The \emph{IF}/\emph{ELSE} blocks were slightly more troublesome than the \emph{WHILE} blocks, given the independence of the
+\emph{ELSE} block from the \emph{IF} block within our grammar, it became difficult to place labels correctly in order to skip the correct portions of code. Therefore we decided to treat the \emph{ELSE} block as if it were nested within the \emph{IF} block. This allowed us keep track of labels, and to know which ELSE belonged to which \emph{IF} when applying several \emph{IF}/\emph{ELSE} blocks one after the other as well as more complex nested configurations.
+
+\section{Global and Static Variables}
+Global and static variables proved to be simple to implement, simply by imitating GCC, and making use of labels, once again the label manager class came in handy.\\
+
+However global and static arrays proved to be slightly more troublesome. Though the labels were already implemented, the different manner of using the array instructions (i.e. <label>(, <register>, <varSize>)) caused some problems during operations such as calculating indexes, due to there being sets of conditions we had not foreseen while implementing the management of expressions. We also encountered some issues when computing operations between arrays of different types (global/static), since the addressing convention is not the same.
+
+\section{Enumerations}
+We found that enumerations worked to our advantage in many ways, allowing us to list constant values, such as the names and standard usages of registers, as well as useful information concerning return types of functions, such as the size of a variable depending on its type.\\
+
+This enabled us to build very generic code which would allow us to expand the span of the project simply by including any addition needed to our enumerations. They also proved very useful to keep track of all the types of operations we would allow, as well as the types of elements we could expect to retrieve from the syntactical analyser.
+
+\section{Label Manager}
+A label manager was implemented for usage with functions -- in order to assure that no two functions would have the same label -- which was rapidly expanded to manage labels for logical blocks and proved to be a very simple, but very useful addition to our project.
+
+\section{Read\_int and printf Methods}
+In order to implement the read_int and printf functions, we opted for a string manager. This allowed us to store each different string provided by printf and read_int and assign labels to each one. This would then allow us to list them all correctly at the top of our files, and use the pre-implemented functions to perform the actual tasks.\\
+
+The aim of this was to potentially expand the
+read_int function to a fully functional scanf function, but other more important issues needed solving before hand.
+
 \section{Building and Testing}
 In order to build the project, we have set up an Ant build. This build will setup a proper building environment.\\
 In order to automate the process, we developed a script that would ensure the building process, as well as the project's integrity. The script enabled us to measure our work progress by launching it with a test module.\\
-The test module allowed us to verify the consistency of the implemented functionalities throughout the different revisions. The tests became more and more complex as the project expanded.
+The test module allowed us to verify the consistency of the implemented functionalities throughout the different revisions. The tests became more and more complex as the project expanded.\\
+
+We then took the script to the next level. In order to make sure that one test wouldn't poison the rest, we decided to generate each one in a separate file. To make the task easier, we developed a script that would automatically run our compiler on every C file found in our testing directory, and set the resulting assembler files aside in another directory to keep things clean. It would also extract each prototype from the C files and place them in a unique header file, in order to allow the usage of each function in our testing script which displays whether each separate test has been successful or not.
 
 \section{Debugging}
 One of the greatest challenges we have encountered during this project was the huge diversity of errors. As opposed to our previous projects, where almost all of the errors were from a single language, we had the pleasure of enjoying multiple sources of errors.\\
@@ -134,12 +166,24 @@ Unless you are Linus Torvalds, compiling errors are inevitable due to our human 
 
 When encountering any type of error, the compiler will issue an error message, and abort the code generation phase. Note that the parser will continue the parsing phase and will detect further errors.
 
+\section{Bug: 10 Parameters Function}
+Having come across some rather disturbing segmentation faults with our ten parameter recursion test, we started searching for the origin(s) of these errors.\\
+
+Using gdb, we located the offending lines, and started commenting the lines, since we couldn't find any faults with the assembler code we had generated. We eventually noticed that the end of recursion condition was never reached. Using the display functionality of gdb we were able to take a deeper look into the inner workings of our code, and soon became aware that the parameters passed to the function were in the wrong order (function(a,b,c,...) would produce assembler code equivalent to function(...,c,b,a)). Once we realized this, the problem was easy to rectify.\\
+
+However, we then came across a new error. The recursion was still never ending, producing stack overflow, because the 7th parameter, which was supposed to be decremented until it's value was 0, was actually reaching the negatives. Upon closer inspection of the registers during execution, we noticed that the instruction: 
+movq 16(\%rbp), \%rax was passing 12 bytes to the register (0xffff< 8 normal bytes >), whereas: 
+movq 24(\%rbp), \%rax was passing 8 bytes to the register (which was the expected amount).\\
+
+Having no idea what could be the cause of this, one solution would be to insert a conversion instruction after the “movq” produced by the 7th parameter which would allow us to maintain only the last 8 bytes in the register.\\
+
+Though this issue remains unsolved, we were able to ensure that once the issue with the order of the parameters was solved, it was possible to reintroduce the 9th and 10th parameters without any errors occurring.
+
 \section{Extensions}
 In the near future, we intend to add a few more functionalities to MyGCC.\\
 These features include:
 
 \begin{itemize}
-\item Static key-word.
 \item Pointers.
 \item Proper function calls with over 6 parameters.
 \item Increment operators.
