@@ -1,5 +1,9 @@
 package MyGCC;
 
+/**
+ * Class designed to contain all the information relevant to the
+ * declaration of a variable
+ **/
 public class Declaration {
   
   public Type type;

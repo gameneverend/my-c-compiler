@@ -8,7 +8,11 @@ public class GlobalContext extends Context{
   public GlobalContext() {
     this.inheritedContext = null;
   }
-  
+
+	/**
+	 * returns the assembly code necessary to access a given variable.
+	 * Throws an exception if the variable is not declared
+	 **/
   public String getVariableLocation(String name) throws Exception{
     // searching in Local Variables
     ContextEntry ce = localVariables.get(name);
@@ -41,7 +45,7 @@ public class GlobalContext extends Context{
 		return false;
 	}
   
-   public String makeLabels() {
+	public String makeLabels() {
     StringBuffer sb = new StringBuffer();
     for(String c : localVariables.keySet()) {
       ContextEntry ce = localVariables.get(c);

@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.io.*;
 
+/**
+ * The nerve center of the compiler, in charge of interfacing between the parser and the rest
+ * of the compiler
+ **/
 public class CodeGenerator{
 
   private LinkedList<Stack<Object>> myStack;
@@ -19,7 +23,7 @@ public class CodeGenerator{
   private Function currentFunction;
   private Block currentBlock = null;
   private Stack<Expression> args;
-  public static boolean mode64 = false;
+  public static boolean mode64 = true;
 
   public CodeGenerator(){
     myStack = new LinkedList<Stack<Object>>();
@@ -63,7 +67,7 @@ public class CodeGenerator{
   }
 
   @SuppressWarnings("unchecked")
-  public void declarePrototype(){
+		public void declarePrototype(){
     Type returnType = null;
     String name = null;
     ArrayList<Type> parameters = new ArrayList<Type>();
@@ -166,8 +170,8 @@ public class CodeGenerator{
         break;
 			case QUALIFIER :
 				//				if(((ParsingResult<String>)r).getValue().equals("static"))
-					isStatic = true;
-					if(Parser.DEBUG) System.out.println("isStatic : " + isStatic);
+				isStatic = true;
+				if(Parser.DEBUG) System.out.println("isStatic : " + isStatic);
 				break;
       default:
         System.err.println("Unexpected Type :" + r.type);

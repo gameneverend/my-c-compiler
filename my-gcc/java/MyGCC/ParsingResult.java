@@ -1,5 +1,8 @@
 package MyGCC;
 
+/**
+ * Class used while retrieving elements from the parser
+ **/
 public class ParsingResult<T>{
   
   public ResultType type;

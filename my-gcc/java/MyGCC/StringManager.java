@@ -2,11 +2,14 @@ package MyGCC;
 
 import java.util.HashMap;
 
+/**
+ * Class designed to manage strings from printf functions
+ **/
 public class StringManager {
   private HashMap<String, String> contents;
   
   public StringManager() {
-    this.contents = new HashMap<String, String>();
+		this.contents = new HashMap<String, String>();
   }
 
   public String addString(String string) {

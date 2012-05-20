@@ -51,7 +51,7 @@ public abstract class Context{
     }
     if (inheritedContext != null) {
       return inheritedContext.getVariableLocation(name);
-     }
+		}
     throw new Exception("No parameter with the specified name : <" + name + "> found");
   }
   
@@ -77,14 +77,16 @@ public abstract class Context{
 				return "(" + Register.RCX + ", " + Register.RDX + ", 8)";
 			}
 		}
-		if(ce != null)
+		if(ce != null) {
+			Integer result = variablesLocations.get(name);
 			if(ce.arraySize != 0) {
 				if(ce.isStatic) {
 					return getStaticVariableLocation(name);
 				}
-				return "(444444" /*+ Register.RCX*/ + ", " + Register.RDX + ", " + ce.type.size + ")";
+				return result.intValue() + "(" + Register.RBP + ", " + Register.RDX + ", " + ce.type.size + ")";
 			}
-		
+		}
+
 		if(inheritedContext != null)
 			return inheritedContext.getArrayLocation(name);
     throw new Exception("No parameter with the specified name : <" + name + "> found");

@@ -2,6 +2,10 @@ package MyGCC;
 
 import java.util.HashMap;
 
+/**
+ * Manages labels specific to different needsm such as functions,
+ * logical jumps, strings and static variables
+ **/
 public class LabelManager {
   
   static private int nbFunctions = 0;

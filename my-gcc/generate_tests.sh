@@ -58,12 +58,10 @@ do
   # Extract the prototypes from the files (needs refining to include everything that is needed, and exclude the rest
     for prototypes in `grep '^[\<int\>\<void\>]' $entry | grep '[^=]*' | grep '.*(.*)' | grep ';$'`
   do
-    echo ${prototypes}
     if [[ "$prototypes" == *\; ]]
     then
       # a complete prototype have been extracted, print it to the file
       str="extern"$str" "$prototypes"\r"
-      echo ${str}
       echo -e $str >> ../batterie_test.h
       str=""
     else

@@ -1,18 +1,21 @@
 package MyGCC;
 
-
+/**
+ * An enumeration of all the Assembler instructions
+ * the compiler can manage
+ **/
 public enum Assembly{
   
   MOV("movl", "movq"),
-  PUSH("pushl", "pushq"),
-  POP("popl", "popq"),
-  CALL("call", "call"),
-  CONVERT("cdq", "cqto"),
-  COMPARE("cmpl", "cmpq"),
-  NEG("negl", "negq"),
-  JUMP("jmp", "jmp"),
-  LEA("leal", "leaq"),
-  TEST("testl", "testq");
+		PUSH("pushl", "pushq"),
+		POP("popl", "popq"),
+		CALL("call", "call"),
+		CONVERT("cdq", "cqto"),
+		COMPARE("cmpl", "cmpq"),
+		NEG("negl", "negq"),
+		JUMP("jmp", "jmp"),
+		LEA("leal", "leaq"),
+		TEST("testl", "testq");
   
   private String name32;
   private String name64;

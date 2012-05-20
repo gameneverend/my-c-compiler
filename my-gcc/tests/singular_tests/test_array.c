@@ -8,8 +8,8 @@ int total_sum(int tab[3]){
   sum = 0;
   index = 0;
   while(index < 3){
-		sum = sum + tab[index];
 		index = index + 1;
+		sum = sum + tab[index - 1];
 	};
   return sum;
 }

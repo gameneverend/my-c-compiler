@@ -3,16 +3,16 @@ package MyGCC;
 public enum Errors {
 
   UNDEFINED,
-  EXPECTING;
+		EXPECTING;
   
   
   private enum ErrorType {
     FUNCTION,
-    VARIABLE,
-    PAREN,
-    BRACKET,
-    HOOK,
-    SEMI;
+			VARIABLE,
+			PAREN,
+			BRACKET,
+			HOOK,
+			SEMI;
   }
   
 

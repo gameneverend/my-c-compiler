@@ -4,30 +4,34 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.lang.String;
 
+/**
+ * An enumerations of all the registers at our disposal for code generation
+ * Useful for retrieving information and attributing roles to registers
+ **/
 public enum Register {
   
   RAX ("%eax", "%rax", "Return Value", RegisterType.CALLER_SAVED),
-  RBX ("%ebx", "%rbx", "", RegisterType.CALLEE_SAVED),
-  RCX ("%ecx", "%rcx", "4th Argument", RegisterType.CALLER_SAVED),
-  RDX ("%edx", "%rdx", "3rd Argument", RegisterType.CALLER_SAVED),
-  RSI ("%esi", "%rsi", "2nd Argument", RegisterType.CALLER_SAVED),
-  RDI ("%edi", "%rdi", "1st Argument", RegisterType.CALLER_SAVED),
-  RBP ("%ebp", "%rbp", "", RegisterType.SPECIAL), // Technically not a special register, but will be treated as one
-  RSP ("%esp", "%rsp", "Stack Pointer", RegisterType.SPECIAL),
-  R8 ("%r8d", "%r8", "5th Argument", RegisterType.CALLER_SAVED),
-  R9 ("%r9d", "%r9", "6th Argument", RegisterType.CALLER_SAVED),
-  R10 ("%r10d", "%r10", "", RegisterType.CALLEE_SAVED),
-  R11 ("%r11d", "%r11", "Used for Linking", RegisterType.SPECIAL),
-  //R12 ("Unused", RegisterType.UNUSED)  // We have no need for this registry as we will only be compiling C
-  R13 ("%r13d", "%r13", "", RegisterType.CALLEE_SAVED),
-  R14 ("%r14d", "%r14", "", RegisterType.CALLEE_SAVED),
-  R15 ("%r15d", "%r15", "", RegisterType.CALLEE_SAVED),
-  RIP ("%eip", "%rip", "", RegisterType.CALLEE_SAVED);
+		RBX ("%ebx", "%rbx", "", RegisterType.CALLEE_SAVED),
+		RCX ("%ecx", "%rcx", "4th Argument", RegisterType.CALLER_SAVED),
+		RDX ("%edx", "%rdx", "3rd Argument", RegisterType.CALLER_SAVED),
+		RSI ("%esi", "%rsi", "2nd Argument", RegisterType.CALLER_SAVED),
+		RDI ("%edi", "%rdi", "1st Argument", RegisterType.CALLER_SAVED),
+		RBP ("%ebp", "%rbp", "", RegisterType.SPECIAL), // Technically not a special register, but will be treated as one
+		RSP ("%esp", "%rsp", "Stack Pointer", RegisterType.SPECIAL),
+		R8 ("%r8d", "%r8", "5th Argument", RegisterType.CALLER_SAVED),
+		R9 ("%r9d", "%r9", "6th Argument", RegisterType.CALLER_SAVED),
+		R10 ("%r10d", "%r10", "", RegisterType.CALLEE_SAVED),
+		R11 ("%r11d", "%r11", "Used for Linking", RegisterType.SPECIAL),
+		//R12 ("Unused", RegisterType.UNUSED)  // We have no need for this registry as we will only be compiling C
+		R13 ("%r13d", "%r13", "", RegisterType.CALLEE_SAVED),
+		R14 ("%r14d", "%r14", "", RegisterType.CALLEE_SAVED),
+		R15 ("%r15d", "%r15", "", RegisterType.CALLEE_SAVED),
+		RIP ("%eip", "%rip", "", RegisterType.CALLEE_SAVED);
   
   public enum RegisterType {
     CALLEE_SAVED,
-    CALLER_SAVED,
-    SPECIAL;
+			CALLER_SAVED,
+			SPECIAL;
     //UNUSED; Would be useful if ever we decided to compile additionnal languages
   }
   

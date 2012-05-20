@@ -247,23 +247,4 @@ public class RegisterManager {
       System.out.println("\t"+ r + " ->");
     }
   }
-  
-  /* public static void main(String[] args) {
-     RegisterManager rm = new RegisterManager();
-     SimpleEntry<Register, Register> se;
-     se = rm.addTwoVariablesToRegisters("a", "b", Register.RegisterType.CALLEE_SAVED);
-     System.out.println(se.toString());
-     se = rm.addTwoVariablesToRegisters("c", "d", Register.RegisterType.CALLEE_SAVED);
-     System.out.println(se.toString());
-     se = rm.addTwoVariablesToRegisters("a", "c", Register.RegisterType.CALLEE_SAVED);
-     System.out.println(se.toString());
-     se = rm.addTwoVariablesToRegisters("a", "c", Register.RegisterType.CALLER_SAVED);
-     System.out.println(se.toString());
-     Register r1 = rm.addVariableToRegister("f", Register.RegisterType.CALLEE_SAVED);
-     System.out.println(r1.toString());
-     se = rm.addTwoVariablesToRegisters("a", "c", Register.RegisterType.CALLEE_SAVED);
-     System.out.println(se.toString());
-    
-     }*/
-
 }

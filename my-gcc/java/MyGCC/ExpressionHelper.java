@@ -252,7 +252,7 @@ public class ExpressionHelper{
         sb.append(asm(Assembly.MOV, "(" + Register.RCX + ", " + Register.RDX + ", 8)", Register.RAX));
 			}
 			else
-				  sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
+				sb.append(asm(Assembly.MOV, context.getVariableLocation((String)a.getValue()), dst));
     }
       
     else if(a.getValue() != null){

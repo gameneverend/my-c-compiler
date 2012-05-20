@@ -2,6 +2,10 @@ package MyGCC;
 
 import java.util.*;
 
+/**
+ * Class used for managing while statements, along with
+ * label placement, and expression handling
+ **/
 public class LogicalBlock extends Instruction  {
   
   public Block block;

@@ -1,6 +1,9 @@
 package MyGCC;
 
-
+/**
+ * Class designed for storing all the information
+ * relevant to a specific parameter passed to a function.
+ **/
 public class Parameter{
   
   public Type type;

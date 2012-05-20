@@ -3,6 +3,9 @@ package MyGCC;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Stores all the necessary information of a function's prototype
+ **/
 class Prototype{
   
   public Type retType;

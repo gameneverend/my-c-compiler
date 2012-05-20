@@ -66,7 +66,7 @@ public class Instruction {
         if(r.isFullyNumeric()){
           if(a.index != null)
             sb.append(a.index.handleExpression(null, context));
-            sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
+					sb.append("\t" + Assembly.MOV + "\t$" + ExpressionHelper.calculateNum(r) + ", " + context.getVariableLocation(String.valueOf(a.getValue())) + "\n"); 
         }
           
         else{

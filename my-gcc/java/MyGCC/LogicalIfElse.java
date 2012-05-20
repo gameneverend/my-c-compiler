@@ -2,6 +2,10 @@ package MyGCC;
 
 import java.util.*;
 
+/**
+ * Class used for managing if/else blocks
+ * and generating the assembler codem along with positionning of labels, ect...
+ **/
 public class LogicalIfElse extends LogicalBlock {
   
   public Block elseBlock = null;
