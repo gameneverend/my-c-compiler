@@ -6,6 +6,7 @@
 \usepackage[margin=0.9in]{geometry}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
+\usepackage{indentfirst}
 
 
 \begin{document}
@@ -50,6 +51,7 @@ The following is a list of the handled C features:
 \item Array type handling.
 \item Handling of printf().
 \item Special function: read\_int(n) (equivalent to scanf).
+\item Global and static variables
 \end{itemize}
 
 
@@ -116,7 +118,7 @@ The \emph{IF}/\emph{ELSE} blocks were slightly more troublesome than the \emph{W
 \section{Global and Static Variables}
 Global and static variables proved to be simple to implement, simply by imitating GCC, and making use of labels, once again the label manager class came in handy.\\
 
-However global and static arrays proved to be slightly more troublesome. Though the labels were already implemented, the different manner of using the array instructions (i.e. <label>(, <register>, <varSize>)) caused some problems during operations such as calculating indexes, due to there being sets of conditions we had not foreseen while implementing the management of expressions. We also encountered some issues when computing operations between arrays of different types (global/static), since the addressing convention is not the same.
+However global and static arrays proved to be slightly more troublesome. Though the labels were already implemented, the different manner of using the array instructions (i.e. $ < label >$ (, $ < register >$ , $< varSize>$ )) caused some problems during operations such as calculating indexes, due to there being sets of conditions we had not foreseen while implementing the management of expressions. We also encountered some issues when computing operations between arrays of different types (global/static), since the addressing convention is not the same.
 
 \section{Enumerations}
 We found that enumerations worked to our advantage in many ways, allowing us to list constant values, such as the names and standard usages of registers, as well as useful information concerning return types of functions, such as the size of a variable depending on its type.\\
@@ -127,10 +129,10 @@ This enabled us to build very generic code which would allow us to expand the sp
 A label manager was implemented for usage with functions -- in order to assure that no two functions would have the same label -- which was rapidly expanded to manage labels for logical blocks and proved to be a very simple, but very useful addition to our project.
 
 \section{Read\_int and printf Methods}
-In order to implement the read_int and printf functions, we opted for a string manager. This allowed us to store each different string provided by printf and read_int and assign labels to each one. This would then allow us to list them all correctly at the top of our files, and use the pre-implemented functions to perform the actual tasks.\\
+In order to implement the read\_int and printf functions, we opted for a string manager. This allowed us to store each different string provided by printf and read\_int and assign labels to each one. This would then allow us to list them all correctly at the top of our files, and use the pre-implemented functions to perform the actual tasks.\\
 
 The aim of this was to potentially expand the
-read_int function to a fully functional scanf function, but other more important issues needed solving before hand.
+read\_int function to a fully functional scanf function, but other more important issues needed solving before hand.
 
 \section{Building and Testing}
 In order to build the project, we have set up an Ant build. This build will setup a proper building environment.\\
@@ -172,7 +174,7 @@ Having come across some rather disturbing segmentation faults with our ten param
 Using gdb, we located the offending lines, and started commenting the lines, since we couldn't find any faults with the assembler code we had generated. We eventually noticed that the end of recursion condition was never reached. Using the display functionality of gdb we were able to take a deeper look into the inner workings of our code, and soon became aware that the parameters passed to the function were in the wrong order (function(a,b,c,...) would produce assembler code equivalent to function(...,c,b,a)). Once we realized this, the problem was easy to rectify.\\
 
 However, we then came across a new error. The recursion was still never ending, producing stack overflow, because the 7th parameter, which was supposed to be decremented until it's value was 0, was actually reaching the negatives. Upon closer inspection of the registers during execution, we noticed that the instruction: 
-movq 16(\%rbp), \%rax was passing 12 bytes to the register (0xffff< 8 normal bytes >), whereas: 
+movq 16(\%rbp), \%rax was passing 12 bytes to the register ($ 0xffff < \text{8 normal bytes} > $), whereas: 
 movq 24(\%rbp), \%rax was passing 8 bytes to the register (which was the expected amount).\\
 
 Having no idea what could be the cause of this, one solution would be to insert a conversion instruction after the “movq” produced by the 7th parameter which would allow us to maintain only the last 8 bytes in the register.\\
